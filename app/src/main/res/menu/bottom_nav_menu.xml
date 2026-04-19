@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/homeFragment"
+        android:icon="@drawable/ic_home"
+        android:title="Trang chủ" />
+
+    <item
+        android:id="@+id/shortsFragment"
+        android:icon="@drawable/ic_shorts"
+        android:title="Shorts" />
+
+    <item
+        android:id="@+id/seriesFragment"
+        android:icon="@drawable/ic_series"
+        android:title="Phim bộ" />
+
+    <item
+        android:id="@+id/moviesFragment"
+        android:icon="@drawable/ic_movies"
+        android:title="Phim lẻ" />
+
+    <item
+        android:id="@+id/premierLeagueFragment"
+        android:icon="@drawable/ic_football"
+        android:title="Ngoại hạng" />
+
+    <item
+        android:id="@+id/moreFragment"
+        android:icon="@drawable/ic_more"
+        android:title="Mở rộng" />
+
+</menu>

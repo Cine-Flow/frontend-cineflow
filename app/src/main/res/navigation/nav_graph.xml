@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Navigation graph.
+    Each <fragment> destination id MUST match the corresponding
+    item id in bottom_nav_menu.xml for NavigationUI to auto-wire tabs.
+-->
+<navigation
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/homeFragment">
+
+    <fragment
+        android:id="@+id/homeFragment"
+        android:name="com.android.cineflow.ui.home.HomeFragment"
+        android:label="Trang chủ" />
+
+    <fragment
+        android:id="@+id/premierLeagueFragment"
+        android:name="com.android.cineflow.ui.premierleague.PremierLeagueFragment"
+        android:label="Ngoại hạng Anh" />
+
+    <!-- Placeholders ensuring all menu IDs exist -->
+    <fragment
+        android:id="@+id/shortsFragment"
+        android:name="com.android.cineflow.ui.home.HomeFragment"
+        android:label="Shorts" />
+    <fragment
+        android:id="@+id/seriesFragment"
+        android:name="com.android.cineflow.ui.home.HomeFragment"
+        android:label="Phim bộ" />
+    <fragment
+        android:id="@+id/moviesFragment"
+        android:name="com.android.cineflow.ui.home.HomeFragment"
+        android:label="Phim lẻ" />
+    <fragment
+        android:id="@+id/moreFragment"
+        android:name="com.android.cineflow.ui.more.MoreFragment"
+        android:label="Mở rộng" />
+
+</navigation>

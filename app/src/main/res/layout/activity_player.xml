@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="#0D0D0D">
+
+    <!-- FPT Play style player at the top -->
+    <androidx.media3.ui.PlayerView
+        android:id="@+id/player_view"
+        android:layout_width="match_parent"
+        android:layout_height="240dp"
+        android:keepScreenOn="true" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:fillViewport="true">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="16dp">
+
+            <TextView
+                android:id="@+id/tv_detail_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Đang chiếu phim"
+                android:textColor="#FFFFFF"
+                android:textSize="22sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Mô tả chi tiết"
+                android:textColor="#AAAAAA"
+                android:textSize="14sp"
+                android:layout_marginTop="8dp" />
+
+            <TextView
+                android:id="@+id/tv_detail_desc"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Bộ phim hấp dẫn đang được phát ngẫu nhiên vì chưa có luồng gọi API lấy chi tiết phim. Để đầy đủ hơn, vui lòng xây dựng API lấy thông tin và danh sách tập phim!"
+                android:textColor="#DFDFDF"
+                android:textSize="14sp"
+                android:layout_marginTop="8dp"
+                android:lineSpacingExtra="4dp" />
+                
+            <!-- Dummy buttons for FPT Play style -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginTop="24dp">
+                
+                <Button
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    android:text="Thêm vào yêu thích"
+                    android:backgroundTint="#2D2D2D"
+                    android:textColor="#FFFFFF" />
+                    
+                <Space android:layout_width="16dp" android:layout_height="wrap_content" />
+                
+                <Button
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    android:text="Chia sẻ"
+                    android:backgroundTint="#2D2D2D"
+                    android:textColor="#FFFFFF" />
+            </LinearLayout>
+
+        </LinearLayout>
+    </ScrollView>
+
+</LinearLayout>

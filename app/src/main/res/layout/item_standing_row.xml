@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:paddingVertical="12dp"
+    android:background="#1A1A1A">
+
+    <TextView
+        android:id="@+id/tv_rank"
+        android:layout_width="30dp"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:textColor="#FFFFFF"
+        android:textStyle="bold" />
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:orientation="horizontal"
+        android:gravity="center_vertical">
+
+        <ImageView
+            android:id="@+id/iv_team_logo"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:src="@drawable/ic_launcher_foreground" />
+
+        <TextView
+            android:id="@+id/tv_team_code"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:textColor="#FFFFFF"
+            android:textStyle="bold" />
+    </LinearLayout>
+
+    <TextView android:id="@+id/tv_played" android:layout_width="30dp" android:layout_height="wrap_content" android:textColor="#CCCCCC" android:gravity="center"/>
+    <TextView android:id="@+id/tv_won" android:layout_width="20dp" android:layout_height="wrap_content" android:textColor="#CCCCCC" android:gravity="center"/>
+    <TextView android:id="@+id/tv_drawn" android:layout_width="20dp" android:layout_height="wrap_content" android:textColor="#CCCCCC" android:gravity="center"/>
+    <TextView android:id="@+id/tv_lost" android:layout_width="20dp" android:layout_height="wrap_content" android:textColor="#CCCCCC" android:gravity="center"/>
+    <TextView android:id="@+id/tv_gd" android:layout_width="30dp" android:layout_height="wrap_content" android:textColor="#CCCCCC" android:gravity="center"/>
+    <TextView android:id="@+id/tv_points" android:layout_width="40dp" android:layout_height="wrap_content" android:textColor="#FFFFFF" android:textStyle="bold" android:gravity="center"/>
+
+</LinearLayout>

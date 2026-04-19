@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:background="#1A1A1A"
+    android:padding="8dp"
+    android:layout_marginTop="8dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="8dp"
+        android:background="#333333">
+
+        <TextView
+            android:id="@+id/tv_standing_title"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Premier League 2025/26"
+            android:textColor="#FFFFFF"
+            android:textStyle="bold" />
+
+        <ImageView
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:src="@drawable/ic_movies" /> <!-- Placeholder for PL logo -->
+
+    </LinearLayout>
+
+    <!-- Header Row -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingVertical="8dp">
+        <TextView android:layout_width="30dp" android:layout_height="wrap_content" android:text="Hạng" android:textColor="#888888" android:textSize="12sp" android:gravity="center"/>
+        <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="Đội bóng" android:textColor="#888888" android:textSize="12sp"/>
+        <TextView android:layout_width="30dp" android:layout_height="wrap_content" android:text="Trận" android:textColor="#888888" android:textSize="12sp" android:gravity="center"/>
+        <TextView android:layout_width="20dp" android:layout_height="wrap_content" android:text="T" android:textColor="#888888" android:textSize="12sp" android:gravity="center"/>
+        <TextView android:layout_width="20dp" android:layout_height="wrap_content" android:text="H" android:textColor="#888888" android:textSize="12sp" android:gravity="center"/>
+        <TextView android:layout_width="20dp" android:layout_height="wrap_content" android:text="B" android:textColor="#888888" android:textSize="12sp" android:gravity="center"/>
+        <TextView android:layout_width="30dp" android:layout_height="wrap_content" android:text="HS" android:textColor="#888888" android:textSize="12sp" android:gravity="center"/>
+        <TextView android:layout_width="40dp" android:layout_height="wrap_content" android:text="Điểm" android:textColor="#888888" android:textSize="12sp" android:gravity="center"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/standings_table_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical" />
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Xem tất cả"
+        android:backgroundTint="#333333"
+        android:textColor="#FFFFFF"
+        android:layout_marginTop="8dp"/>
+
+</LinearLayout>

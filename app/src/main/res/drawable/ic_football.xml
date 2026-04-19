@@ -1,0 +1,29 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24">
+    
+    <!-- Outer circle (ball boundary) -->
+    <path
+        android:strokeColor="#FFFFFF"
+        android:strokeWidth="1.5"
+        android:pathData="M12,2C6.48,2 2,6.48 2,12s4.48,10 10,10 10,-4.48 10,-10S17.52,2 12,2z"/>
+
+    <!-- Central Pentagon (Filled) -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M12,7.5 L16.28,10.6 L14.65,15.63 L9.35,15.63 L7.72,10.6 Z"/>
+
+    <!-- Connecting lines (Corrected coordinates to stop exactly at circle boundary) -->
+    <path
+        android:strokeColor="#FFFFFF"
+        android:strokeWidth="1.2"
+        android:strokeLineCap="butt"
+        android:pathData="M12,7.5 L12,2
+                          M16.28,10.6 L21.5,8.9
+                          M14.65,15.63 L17.9,20.1
+                          M9.35,15.63 L6.1,20.1
+                          M7.72,10.6 L2.5,8.9"/>
+
+</vector>
