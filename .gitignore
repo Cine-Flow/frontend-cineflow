@@ -1,4 +1,14 @@
-*.iml
+# Built artifacts
+*.apk
+*.ap_
+*.dex
+*.class
+/bin
+/gen
+/out
+/build
+
+# Gradle files
 .gradle
 /local.properties
 /.idea/caches
@@ -7,9 +17,20 @@
 /.idea/workspace.xml
 /.idea/navEditor.xml
 /.idea/assetWizardSettings.xml
-.DS_Store
-/build
-/captures
 .externalNativeBuild
 .cxx
-local.properties
+
+# IntelliJ IDEA files
+.idea/
+*.iml
+*.ipr
+*.iws
+
+# MacOS files
+.DS_Store
+
+# Log files
+*.log
+
+# Captures
+/captures
