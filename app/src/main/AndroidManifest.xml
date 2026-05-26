@@ -28,6 +28,9 @@
         <activity
             android:name=".ui.player.PlayerActivity"
             android:configChanges="orientation|screenSize" />
+        <activity
+            android:name=".ui.detail.FilmDetailActivity"
+            android:theme="@style/Theme.Cineflow.NoActionBar" />
     </application>
 
 </manifest>

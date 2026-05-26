@@ -27,9 +27,8 @@ public class HomeFragment extends BaseFragment {
 
         homeAdapter = new HomeAdapter(requireContext(), new ArrayList<>());
         homeAdapter.setOnItemClickListener((section, card) -> {
-            android.content.Intent intent = new android.content.Intent(requireContext(), com.android.cineflow.ui.player.PlayerActivity.class);
-            // Defaulting to empty url, so PlayerActivity will use its fallback playable video
-            intent.putExtra(com.android.cineflow.ui.player.PlayerActivity.EXTRA_VIDEO_URL, "");
+            android.content.Intent intent = new android.content.Intent(requireContext(), com.android.cineflow.ui.detail.FilmDetailActivity.class);
+            intent.putExtra(com.android.cineflow.ui.detail.FilmDetailActivity.EXTRA_FILM_ID, card.getId());
             startActivity(intent);
         });
         lvHome.setAdapter(homeAdapter);
