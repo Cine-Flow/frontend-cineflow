@@ -1,3 +1,13 @@
 <resources>
     <string name="app_name">cineflow</string>
+    <string name="more_download_title">Nội dung tải xuống</string>
+    <string name="more_download_subtitle">Xem bất kỳ lúc nào, ở bất kỳ nơi nào</string>
+    <string name="more_support_title">Hỗ trợ</string>
+    <string name="more_contact_info">Thông tin liên hệ</string>
+    <string name="premier_league_season">Premier League 2025/26</string>
+    <string name="premier_league_rank">Hạng</string>
+    <string name="premier_league_team">Đội bóng</string>
+    <string name="premier_league_played">Trận</string>
+    <string name="premier_league_points">Điểm</string>
+    <string name="view_all">Xem tất cả</string>
 </resources>

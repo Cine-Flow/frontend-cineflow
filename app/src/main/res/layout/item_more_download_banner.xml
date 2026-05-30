@@ -23,7 +23,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Nội dung tải xuống"
+                android:text="@string/more_download_title"
                 android:textColor="@color/text_primary"
                 android:textSize="17sp"
                 android:fontFamily="sans-serif-medium" />
@@ -32,7 +32,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="6dp"
-                android:text="Xem bất kỳ lúc nào, ở bất kỳ nơi nào"
+                android:text="@string/more_download_subtitle"
                 android:textColor="@color/brand_accent"
                 android:textSize="13sp"
                 android:alpha="0.85" />

@@ -19,7 +19,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Premier League 2025/26"
+            android:text="@string/premier_league_season"
             android:textColor="#FFFFFF"
             android:textStyle="bold" />
 
@@ -36,14 +36,14 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:paddingVertical="8dp">
-        <TextView android:layout_width="30dp" android:layout_height="wrap_content" android:text="Hạng" android:textColor="#888888" android:textSize="12sp" android:gravity="center"/>
-        <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="Đội bóng" android:textColor="#888888" android:textSize="12sp"/>
-        <TextView android:layout_width="30dp" android:layout_height="wrap_content" android:text="Trận" android:textColor="#888888" android:textSize="12sp" android:gravity="center"/>
+        <TextView android:layout_width="30dp" android:layout_height="wrap_content" android:text="@string/premier_league_rank" android:textColor="#888888" android:textSize="12sp" android:gravity="center"/>
+        <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="@string/premier_league_team" android:textColor="#888888" android:textSize="12sp"/>
+        <TextView android:layout_width="30dp" android:layout_height="wrap_content" android:text="@string/premier_league_played" android:textColor="#888888" android:textSize="12sp" android:gravity="center"/>
         <TextView android:layout_width="20dp" android:layout_height="wrap_content" android:text="T" android:textColor="#888888" android:textSize="12sp" android:gravity="center"/>
         <TextView android:layout_width="20dp" android:layout_height="wrap_content" android:text="H" android:textColor="#888888" android:textSize="12sp" android:gravity="center"/>
         <TextView android:layout_width="20dp" android:layout_height="wrap_content" android:text="B" android:textColor="#888888" android:textSize="12sp" android:gravity="center"/>
         <TextView android:layout_width="30dp" android:layout_height="wrap_content" android:text="HS" android:textColor="#888888" android:textSize="12sp" android:gravity="center"/>
-        <TextView android:layout_width="40dp" android:layout_height="wrap_content" android:text="Điểm" android:textColor="#888888" android:textSize="12sp" android:gravity="center"/>
+        <TextView android:layout_width="40dp" android:layout_height="wrap_content" android:text="@string/premier_league_points" android:textColor="#888888" android:textSize="12sp" android:gravity="center"/>
     </LinearLayout>
 
     <LinearLayout
@@ -55,7 +55,7 @@
     <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Xem tất cả"
+        android:text="@string/view_all"
         android:backgroundTint="#333333"
         android:textColor="#FFFFFF"
         android:layout_marginTop="8dp"/>
