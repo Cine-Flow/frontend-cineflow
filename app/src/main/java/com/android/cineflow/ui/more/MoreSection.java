@@ -10,6 +10,9 @@ public class MoreSection {
     public static final int TYPE_HELP_ITEM = 4;
     public static final int TYPE_ADMIN_ENTRY = 5;
     public static final int TYPE_LOGOUT = 6;
+    public static final String ACTION_LIBRARY = "library";
+    public static final String ACTION_GIFT = "gift";
+    public static final String ACTION_FAVORITES = "favorites";
 
     private final int type;
     private final String title;
@@ -29,15 +32,22 @@ public class MoreSection {
         private final String label;
         private final int iconRes;
         private final String subLabel;
+        private final String action;
 
         public MoreItem(String label, int iconRes, String subLabel) {
+            this(label, iconRes, subLabel, null);
+        }
+
+        public MoreItem(String label, int iconRes, String subLabel, String action) {
             this.label = label;
             this.iconRes = iconRes;
             this.subLabel = subLabel;
+            this.action = action;
         }
 
         public String getLabel() { return label; }
         public int getIconRes() { return iconRes; }
         public String getSubLabel() { return subLabel; }
+        public String getAction() { return action; }
     }
 }

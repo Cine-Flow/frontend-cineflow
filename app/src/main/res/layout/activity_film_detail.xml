@@ -97,6 +97,13 @@
                 app:iconGravity="textStart"
                 app:cornerRadius="4dp"/>
 
+            <Button
+                android:id="@+id/btn_add_favorite"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="Thêm vào yêu thích" />
+
             <TextView
                 android:id="@+id/tv_film_description"
                 android:layout_width="match_parent"

@@ -47,6 +47,8 @@
         <activity
             android:name=".ui.auth.ForgotPasswordActivity"
             android:theme="@style/Theme.Cineflow.Admin" />
+        <activity android:name=".ui.more.UserContentListActivity" />
+        <activity android:name=".ui.more.AccountActivity" />
     </application>
 
 </manifest>

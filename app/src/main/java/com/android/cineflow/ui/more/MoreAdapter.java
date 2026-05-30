@@ -17,17 +17,34 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MoreAdapter extends BaseAdapter {
+    public interface OnMoreItemClickListener {
+        void onClick(MoreSection.MoreItem item);
+    }
 
     private final Context context;
+    private final OnMoreItemClickListener listener;
+    private long favoriteCount;
+    private long historyCount;
     private List<MoreSection> sections;
 
     public MoreAdapter(Context context, List<MoreSection> sections) {
+        this(context, sections, null);
+    }
+
+    public MoreAdapter(Context context, List<MoreSection> sections, OnMoreItemClickListener listener) {
         this.context = context;
         this.sections = sections != null ? sections : new ArrayList<>();
+        this.listener = listener;
     }
 
     public void setData(List<MoreSection> data) {
         this.sections = data != null ? data : new ArrayList<>();
+        notifyDataSetChanged();
+    }
+
+    public void setProfileStats(long favoriteCount, long historyCount) {
+        this.favoriteCount = favoriteCount;
+        this.historyCount = historyCount;
         notifyDataSetChanged();
     }
 
@@ -130,6 +147,9 @@ public class MoreAdapter extends BaseAdapter {
         TextView tvLoginText = v.findViewById(R.id.tv_login_text);
         TextView tvSubtitle = v.findViewById(R.id.tv_login_subtitle);
         View quickStats = v.findViewById(R.id.layout_quick_stats);
+        TextView tvFavoriteCount = v.findViewById(R.id.tv_favorite_count);
+        TextView tvHistoryCount = v.findViewById(R.id.tv_history_count);
+        TextView tvDownloadCount = v.findViewById(R.id.tv_download_count);
 
         if (section.getTitle() != null) {
             tvLoginText.setText(section.getTitle());
@@ -137,6 +157,9 @@ public class MoreAdapter extends BaseAdapter {
             if (quickStats != null) {
                 quickStats.setVisibility(View.VISIBLE);
             }
+            tvFavoriteCount.setText(String.valueOf(favoriteCount));
+            tvHistoryCount.setText(String.valueOf(historyCount));
+            tvDownloadCount.setText("0");
         } else {
             tvLoginText.setText("Đăng nhập");
             tvSubtitle.setText("Tap to sign in to your account");
@@ -202,6 +225,9 @@ public class MoreAdapter extends BaseAdapter {
             } else {
                 iv.setImageResource(R.drawable.ic_launcher_foreground);
             }
+            convertView.setOnClickListener(v -> {
+                if (listener != null) listener.onClick(item);
+            });
             return convertView;
         }
     }
