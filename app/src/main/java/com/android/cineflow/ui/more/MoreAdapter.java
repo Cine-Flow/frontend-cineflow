@@ -1,11 +1,12 @@
 package com.android.cineflow.ui.more;
 
 import android.content.Context;
+import android.content.res.ColorStateList;
+import android.graphics.drawable.GradientDrawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.GridLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -40,7 +41,7 @@ public class MoreAdapter extends BaseAdapter {
     public long getItemId(int position) { return position; }
 
     @Override
-    public int getViewTypeCount() { return 5; }
+    public int getViewTypeCount() { return 7; }
 
     @Override
     public int getItemViewType(int position) {
@@ -51,7 +52,7 @@ public class MoreAdapter extends BaseAdapter {
     public View getView(int position, View convertView, ViewGroup parent) {
         int type = getItemViewType(position);
         MoreSection section = sections.get(position);
-        
+
         if (convertView == null) {
             LayoutInflater inflater = LayoutInflater.from(context);
             switch (type) {
@@ -68,15 +69,31 @@ public class MoreAdapter extends BaseAdapter {
                 case MoreSection.TYPE_HELP_ITEM:
                     convertView = inflater.inflate(R.layout.item_more_help_row, parent, false);
                     break;
+                case MoreSection.TYPE_ADMIN_ENTRY:
+                    convertView = inflater.inflate(R.layout.item_more_admin_entry, parent, false);
+                    break;
+                case MoreSection.TYPE_LOGOUT:
+                    convertView = inflater.inflate(R.layout.item_more_logout, parent, false);
+                    break;
                 default:
                     convertView = new View(context);
             }
         }
 
-        if (type == MoreSection.TYPE_ACTION_GRID || type == MoreSection.TYPE_APPS_SECTION) {
-            bindGridView(convertView, section);
-        } else if (type == MoreSection.TYPE_HELP_ITEM) {
-            bindHelpItem(convertView, section);
+        switch (type) {
+            case MoreSection.TYPE_ACTION_GRID:
+            case MoreSection.TYPE_APPS_SECTION:
+                bindGridView(convertView, section);
+                break;
+            case MoreSection.TYPE_HELP_ITEM:
+                bindHelpItem(convertView, section);
+                break;
+            case MoreSection.TYPE_HEADER_LOGIN:
+                bindLoginHeader(convertView, section);
+                break;
+            case MoreSection.TYPE_LOGOUT:
+                bindSignButton(convertView, section);
+                break;
         }
 
         return convertView;
@@ -109,6 +126,47 @@ public class MoreAdapter extends BaseAdapter {
         }
     }
 
+    private void bindLoginHeader(View v, MoreSection section) {
+        TextView tvLoginText = v.findViewById(R.id.tv_login_text);
+        TextView tvSubtitle = v.findViewById(R.id.tv_login_subtitle);
+        View quickStats = v.findViewById(R.id.layout_quick_stats);
+
+        if (section.getTitle() != null) {
+            tvLoginText.setText(section.getTitle());
+            tvSubtitle.setText("Tap to manage your account");
+            if (quickStats != null) {
+                quickStats.setVisibility(View.VISIBLE);
+            }
+        } else {
+            tvLoginText.setText("Đăng nhập");
+            tvSubtitle.setText("Tap to sign in to your account");
+            if (quickStats != null) {
+                quickStats.setVisibility(View.GONE);
+            }
+        }
+    }
+
+    private void bindSignButton(View v, MoreSection section) {
+        TextView btnLogout = v.findViewById(R.id.btn_logout);
+        if (btnLogout == null) return;
+
+        boolean isSignOut = "Sign Out".equals(section.getTitle());
+        btnLogout.setText(section.getTitle() != null ? section.getTitle() : "Sign In");
+
+        if (isSignOut) {
+            btnLogout.setTextColor(context.getColor(R.color.status_error));
+            GradientDrawable bg = (GradientDrawable) context.getDrawable(R.drawable.bg_more_logout_button);
+            btnLogout.setBackground(bg);
+        } else {
+            btnLogout.setTextColor(context.getColor(R.color.brand_primary));
+            GradientDrawable bg = new GradientDrawable();
+            bg.setCornerRadius(12f * context.getResources().getDisplayMetrics().density);
+            bg.setColor(context.getColor(R.color.surface_secondary));
+            bg.setStroke(1, context.getColor(R.color.brand_primary));
+            btnLogout.setBackground(bg);
+        }
+    }
+
     // --- Inner Grid Adapter ---
     class GridItemAdapter extends BaseAdapter {
         Context ctx;
@@ -128,16 +186,16 @@ public class MoreAdapter extends BaseAdapter {
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
             if (convertView == null) {
-                int layoutId = (sectionType == MoreSection.TYPE_APPS_SECTION) 
-                        ? R.layout.item_more_app_card 
+                int layoutId = (sectionType == MoreSection.TYPE_APPS_SECTION)
+                        ? R.layout.item_more_app_card
                         : R.layout.item_more_action_card;
                 convertView = LayoutInflater.from(ctx).inflate(layoutId, parent, false);
             }
-            
+
             MoreSection.MoreItem item = items.get(position);
             TextView tv = convertView.findViewById(R.id.tv_item_label);
             ImageView iv = convertView.findViewById(R.id.iv_item_icon);
-            
+
             tv.setText(item.getLabel());
             if (item.getIconRes() != 0) {
                 iv.setImageResource(item.getIconRes());

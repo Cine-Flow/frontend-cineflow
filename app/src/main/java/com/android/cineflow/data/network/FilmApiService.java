@@ -1,16 +1,65 @@
 package com.android.cineflow.data.network;
 
 import com.android.cineflow.data.network.dto.ApiResponseDto;
+import com.android.cineflow.data.network.dto.CreateFilmRequestDto;
+import com.android.cineflow.data.network.dto.FilmDetailDto;
+import com.android.cineflow.data.network.dto.ForgotPasswordRequestDto;
 import com.android.cineflow.data.network.dto.HomeFilmsDto;
+import com.android.cineflow.data.network.dto.LoginRequestDto;
+import com.android.cineflow.data.network.dto.LoginResponseDto;
+import com.android.cineflow.data.network.dto.PagedResponseDto;
+import com.android.cineflow.data.network.dto.RegisterRequestDto;
+import com.android.cineflow.data.network.dto.UpdateFilmRequestDto;
+
+import java.util.List;
 
 import retrofit2.Call;
+import retrofit2.http.Body;
+import retrofit2.http.DELETE;
 import retrofit2.http.GET;
+import retrofit2.http.POST;
+import retrofit2.http.PUT;
+import retrofit2.http.Path;
+import retrofit2.http.Query;
 
 public interface FilmApiService {
+
+    // ── Public ──────────────────────────────────────────────────────────────
 
     @GET("films/home")
     Call<ApiResponseDto<HomeFilmsDto>> getHomeFilms();
 
     @GET("films/{id}")
-    Call<ApiResponseDto<com.android.cineflow.data.network.dto.FilmDetailDto>> getFilmById(@retrofit2.http.Path("id") Integer id);
+    Call<ApiResponseDto<FilmDetailDto>> getFilmById(@Path("id") Integer id);
+
+    // ── Auth ────────────────────────────────────────────────────────────────
+
+    @POST("auth/login")
+    Call<ApiResponseDto<LoginResponseDto>> login(@Body LoginRequestDto request);
+
+    @POST("auth/register")
+    Call<ApiResponseDto<Void>> register(@Body RegisterRequestDto request);
+
+    @POST("auth/forgot-password")
+    Call<ApiResponseDto<Void>> forgotPassword(@Body ForgotPasswordRequestDto request);
+
+    // ── Admin: Films ────────────────────────────────────────────────────────
+
+    @GET("admin/films")
+    Call<ApiResponseDto<PagedResponseDto<FilmDetailDto>>> getAllFilms(
+            @Query("page") int page,
+            @Query("size") int size,
+            @Query("search") String search);
+
+    @GET("admin/films/{id}")
+    Call<ApiResponseDto<FilmDetailDto>> getAdminFilmById(@Path("id") Integer id);
+
+    @POST("admin/films")
+    Call<ApiResponseDto<FilmDetailDto>> createFilm(@Body CreateFilmRequestDto request);
+
+    @PUT("admin/films/{id}")
+    Call<ApiResponseDto<FilmDetailDto>> updateFilm(@Path("id") Integer id, @Body UpdateFilmRequestDto request);
+
+    @DELETE("admin/films/{id}")
+    Call<ApiResponseDto<Void>> deleteFilm(@Path("id") Integer id);
 }

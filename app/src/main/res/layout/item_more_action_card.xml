@@ -1,28 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
+    android:layout_width="0dp"
     android:layout_height="wrap_content"
+    android:layout_weight="1"
     android:orientation="vertical"
     android:gravity="center"
-    android:padding="12dp"
-    android:layout_margin="4dp"
-    android:background="@drawable/placeholder_card">
+    android:paddingVertical="8dp">
 
     <ImageView
         android:id="@+id/iv_item_icon"
-        android:layout_width="28dp"
-        android:layout_height="28dp"
+        android:layout_width="44dp"
+        android:layout_height="44dp"
         android:scaleType="fitCenter"
-        android:tint="#FFFFFF" />
+        android:background="@drawable/bg_more_action_icon"
+        android:padding="10dp"
+        android:tint="@color/text_primary" />
 
     <TextView
         android:id="@+id/tv_item_label"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:textColor="#FFFFFF"
+        android:layout_marginTop="10dp"
+        android:textColor="@color/text_secondary"
         android:textSize="12sp"
         android:gravity="center"
-        android:textAlignment="center" />
+        android:textAlignment="center"
+        android:maxLines="2"
+        android:ellipsize="end" />
 
 </LinearLayout>

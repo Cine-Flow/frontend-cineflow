@@ -3,24 +3,26 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:padding="16dp">
+    android:paddingHorizontal="16dp"
+    android:paddingTop="20dp">
 
     <TextView
         android:id="@+id/tv_more_section_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textColor="#888888"
-        android:textSize="14sp"
-        android:textStyle="bold"
+        android:textColor="@color/text_secondary"
+        android:textSize="13sp"
+        android:fontFamily="sans-serif-medium"
+        android:letterSpacing="0.06"
+        android:paddingStart="4dp"
         android:paddingBottom="12dp" />
 
-    <!-- GridLayout to simulate the grid from RecyclerView -->
-    <GridLayout
+    <LinearLayout
         android:id="@+id/more_grid_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:columnCount="2"
-        android:alignmentMode="alignMargins"
-        android:rowOrderPreserved="false" />
+        android:orientation="horizontal"
+        android:background="@drawable/bg_more_section_card"
+        android:padding="16dp" />
 
 </LinearLayout>

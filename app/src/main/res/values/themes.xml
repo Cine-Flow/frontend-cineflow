@@ -1,12 +1,12 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
     <style name="Base.Theme.Cineflow" parent="Theme.Material3.DayNight.NoActionBar">
-        <!-- Customize your light theme here. -->
-        <item name="colorPrimary">#E50914</item>
-        <item name="colorPrimaryDark">#B20710</item>
-        <item name="colorAccent">#E50914</item>
-        <item name="android:statusBarColor">#0D0D0D</item>
-        <item name="android:navigationBarColor">#0D0D0D</item>
+        <item name="colorPrimary">@color/brand_primary</item>
+        <item name="colorPrimaryDark">@color/brand_primary_dark</item>
+        <item name="colorAccent">@color/brand_primary</item>
+        <item name="android:statusBarColor">@color/surface_primary</item>
+        <item name="android:navigationBarColor">@color/surface_primary</item>
+        <item name="android:windowBackground">@color/surface_primary</item>
     </style>
 
     <style name="Theme.Cineflow" parent="Base.Theme.Cineflow" />
@@ -22,5 +22,67 @@
         <item name="windowNoTitle">true</item>
         <item name="android:windowFullscreen">true</item>
         <item name="android:windowContentOverlay">@null</item>
+    </style>
+
+    <style name="Theme.Cineflow.Admin" parent="Theme.Cineflow">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+
+    <!-- ── Reusable Text Styles ──────────────────────────────────── -->
+    <style name="TextAppearance.Cineflow" parent="TextAppearance.Material3.BodyMedium">
+    </style>
+
+    <style name="TextAppearance.Cineflow.Title">
+        <item name="android:textColor">@color/text_primary</item>
+        <item name="android:textSize">20sp</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="TextAppearance.Cineflow.Subtitle">
+        <item name="android:textColor">@color/text_secondary</item>
+        <item name="android:textSize">14sp</item>
+    </style>
+
+    <style name="TextAppearance.Cineflow.Body">
+        <item name="android:textColor">@color/text_secondary</item>
+        <item name="android:textSize">14sp</item>
+    </style>
+
+    <style name="TextAppearance.Cineflow.Caption">
+        <item name="android:textColor">@color/text_tertiary</item>
+        <item name="android:textSize">12sp</item>
+    </style>
+
+    <!-- ── Reusable Button Styles ─────────────────────────────────── -->
+    <style name="Widget.Cineflow" parent="">
+    </style>
+
+    <style name="Widget.Cineflow.Button" parent="Widget.Material3.Button">
+    </style>
+
+    <style name="Widget.Cineflow.Button.Primary">
+        <item name="backgroundTint">@color/brand_primary</item>
+        <item name="android:textColor">@color/text_primary</item>
+        <item name="cornerRadius">8dp</item>
+    </style>
+
+    <style name="Widget.Cineflow.Button.Secondary" parent="Widget.Material3.Button.OutlinedButton">
+        <item name="strokeColor">@color/brand_primary</item>
+        <item name="android:textColor">@color/brand_primary</item>
+        <item name="cornerRadius">8dp</item>
+    </style>
+
+    <style name="Widget.Cineflow.Button.Danger">
+        <item name="backgroundTint">@color/status_error</item>
+        <item name="android:textColor">@color/text_primary</item>
+        <item name="cornerRadius">8dp</item>
+    </style>
+
+    <!-- ── Reusable Card Style ───────────────────────────────────── -->
+    <style name="Widget.Cineflow.Card" parent="Widget.Material3.CardView.Filled">
+        <item name="cardBackgroundColor">@color/surface_card</item>
+        <item name="cardCornerRadius">12dp</item>
+        <item name="cardElevation">0dp</item>
     </style>
 </resources>

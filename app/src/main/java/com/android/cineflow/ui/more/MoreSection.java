@@ -8,6 +8,8 @@ public class MoreSection {
     public static final int TYPE_ACTION_GRID = 2;
     public static final int TYPE_APPS_SECTION = 3;
     public static final int TYPE_HELP_ITEM = 4;
+    public static final int TYPE_ADMIN_ENTRY = 5;
+    public static final int TYPE_LOGOUT = 6;
 
     private final int type;
     private final String title;

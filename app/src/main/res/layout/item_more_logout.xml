@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:paddingHorizontal="16dp"
+    android:paddingTop="32dp"
+    android:paddingBottom="24dp">
+
+    <TextView
+        android:id="@+id/btn_logout"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:background="@drawable/bg_more_logout_button"
+        android:text="Sign Out"
+        android:textColor="@color/status_error"
+        android:textSize="15sp"
+        android:fontFamily="sans-serif-medium"
+        android:gravity="center" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="CineFlow v1.0"
+        android:textColor="@color/text_disabled"
+        android:textSize="12sp"
+        android:gravity="center" />
+
+</LinearLayout>
