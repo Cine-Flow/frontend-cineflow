@@ -2,6 +2,7 @@ package com.android.cineflow.ui.premierleague;
 
 import android.view.View;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import androidx.lifecycle.ViewModelProvider;
 
@@ -32,6 +33,11 @@ public class PremierLeagueFragment extends BaseFragment {
         viewModel = new ViewModelProvider(this).get(PremierLeagueViewModel.class);
         viewModel.getSections().observe(getViewLifecycleOwner(), sections -> {
             adapter.setSections(sections);
+        });
+        viewModel.getErrorMessage().observe(getViewLifecycleOwner(), message -> {
+            if (message != null && !message.isEmpty()) {
+                Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show();
+            }
         });
     }
 }

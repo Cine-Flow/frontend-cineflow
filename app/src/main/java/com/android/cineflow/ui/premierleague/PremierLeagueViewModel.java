@@ -12,4 +12,16 @@ public class PremierLeagueViewModel extends ViewModel {
     public LiveData<List<PremierLeagueSection>> getSections() {
         return repository.getSections();
     }
+
+    public LiveData<Boolean> getLoading() {
+        return repository.getLoading();
+    }
+
+    public LiveData<String> getErrorMessage() {
+        return repository.getErrorMessage();
+    }
+
+    public void refresh() {
+        repository.fetchData();
+    }
 }

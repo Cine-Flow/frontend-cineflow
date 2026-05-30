@@ -15,6 +15,7 @@ import com.android.cineflow.data.common.uimodel.ContentCard;
 import com.android.cineflow.data.model.premierleague.Match;
 import com.android.cineflow.data.model.premierleague.Standing;
 import com.android.cineflow.ui.home.ContentRowAdapter;
+import com.bumptech.glide.Glide;
 
 import java.util.List;
 
@@ -149,9 +150,16 @@ public class PremierLeagueAdapter extends BaseAdapter {
             TextView tvHome = convertView.findViewById(R.id.tv_home_team);
             TextView tvAway = convertView.findViewById(R.id.tv_away_team);
             TextView tvCenter = convertView.findViewById(R.id.tv_match_center);
+            ImageView ivHome = convertView.findViewById(R.id.iv_home_logo);
+            ImageView ivAway = convertView.findViewById(R.id.iv_away_logo);
             tvHome.setText(m.getHomeTeamCode());
             tvAway.setText(m.getAwayTeamCode());
-            if (m.getHomeScore() != null && !m.getHomeScore().isEmpty()) {
+            loadTeamLogo(ivHome, m.getHomeTeamLogo());
+            loadTeamLogo(ivAway, m.getAwayTeamLogo());
+            if (m.isLive()) {
+                tvCenter.setText("LIVE");
+                tvCenter.setBackgroundColor(Color.parseColor("#D32F2F"));
+            } else if (m.getHomeScore() != null && !m.getHomeScore().isEmpty()) {
                 tvCenter.setText(m.getHomeScore() + " - " + m.getAwayScore());
                 tvCenter.setBackgroundResource(0);
             } else {
@@ -173,6 +181,7 @@ public class PremierLeagueAdapter extends BaseAdapter {
             Standing s = standings.get(position);
             ((TextView)convertView.findViewById(R.id.tv_rank)).setText(String.valueOf(s.getRank()));
             ((TextView)convertView.findViewById(R.id.tv_team_code)).setText(s.getTeamCode());
+            loadTeamLogo(convertView.findViewById(R.id.iv_team_logo), s.getTeamLogo());
             ((TextView)convertView.findViewById(R.id.tv_played)).setText(String.valueOf(s.getPlayed()));
             ((TextView)convertView.findViewById(R.id.tv_won)).setText(String.valueOf(s.getWon()));
             ((TextView)convertView.findViewById(R.id.tv_drawn)).setText(String.valueOf(s.getDrawn()));
@@ -181,5 +190,13 @@ public class PremierLeagueAdapter extends BaseAdapter {
             ((TextView)convertView.findViewById(R.id.tv_points)).setText(String.valueOf(s.getPoints()));
             return convertView;
         }
+    }
+
+    private void loadTeamLogo(ImageView imageView, String logoUrl) {
+        Glide.with(imageView.getContext())
+                .load(logoUrl)
+                .placeholder(R.drawable.ic_launcher_foreground)
+                .error(R.drawable.ic_launcher_foreground)
+                .into(imageView);
     }
 }
