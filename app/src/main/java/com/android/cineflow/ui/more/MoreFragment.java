@@ -4,6 +4,9 @@ import android.content.Intent;
 import android.view.View;
 import android.widget.ListView;
 
+import androidx.viewpager2.widget.ViewPager2;
+
+import com.android.cineflow.MainActivity;
 import com.android.cineflow.R;
 import com.android.cineflow.data.auth.AuthManager;
 import com.android.cineflow.ui.admin.AdminDashboardActivity;
@@ -38,15 +41,8 @@ public class MoreFragment extends BaseFragment {
                 case MoreSection.TYPE_ADMIN_ENTRY:
                     startActivity(new Intent(requireContext(), AdminDashboardActivity.class));
                     break;
-                case MoreSection.TYPE_HEADER_LOGIN:
-                    AuthManager auth = AuthManager.getInstance();
-                    if (auth != null && auth.isLoggedIn()) {
-                        showLogoutDialog();
-                    } else {
-                        startActivityForResult(
-                                new Intent(requireContext(), LoginActivity.class),
-                                REQUEST_LOGIN);
-                    }
+                case MoreSection.TYPE_LOGOUT:
+                    handleSignButton();
                     break;
             }
         });
@@ -101,24 +97,37 @@ public class MoreFragment extends BaseFragment {
                 new MoreSection.MoreItem("Thông tin liên hệ", 0, null)
         )));
 
-        // 6. Logout (only if logged in)
-        if (isLoggedIn) {
-            data.add(new MoreSection(MoreSection.TYPE_LOGOUT, null, null));
-        }
+        // 6. Sign In / Sign Out button (always visible)
+        boolean isLogged = authManager != null && authManager.isLoggedIn();
+        data.add(new MoreSection(MoreSection.TYPE_LOGOUT, isLogged ? "Sign Out" : "Sign In", null));
 
         moreAdapter.setData(data);
     }
 
-    private void showLogoutDialog() {
-        new androidx.appcompat.app.AlertDialog.Builder(requireContext())
-                .setTitle("Sign Out")
-                .setMessage("Are you sure you want to sign out?")
-                .setPositiveButton("Sign Out", (d, w) -> {
-                    AuthManager auth = AuthManager.getInstance();
-                    if (auth != null) auth.clearSession();
-                    buildSections();
-                })
-                .setNegativeButton("Cancel", null)
-                .show();
+    private void handleSignButton() {
+        AuthManager auth = AuthManager.getInstance();
+        boolean isLoggedIn = auth != null && auth.isLoggedIn();
+
+        if (isLoggedIn) {
+            performSignOut();
+        } else {
+            startActivityForResult(
+                    new Intent(requireContext(), LoginActivity.class),
+                    REQUEST_LOGIN);
+        }
+    }
+
+    private void performSignOut() {
+        AuthManager auth = AuthManager.getInstance();
+        if (auth != null) auth.clearSession();
+        buildSections();
+
+        // Navigate to Home tab
+        if (getActivity() instanceof MainActivity) {
+            ViewPager2 viewPager = ((MainActivity) getActivity()).findViewById(R.id.view_pager);
+            if (viewPager != null) {
+                viewPager.setCurrentItem(0, false);
+            }
+        }
     }
 }
