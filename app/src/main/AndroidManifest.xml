@@ -6,6 +6,7 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
     <application
+        android:name=".CineflowApp"
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
@@ -31,6 +32,21 @@
         <activity
             android:name=".ui.detail.FilmDetailActivity"
             android:theme="@style/Theme.Cineflow.NoActionBar" />
+        <activity
+            android:name=".ui.admin.AdminDashboardActivity"
+            android:theme="@style/Theme.Cineflow.Admin" />
+        <activity
+            android:name=".ui.admin.AdminFilmListActivity"
+            android:theme="@style/Theme.Cineflow.Admin" />
+        <activity
+            android:name=".ui.auth.LoginActivity"
+            android:theme="@style/Theme.Cineflow.Admin" />
+        <activity
+            android:name=".ui.auth.RegisterActivity"
+            android:theme="@style/Theme.Cineflow.Admin" />
+        <activity
+            android:name=".ui.auth.ForgotPasswordActivity"
+            android:theme="@style/Theme.Cineflow.Admin" />
     </application>
 
 </manifest>

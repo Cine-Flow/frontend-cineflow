@@ -40,7 +40,7 @@ public class MoreAdapter extends BaseAdapter {
     public long getItemId(int position) { return position; }
 
     @Override
-    public int getViewTypeCount() { return 5; }
+    public int getViewTypeCount() { return 7; }
 
     @Override
     public int getItemViewType(int position) {
@@ -68,6 +68,12 @@ public class MoreAdapter extends BaseAdapter {
                 case MoreSection.TYPE_HELP_ITEM:
                     convertView = inflater.inflate(R.layout.item_more_help_row, parent, false);
                     break;
+                case MoreSection.TYPE_ADMIN_ENTRY:
+                    convertView = inflater.inflate(R.layout.item_more_admin_entry, parent, false);
+                    break;
+                case MoreSection.TYPE_LOGOUT:
+                    convertView = inflater.inflate(R.layout.item_more_logout, parent, false);
+                    break;
                 default:
                     convertView = new View(context);
             }
@@ -77,7 +83,10 @@ public class MoreAdapter extends BaseAdapter {
             bindGridView(convertView, section);
         } else if (type == MoreSection.TYPE_HELP_ITEM) {
             bindHelpItem(convertView, section);
+        } else if (type == MoreSection.TYPE_HEADER_LOGIN) {
+            bindLoginHeader(convertView, section);
         }
+        // TYPE_ADMIN_ENTRY and TYPE_HEADER_LOGIN/TYPE_DOWNLOAD_BANNER are static layouts — no binding needed
 
         return convertView;
     }
@@ -106,6 +115,27 @@ public class MoreAdapter extends BaseAdapter {
         TextView tvLabel = v.findViewById(R.id.tv_help_label);
         if (section.getItems() != null && !section.getItems().isEmpty()) {
             tvLabel.setText(section.getItems().get(0).getLabel());
+        }
+    }
+
+    private void bindLoginHeader(View v, MoreSection section) {
+        TextView tvLoginText = v.findViewById(R.id.tv_login_text);
+        if (tvLoginText == null) {
+            // Fallback: find the hardcoded "Đăng nhập" text view
+            // The layout has a single TextView with no id — find it by traversing children
+            if (v instanceof ViewGroup) {
+                ViewGroup group = (ViewGroup) v;
+                for (int i = 0; i < group.getChildCount(); i++) {
+                    View child = group.getChildAt(i);
+                    if (child instanceof TextView) {
+                        tvLoginText = (TextView) child;
+                        break;
+                    }
+                }
+            }
+        }
+        if (tvLoginText != null && section.getTitle() != null) {
+            tvLoginText.setText(section.getTitle());
         }
     }
 

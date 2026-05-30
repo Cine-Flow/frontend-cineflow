@@ -1,5 +1,46 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!-- ── Base ─────────────────────────────────────────────────── -->
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+
+    <!-- ── CineFlow Dark Palette ────────────────────────────────── -->
+    <color name="surface_primary">#0D0D0D</color>
+    <color name="surface_secondary">#1A1A1A</color>
+    <color name="surface_tertiary">#242424</color>
+    <color name="surface_card">#2A2A2A</color>
+    <color name="surface_card_hover">#333333</color>
+
+    <!-- ── Brand / Accent ────────────────────────────────────────── -->
+    <color name="brand_primary">#E50914</color>
+    <color name="brand_primary_dark">#B20710</color>
+    <color name="brand_accent">#FF6600</color>
+
+    <!-- ── Text ─────────────────────────────────────────────────── -->
+    <color name="text_primary">#FFFFFF</color>
+    <color name="text_secondary">#AAAAAA</color>
+    <color name="text_tertiary">#666666</color>
+    <color name="text_disabled">#444444</color>
+
+    <!-- ── Semantic ─────────────────────────────────────────────── -->
+    <color name="status_success">#00C853</color>
+    <color name="status_error">#FF1744</color>
+    <color name="status_warning">#FFD600</color>
+    <color name="status_info">#2979FF</color>
+
+    <!-- ── Tag / Badge ──────────────────────────────────────────── -->
+    <color name="badge_premium">#FFD700</color>
+    <color name="badge_live">#FF1744</color>
+    <color name="badge_series">#7C4DFF</color>
+    <color name="badge_movie">#2979FF</color>
+
+    <!-- ── Overlays ─────────────────────────────────────────────── -->
+    <color name="overlay_dark">#CC000000</color>
+    <color name="overlay_medium">#80000000</color>
+    <color name="overlay_light">#33000000</color>
+    <color name="divider">#1FFFFFFF</color>
+
+    <!-- ── Nav ──────────────────────────────────────────────────── -->
+    <color name="nav_active">#FFFFFF</color>
+    <color name="nav_inactive">#757575</color>
 </resources>

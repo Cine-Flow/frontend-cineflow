@@ -1,9 +1,13 @@
 package com.android.cineflow.ui.more;
 
+import android.content.Intent;
 import android.view.View;
 import android.widget.ListView;
 
 import com.android.cineflow.R;
+import com.android.cineflow.data.auth.AuthManager;
+import com.android.cineflow.ui.admin.AdminDashboardActivity;
+import com.android.cineflow.ui.auth.LoginActivity;
 import com.android.cineflow.ui.base.BaseFragment;
 
 import java.util.ArrayList;
@@ -13,6 +17,7 @@ import java.util.List;
 public class MoreFragment extends BaseFragment {
 
     private MoreAdapter moreAdapter;
+    private static final int REQUEST_LOGIN = 1001;
 
     @Override
     protected int getLayoutId() {
@@ -24,14 +29,54 @@ public class MoreFragment extends BaseFragment {
         ListView lvMore = view.findViewById(R.id.lv_more);
         moreAdapter = new MoreAdapter(requireContext(), new ArrayList<>());
         lvMore.setAdapter(moreAdapter);
+
+        lvMore.setOnItemClickListener((parent, v, position, id) -> {
+            MoreSection section = (MoreSection) moreAdapter.getItem(position);
+            if (section == null) return;
+
+            switch (section.getType()) {
+                case MoreSection.TYPE_ADMIN_ENTRY:
+                    startActivity(new Intent(requireContext(), AdminDashboardActivity.class));
+                    break;
+                case MoreSection.TYPE_HEADER_LOGIN:
+                    AuthManager auth = AuthManager.getInstance();
+                    if (auth != null && auth.isLoggedIn()) {
+                        showLogoutDialog();
+                    } else {
+                        startActivityForResult(
+                                new Intent(requireContext(), LoginActivity.class),
+                                REQUEST_LOGIN);
+                    }
+                    break;
+            }
+        });
     }
 
     @Override
     protected void initData() {
+        buildSections();
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == REQUEST_LOGIN && resultCode == getActivity().RESULT_OK) {
+            buildSections();
+        }
+    }
+
+    private void buildSections() {
         List<MoreSection> data = new ArrayList<>();
-        
-        // 1. Header
-        data.add(new MoreSection(MoreSection.TYPE_HEADER_LOGIN, null, null));
+        AuthManager authManager = AuthManager.getInstance();
+        boolean isLoggedIn = authManager != null && authManager.isLoggedIn();
+
+        // 0. Admin Panel (only if user is admin)
+        if (isLoggedIn && authManager.isAdmin()) {
+            data.add(new MoreSection(MoreSection.TYPE_ADMIN_ENTRY, null, null));
+        }
+
+        // 1. Header (shows "Đăng nhập" or username)
+        String headerTitle = isLoggedIn ? authManager.getUsername() : null;
+        data.add(new MoreSection(MoreSection.TYPE_HEADER_LOGIN, headerTitle, null));
 
         // 2. Download
         data.add(new MoreSection(MoreSection.TYPE_DOWNLOAD_BANNER, null, null));
@@ -56,6 +101,24 @@ public class MoreFragment extends BaseFragment {
                 new MoreSection.MoreItem("Thông tin liên hệ", 0, null)
         )));
 
+        // 6. Logout (only if logged in)
+        if (isLoggedIn) {
+            data.add(new MoreSection(MoreSection.TYPE_LOGOUT, null, null));
+        }
+
         moreAdapter.setData(data);
+    }
+
+    private void showLogoutDialog() {
+        new androidx.appcompat.app.AlertDialog.Builder(requireContext())
+                .setTitle("Sign Out")
+                .setMessage("Are you sure you want to sign out?")
+                .setPositiveButton("Sign Out", (d, w) -> {
+                    AuthManager auth = AuthManager.getInstance();
+                    if (auth != null) auth.clearSession();
+                    buildSections();
+                })
+                .setNegativeButton("Cancel", null)
+                .show();
     }
 }
