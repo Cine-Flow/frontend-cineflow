@@ -18,7 +18,9 @@ public class HomeMapper {
                 movie.getTitle(),
                 movie.getThumbnailUrl(),
                 badge,
-                cardStyle
+                cardStyle,
+                null,
+                movie.getGenre() // This is mapped from film's type
         );
     }
 
@@ -29,7 +31,9 @@ public class HomeMapper {
                 event.getTitle(),
                 event.getThumbnailUrl(),
                 badge,
-                ContentCard.STYLE_LANDSCAPE
+                ContentCard.STYLE_LANDSCAPE,
+                event.getStreamUrl(),
+                "LIVE"
         );
     }
 

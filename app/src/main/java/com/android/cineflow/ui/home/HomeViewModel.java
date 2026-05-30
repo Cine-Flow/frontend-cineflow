@@ -1,8 +1,11 @@
 package com.android.cineflow.ui.home;
 
+import android.app.Application;
+
+import androidx.annotation.NonNull;
+import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MediatorLiveData;
-import androidx.lifecycle.ViewModel;
 
 import com.android.cineflow.data.common.uimodel.ContentCard;
 import com.android.cineflow.data.common.uimodel.HomeMapper;
@@ -14,19 +17,34 @@ import com.android.cineflow.data.repository.HomeRepository;
 import java.util.ArrayList;
 import java.util.List;
 
-public class HomeViewModel extends ViewModel {
+public class HomeViewModel extends AndroidViewModel {
 
     private final HomeRepository repository = HomeRepository.getInstance();
 
     // The single stream HomeFragment observes
     private final MediatorLiveData<List<HomeSection>> sections = new MediatorLiveData<>();
 
-    public HomeViewModel() {
+    public HomeViewModel(@NonNull Application application) {
+        super(application);
+        repository.init(application);
         loadSections();
     }
 
     public LiveData<List<HomeSection>> getSections() {
         return sections;
+    }
+
+    public LiveData<Boolean> isLoading() {
+        return repository.isLoading();
+    }
+
+    public LiveData<String> getError() {
+        return repository.getError();
+    }
+
+    /** Triggers a network refresh (used by pull-to-refresh). */
+    public void refresh() {
+        repository.refresh();
     }
 
     // ── Private assembly ─────────────────────────────────────────────────────

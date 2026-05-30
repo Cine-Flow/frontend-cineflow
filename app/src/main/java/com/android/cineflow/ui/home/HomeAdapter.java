@@ -12,6 +12,10 @@ import com.android.cineflow.R;
 import com.android.cineflow.data.common.uimodel.ContentCard;
 import com.android.cineflow.data.common.uimodel.HomeSection;
 
+import androidx.viewpager2.widget.ViewPager2;
+import android.os.Handler;
+import android.os.Looper;
+
 import java.util.List;
 
 public class HomeAdapter extends BaseAdapter {
@@ -20,9 +24,15 @@ public class HomeAdapter extends BaseAdapter {
         void onItemClick(HomeSection section, ContentCard card);
     }
 
+    /** Callback for the "Xem thêm" action label tap. */
+    public interface OnSeeMoreClickListener {
+        void onSeeMoreClick(HomeSection section);
+    }
+
     private final Context context;
     private List<HomeSection> sections;
     private OnItemClickListener clickListener;
+    private OnSeeMoreClickListener seeMoreListener;
 
     public HomeAdapter(Context context, List<HomeSection> sections) {
         this.context = context;
@@ -36,6 +46,10 @@ public class HomeAdapter extends BaseAdapter {
 
     public void setOnItemClickListener(OnItemClickListener listener) {
         this.clickListener = listener;
+    }
+
+    public void setOnSeeMoreClickListener(OnSeeMoreClickListener listener) {
+        this.seeMoreListener = listener;
     }
 
     @Override
@@ -74,7 +88,7 @@ public class HomeAdapter extends BaseAdapter {
         if (convertView == null) {
             LayoutInflater inf = LayoutInflater.from(context);
             if (type == 0) {
-                convertView = inf.inflate(R.layout.item_home_banner, parent, false);
+                convertView = inf.inflate(R.layout.item_home_banner_vp, parent, false);
             } else {
                 convertView = inf.inflate(R.layout.item_home_section_row, parent, false);
             }
@@ -90,23 +104,44 @@ public class HomeAdapter extends BaseAdapter {
     }
 
     private void bindBanner(View view, HomeSection section) {
-        // Vì RecyclerView không dùng được với BaseAdapter một cách trực tiếp trong scroll ngang 
-        // mà vẫn muốn "giữ hoạt động", tôi sẽ dùng một LinearLayout nằm ngang giả lập hoặc 
-        // giữ RecyclerView bên trong nhưng dùng BaseAdapter cho nó.
-        // Tuy nhiên, RecyclerView CẦN RecyclerView.Adapter. 
-        // Để giải quyết, tôi sẽ dùng phương pháp inflate view thủ công vào một LinearLayout ngang 
-        // để thay thế RecyclerView ngang.
+        ViewPager2 viewPager = view.findViewById(R.id.vp_banner); 
+        if (viewPager == null) return;
         
-        LinearLayout container = view.findViewById(R.id.rv_banner_container); 
-        if (container == null) return;
-        
-        container.removeAllViews();
-        ContentRowAdapter childAdapter = new ContentRowAdapter(context, section.getItems(), ContentCard.STYLE_BANNER, 
+        BannerAdapter adapter = new BannerAdapter(context, section.getItems(), 
             card -> { if (clickListener != null) clickListener.onItemClick(section, card); });
         
-        for (int i = 0; i < childAdapter.getCount(); i++) {
-            container.addView(childAdapter.getView(i, null, container));
-        }
+        viewPager.setAdapter(adapter);
+        
+        // Auto-scroll logic
+        Handler handler = new Handler(Looper.getMainLooper());
+        Runnable runnable = new Runnable() {
+            @Override
+            public void run() {
+                if (adapter.getItemCount() > 0) {
+                    int nextItem = (viewPager.getCurrentItem() + 1) % adapter.getItemCount();
+                    viewPager.setCurrentItem(nextItem, true);
+                    handler.postDelayed(this, 3000); // 3 seconds
+                }
+            }
+        };
+        
+        // Remove callbacks to avoid memory leaks or multiple runnables
+        viewPager.setTag(handler); 
+        handler.removeCallbacksAndMessages(null);
+        handler.postDelayed(runnable, 3000);
+        
+        viewPager.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
+            @Override
+            public void onPageScrollStateChanged(int state) {
+                super.onPageScrollStateChanged(state);
+                if (state == ViewPager2.SCROLL_STATE_DRAGGING) {
+                    handler.removeCallbacksAndMessages(null);
+                } else if (state == ViewPager2.SCROLL_STATE_IDLE) {
+                    handler.removeCallbacksAndMessages(null);
+                    handler.postDelayed(runnable, 3000);
+                }
+            }
+        });
     }
 
     private void bindSectionRow(View view, HomeSection section) {
@@ -118,8 +153,15 @@ public class HomeAdapter extends BaseAdapter {
         if (section.getActionLabel() != null) {
             tvAction.setVisibility(View.VISIBLE);
             tvAction.setText(section.getActionLabel());
+            // Handle "Xem thêm" click
+            tvAction.setOnClickListener(v -> {
+                if (seeMoreListener != null) {
+                    seeMoreListener.onSeeMoreClick(section);
+                }
+            });
         } else {
             tvAction.setVisibility(View.GONE);
+            tvAction.setOnClickListener(null);
         }
 
         int cardStyle = section.getViewType() == HomeSection.TYPE_SPORT_ROW

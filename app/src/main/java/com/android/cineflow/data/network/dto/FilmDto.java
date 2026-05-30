@@ -17,7 +17,11 @@ public class FilmDto {
 
     private String type; // "SINGLE", "SERIES", "LIVE"
 
+    @SerializedName("trailerUrl")
+    private String trailerUrl;
+
     public Integer getId() { return id; }
+    public String getTrailerUrl() { return trailerUrl != null ? trailerUrl : ""; }
     public String getTitle() { return title != null ? title : ""; }
     public String getThumbnailUrl() { return thumbnailUrl != null ? thumbnailUrl : ""; }
     public int getReleaseYear() { return releaseYear != null ? releaseYear : 0; }

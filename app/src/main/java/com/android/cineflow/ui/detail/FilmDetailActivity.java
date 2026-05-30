@@ -108,8 +108,16 @@ public class FilmDetailActivity extends AppCompatActivity {
         if (film.getEpisodes() != null && !film.getEpisodes().isEmpty()) {
             episodeAdapter.setEpisodes(film.getEpisodes());
             btnPlayMain.setOnClickListener(v -> playEpisode(film.getEpisodes().get(0)));
+        } else if ("LIVE".equals(film.getType()) && film.getTrailerUrl() != null && !film.getTrailerUrl().isEmpty()) {
+            btnPlayMain.setText("▶  Xem trực tiếp");
+            btnPlayMain.setOnClickListener(v -> {
+                Intent intent = new Intent(this, PlayerActivity.class);
+                intent.putExtra(PlayerActivity.EXTRA_VIDEO_URL, film.getTrailerUrl());
+                startActivity(intent);
+            });
         } else {
             btnPlayMain.setEnabled(false);
+            btnPlayMain.setText("Chưa khả dụng");
         }
     }
 

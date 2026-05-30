@@ -49,6 +49,8 @@
             android:theme="@style/Theme.Cineflow.Admin" />
         <activity android:name=".ui.more.UserContentListActivity" />
         <activity android:name=".ui.more.AccountActivity" />
+            android:name=".ui.category.CategoryActivity"
+            android:theme="@style/Theme.Cineflow.NoActionBar" />
     </application>
 
 </manifest>

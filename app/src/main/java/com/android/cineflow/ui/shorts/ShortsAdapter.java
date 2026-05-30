@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.media3.ui.PlayerView;
@@ -19,10 +20,22 @@ public class ShortsAdapter extends BaseAdapter {
 
     private final Context context;
     private List<ShortVideo> items;
+    private OnShortInteractionListener listener;
+
+    public interface OnShortInteractionListener {
+        void onVideoClick(int position);
+        void onLikeClick(int position);
+        void onCommentClick(int position);
+        void onShareClick(int position);
+    }
 
     public ShortsAdapter(Context context, List<ShortVideo> items) {
         this.context = context;
         this.items = items;
+    }
+
+    public void setListener(OnShortInteractionListener listener) {
+        this.listener = listener;
     }
 
     public void setItems(List<ShortVideo> items) {
@@ -51,15 +64,13 @@ public class ShortsAdapter extends BaseAdapter {
         if (convertView == null) {
             convertView = LayoutInflater.from(context).inflate(R.layout.item_short, parent, false);
             holder = new ViewHolder(convertView);
-            
-            // To make each item full screen in a ListView, we need to set its layout params
+
+            // Make each item full screen in a ListView
             DisplayMetrics displayMetrics = context.getResources().getDisplayMetrics();
             int screenHeight = displayMetrics.heightPixels;
-            // Subtract bottom nav height roughly (e.g. 150 pixels or dynamically) if we want, 
-            // but match_parent or passing display height works. For now, let's use display height.
             ViewGroup.LayoutParams params = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, screenHeight);
             convertView.setLayoutParams(params);
-            
+
             convertView.setTag(holder);
         } else {
             holder = (ViewHolder) convertView.getTag();
@@ -68,6 +79,27 @@ public class ShortsAdapter extends BaseAdapter {
         ShortVideo video = items.get(position);
         holder.bind(video);
 
+        // Click on entire video area -> play/pause
+        final View finalConvertView = convertView;
+        finalConvertView.setOnClickListener(v -> {
+            if (listener != null) listener.onVideoClick(position);
+        });
+
+        // Like button
+        holder.btnLike.setOnClickListener(v -> {
+            if (listener != null) listener.onLikeClick(position);
+        });
+
+        // Comment button
+        holder.btnComment.setOnClickListener(v -> {
+            if (listener != null) listener.onCommentClick(position);
+        });
+
+        // Share button
+        holder.btnShare.setOnClickListener(v -> {
+            if (listener != null) listener.onShareClick(position);
+        });
+
         return convertView;
     }
 
@@ -75,18 +107,47 @@ public class ShortsAdapter extends BaseAdapter {
         public final PlayerView playerView;
         public final TextView tvUploader;
         public final TextView tvTitle;
+        public final TextView tvDescription;
+        public final ImageView btnLike;
+        public final TextView tvLikeCount;
+        public final ImageView btnComment;
+        public final ImageView btnShare;
 
         public ViewHolder(View view) {
             playerView = view.findViewById(R.id.player_view);
             tvUploader = view.findViewById(R.id.tv_short_uploader);
             tvTitle = view.findViewById(R.id.tv_short_title);
+            tvDescription = view.findViewById(R.id.tv_short_description);
+            btnLike = view.findViewById(R.id.btn_like);
+            tvLikeCount = view.findViewById(R.id.tv_like_count);
+            btnComment = view.findViewById(R.id.btn_comment);
+            btnShare = view.findViewById(R.id.btn_share);
         }
 
         public void bind(ShortVideo video) {
             tvUploader.setText(video.getUploader());
             tvTitle.setText(video.getTitle());
+            tvDescription.setText(video.getDescription());
+
+            // Like state
+            tvLikeCount.setText(formatCount(video.getLikeCount()));
+            if (video.isLiked()) {
+                btnLike.setImageResource(R.drawable.ic_heart_filled);
+            } else {
+                btnLike.setImageResource(R.drawable.ic_heart_outline);
+            }
+
             // We do not set the player here. The Fragment will manage the single ExoPlayer instance
             // and attach it to the visible ViewHolder's PlayerView.
+        }
+
+        private String formatCount(int count) {
+            if (count >= 1_000_000) {
+                return String.format("%.1fM", count / 1_000_000.0);
+            } else if (count >= 1_000) {
+                return String.format("%.1fK", count / 1_000.0);
+            }
+            return String.valueOf(count);
         }
     }
 }

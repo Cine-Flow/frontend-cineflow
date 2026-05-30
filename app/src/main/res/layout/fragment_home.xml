@@ -5,14 +5,42 @@
     android:layout_height="match_parent"
     android:background="#0D0D0D">
 
-    <ListView
-        android:id="@+id/lv_home"
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/swipe_refresh"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:divider="@null"
-        android:dividerHeight="0dp"
-        android:scrollbars="none"
-        android:clipToPadding="false"
-        android:paddingBottom="8dp" />
+        android:layout_height="match_parent">
+
+        <ListView
+            android:id="@+id/lv_home"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:divider="@null"
+            android:dividerHeight="0dp"
+            android:scrollbars="none"
+            android:clipToPadding="false"
+            android:paddingBottom="8dp" />
+
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
+    <!-- Loading spinner — centered, shown while API is in-flight -->
+    <ProgressBar
+        android:id="@+id/progress_loading"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_gravity="center"
+        android:indeterminate="true"
+        android:visibility="gone" />
+
+    <!-- Error message — shown when the API call fails -->
+    <TextView
+        android:id="@+id/tv_error"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:text="Không thể tải dữ liệu"
+        android:textColor="#AAAAAA"
+        android:textSize="15sp"
+        android:drawablePadding="8dp"
+        android:visibility="gone" />
 
 </FrameLayout>

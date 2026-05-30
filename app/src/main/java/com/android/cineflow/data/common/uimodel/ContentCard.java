@@ -11,14 +11,24 @@ public class ContentCard {
     private final String thumbnailUrl;
     private final String badgeLabel;   // "NEW", "4K", "LIVE" — empty = hidden
     private final int cardStyle;
+    private final String streamUrl;    // URL stream trực tiếp cho LIVE
+    private final String contentType;  // "SINGLE", "SERIES", "LIVE"
 
     public ContentCard(String id, String title, String thumbnailUrl,
                        String badgeLabel, int cardStyle) {
+        this(id, title, thumbnailUrl, badgeLabel, cardStyle, null, null);
+    }
+
+    public ContentCard(String id, String title, String thumbnailUrl,
+                       String badgeLabel, int cardStyle,
+                       String streamUrl, String contentType) {
         this.id = id;
         this.title = title;
         this.thumbnailUrl = thumbnailUrl;
         this.badgeLabel = badgeLabel;
         this.cardStyle = cardStyle;
+        this.streamUrl = streamUrl;
+        this.contentType = contentType;
     }
 
     public String getId() { return id; }
@@ -26,4 +36,6 @@ public class ContentCard {
     public String getThumbnailUrl() { return thumbnailUrl; }
     public String getBadgeLabel() { return badgeLabel; }
     public int getCardStyle() { return cardStyle; }
+    public String getStreamUrl() { return streamUrl; }
+    public String getContentType() { return contentType; }
 }

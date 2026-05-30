@@ -1,16 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:background="#0D0D0D">
 
-    <!-- FPT Play style player at the top -->
-    <androidx.media3.ui.PlayerView
-        android:id="@+id/player_view"
+    <!-- Container for Player and Back Button -->
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="240dp"
-        android:keepScreenOn="true" />
+        android:layout_height="240dp">
+
+        <androidx.media3.ui.PlayerView
+            android:id="@+id/player_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:keepScreenOn="true"
+            app:show_timeout="1500" />
+
+        <ImageButton
+            android:id="@+id/btn_back"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_margin="12dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:src="@drawable/ic_back"
+            android:contentDescription="Quay lại"
+            android:padding="8dp"
+            android:scaleType="centerInside"
+            android:layout_gravity="top|start"
+            android:elevation="2dp" />
+    </FrameLayout>
 
     <ScrollView
         android:layout_width="match_parent"
@@ -51,7 +71,6 @@
                 android:layout_marginTop="8dp"
                 android:lineSpacingExtra="4dp" />
                 
-            <!-- Dummy buttons for FPT Play style -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
