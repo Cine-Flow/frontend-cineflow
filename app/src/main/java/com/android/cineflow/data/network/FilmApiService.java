@@ -4,12 +4,17 @@ import com.android.cineflow.data.network.dto.ApiResponseDto;
 import com.android.cineflow.data.network.dto.CreateFilmRequestDto;
 import com.android.cineflow.data.network.dto.FilmDetailDto;
 import com.android.cineflow.data.network.dto.ForgotPasswordRequestDto;
+import com.android.cineflow.data.network.dto.FavoriteDto;
 import com.android.cineflow.data.network.dto.HomeFilmsDto;
 import com.android.cineflow.data.network.dto.LoginRequestDto;
 import com.android.cineflow.data.network.dto.LoginResponseDto;
 import com.android.cineflow.data.network.dto.PagedResponseDto;
+import com.android.cineflow.data.network.dto.PremierLeagueHomeDto;
 import com.android.cineflow.data.network.dto.RegisterRequestDto;
 import com.android.cineflow.data.network.dto.UpdateFilmRequestDto;
+import com.android.cineflow.data.network.dto.UpdateWatchHistoryRequestDto;
+import com.android.cineflow.data.network.dto.UserProfileDto;
+import com.android.cineflow.data.network.dto.WatchHistoryDto;
 
 import java.util.List;
 
@@ -31,6 +36,29 @@ public interface FilmApiService {
 
     @GET("films/{id}")
     Call<ApiResponseDto<FilmDetailDto>> getFilmById(@Path("id") Integer id);
+
+    @GET("premier-league/home")
+    Call<ApiResponseDto<PremierLeagueHomeDto>> getPremierLeagueHome();
+
+    @GET("favorites")
+    Call<ApiResponseDto<List<FavoriteDto>>> getFavorites();
+
+    @POST("favorites/{filmId}")
+    Call<ApiResponseDto<FavoriteDto>> addFavorite(@Path("filmId") Integer filmId);
+
+    @DELETE("favorites/{filmId}")
+    Call<ApiResponseDto<Void>> deleteFavorite(@Path("filmId") Integer filmId);
+
+    @GET("watch-history")
+    Call<ApiResponseDto<List<WatchHistoryDto>>> getWatchHistory();
+
+    @PUT("watch-history/{episodeId}")
+    Call<ApiResponseDto<WatchHistoryDto>> updateWatchHistory(
+            @Path("episodeId") Integer episodeId,
+            @Body UpdateWatchHistoryRequestDto request);
+
+    @GET("user/me")
+    Call<ApiResponseDto<UserProfileDto>> getProfile();
 
     // ── Auth ────────────────────────────────────────────────────────────────
 
