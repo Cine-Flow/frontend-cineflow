@@ -5,6 +5,8 @@ import com.android.cineflow.data.network.dto.CreateFilmRequestDto;
 import com.android.cineflow.data.network.dto.FilmDetailDto;
 import com.android.cineflow.data.network.dto.ForgotPasswordRequestDto;
 import com.android.cineflow.data.network.dto.FavoriteDto;
+import com.android.cineflow.data.network.dto.FootballMatchDto;
+import com.android.cineflow.data.network.dto.FootballStandingDto;
 import com.android.cineflow.data.network.dto.HomeFilmsDto;
 import com.android.cineflow.data.network.dto.LoginRequestDto;
 import com.android.cineflow.data.network.dto.LoginResponseDto;
@@ -44,6 +46,12 @@ public interface FilmApiService {
 
     @GET("premier-league/home")
     Call<ApiResponseDto<PremierLeagueHomeDto>> getPremierLeagueHome();
+
+    @GET("premier-league/matches")
+    Call<ApiResponseDto<List<FootballMatchDto>>> getPremierLeagueMatches(@Query("status") String status);
+
+    @GET("premier-league/standings")
+    Call<ApiResponseDto<List<FootballStandingDto>>> getPremierLeagueStandings();
 
     @GET("favorites")
     Call<ApiResponseDto<List<FavoriteDto>>> getFavorites();

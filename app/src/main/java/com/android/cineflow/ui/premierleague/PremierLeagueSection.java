@@ -16,6 +16,7 @@ public class PremierLeagueSection {
     private final List<ContentCard> cards;
     private final List<Match> matches;
     private final List<Standing> standings;
+    private final String listMode;
 
     // For Banners and Horizontal Lists
     public PremierLeagueSection(int type, String title, List<ContentCard> cards) {
@@ -24,15 +25,17 @@ public class PremierLeagueSection {
         this.cards = cards;
         this.matches = null;
         this.standings = null;
+        this.listMode = null;
     }
 
     // For Match Schedule / Results
-    public PremierLeagueSection(int type, String title, List<Match> matches, boolean isMatchList) {
+    public PremierLeagueSection(int type, String title, List<Match> matches, String listMode) {
         this.type = type;
         this.title = title;
         this.cards = null;
         this.matches = matches;
         this.standings = null;
+        this.listMode = listMode;
     }
 
     // For Standings
@@ -42,6 +45,7 @@ public class PremierLeagueSection {
         this.cards = null;
         this.matches = null;
         this.standings = standings;
+        this.listMode = PremierLeagueFullListActivity.MODE_STANDINGS;
     }
 
     public int getType() { return type; }
@@ -49,4 +53,5 @@ public class PremierLeagueSection {
     public List<ContentCard> getCards() { return cards; }
     public List<Match> getMatches() { return matches; }
     public List<Standing> getStandings() { return standings; }
+    public String getListMode() { return listMode; }
 }

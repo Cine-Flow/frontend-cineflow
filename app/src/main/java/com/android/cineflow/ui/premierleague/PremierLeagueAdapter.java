@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -21,12 +22,19 @@ import java.util.List;
 
 public class PremierLeagueAdapter extends BaseAdapter {
 
+    public interface OnViewAllClickListener {
+        void onViewAll(String mode);
+    }
+
     private final Context context;
+    private final OnViewAllClickListener viewAllClickListener;
     private List<PremierLeagueSection> sections;
 
-    public PremierLeagueAdapter(Context context, List<PremierLeagueSection> sections) {
+    public PremierLeagueAdapter(Context context, List<PremierLeagueSection> sections,
+                                OnViewAllClickListener viewAllClickListener) {
         this.context = context;
         this.sections = sections;
+        this.viewAllClickListener = viewAllClickListener;
     }
 
     public void setSections(List<PremierLeagueSection> newSections) {
@@ -114,7 +122,9 @@ public class PremierLeagueAdapter extends BaseAdapter {
     private void bindMatchSchedule(View v, PremierLeagueSection section) {
         TextView tvHeader = v.findViewById(R.id.tv_schedule_header);
         LinearLayout container = v.findViewById(R.id.match_list_container);
+        Button btnViewAll = v.findViewById(R.id.btn_view_all_matches);
         tvHeader.setText(section.getTitle());
+        btnViewAll.setOnClickListener(view -> openFullList(section.getListMode()));
         if (container != null) {
             container.removeAllViews();
             MatchListAdapter adapter = new MatchListAdapter(context, section.getMatches());
@@ -127,7 +137,9 @@ public class PremierLeagueAdapter extends BaseAdapter {
     private void bindStandings(View v, PremierLeagueSection section) {
         TextView tvTitle = v.findViewById(R.id.tv_standing_title);
         LinearLayout container = v.findViewById(R.id.standings_table_container);
+        Button btnViewAll = v.findViewById(R.id.btn_view_all_standings);
         tvTitle.setText(section.getTitle());
+        btnViewAll.setOnClickListener(view -> openFullList(section.getListMode()));
         if (container != null) {
             container.removeAllViews();
             StandingTableAdapter adapter = new StandingTableAdapter(context, section.getStandings());
@@ -189,6 +201,12 @@ public class PremierLeagueAdapter extends BaseAdapter {
             ((TextView)convertView.findViewById(R.id.tv_gd)).setText(String.valueOf(s.getGoalDifference()));
             ((TextView)convertView.findViewById(R.id.tv_points)).setText(String.valueOf(s.getPoints()));
             return convertView;
+        }
+    }
+
+    private void openFullList(String mode) {
+        if (viewAllClickListener != null) {
+            viewAllClickListener.onViewAll(mode);
         }
     }
 

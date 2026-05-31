@@ -1,5 +1,6 @@
 package com.android.cineflow.ui.premierleague;
 
+import android.content.Intent;
 import android.view.View;
 import android.widget.ListView;
 import android.widget.Toast;
@@ -24,7 +25,11 @@ public class PremierLeagueFragment extends BaseFragment {
     @Override
     protected void initViews(View view) {
         ListView lvPremierLeague = view.findViewById(R.id.lv_premier_league);
-        adapter = new PremierLeagueAdapter(requireContext(), new ArrayList<>());
+        adapter = new PremierLeagueAdapter(requireContext(), new ArrayList<>(), mode -> {
+            Intent intent = new Intent(requireContext(), PremierLeagueFullListActivity.class);
+            intent.putExtra(PremierLeagueFullListActivity.EXTRA_MODE, mode);
+            startActivity(intent);
+        });
         lvPremierLeague.setAdapter(adapter);
     }
 

@@ -21,4 +21,13 @@
         android:layout_height="wrap_content"
         android:orientation="vertical" />
 
+    <Button
+        android:id="@+id/btn_view_all_matches"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:backgroundTint="#333333"
+        android:text="@string/view_all"
+        android:textColor="#FFFFFF" />
+
 </LinearLayout>

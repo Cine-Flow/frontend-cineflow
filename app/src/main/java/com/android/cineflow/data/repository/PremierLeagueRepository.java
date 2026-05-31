@@ -104,7 +104,7 @@ public class PremierLeagueRepository {
                     PremierLeagueSection.TYPE_MATCH_SCHEDULE,
                     scheduleHeader(schedule),
                     schedule,
-                    true));
+                    "SCHEDULED"));
         }
 
         List<Match> results = toMatches(data.getResults());
@@ -113,7 +113,7 @@ public class PremierLeagueRepository {
                     PremierLeagueSection.TYPE_MATCH_SCHEDULE,
                     "Kết quả gần nhất",
                     results,
-                    true));
+                    "FINISHED"));
         }
 
         List<Standing> standings = toStandings(data.getStandings());
