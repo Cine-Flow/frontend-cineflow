@@ -11,4 +11,5 @@
     <string name="premier_league_points">Điểm</string>
     <string name="view_all">Xem tất cả</string>
     <string name="premier_league_select_date">Chọn ngày xem lịch đấu</string>
+    <string name="premier_league_empty_fixtures">Không có lịch đấu trong ngày đã chọn</string>
 </resources>

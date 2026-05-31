@@ -21,6 +21,16 @@
         android:layout_height="wrap_content"
         android:orientation="vertical" />
 
+    <TextView
+        android:id="@+id/tv_empty_matches"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:padding="16dp"
+        android:text="@string/premier_league_empty_fixtures"
+        android:textColor="#AAAAAA"
+        android:visibility="gone" />
+
     <Button
         android:id="@+id/btn_select_fixture_date"
         android:layout_width="match_parent"

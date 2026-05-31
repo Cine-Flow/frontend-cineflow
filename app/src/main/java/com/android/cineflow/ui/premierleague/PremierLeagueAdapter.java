@@ -22,6 +22,7 @@ import com.bumptech.glide.Glide;
 import java.util.List;
 import java.util.Calendar;
 import java.util.Locale;
+import java.text.SimpleDateFormat;
 
 public class PremierLeagueAdapter extends BaseAdapter {
 
@@ -132,6 +133,7 @@ public class PremierLeagueAdapter extends BaseAdapter {
     private void bindMatchSchedule(View v, PremierLeagueSection section) {
         TextView tvHeader = v.findViewById(R.id.tv_schedule_header);
         LinearLayout container = v.findViewById(R.id.match_list_container);
+        TextView tvEmptyMatches = v.findViewById(R.id.tv_empty_matches);
         Button btnViewAll = v.findViewById(R.id.btn_view_all_matches);
         Button btnSelectDate = v.findViewById(R.id.btn_select_fixture_date);
         tvHeader.setText(section.getTitle());
@@ -139,7 +141,9 @@ public class PremierLeagueAdapter extends BaseAdapter {
         btnViewAll.setOnClickListener(view -> expandSection(section.getListMode()));
         boolean isFixtures = PremierLeagueSection.MODE_UPCOMING.equals(section.getListMode());
         btnSelectDate.setVisibility(isFixtures ? View.VISIBLE : View.GONE);
-        btnSelectDate.setOnClickListener(view -> showFixtureDatePicker());
+        btnSelectDate.setOnClickListener(view -> showFixtureDatePicker(section));
+        boolean hasMatches = section.getMatches() != null && !section.getMatches().isEmpty();
+        tvEmptyMatches.setVisibility(hasMatches ? View.GONE : View.VISIBLE);
         if (container != null) {
             container.removeAllViews();
             MatchListAdapter adapter = new MatchListAdapter(context, section.getMatches());
@@ -226,8 +230,16 @@ public class PremierLeagueAdapter extends BaseAdapter {
         }
     }
 
-    private void showFixtureDatePicker() {
+    private void showFixtureDatePicker(PremierLeagueSection section) {
         Calendar calendar = Calendar.getInstance();
+        if (section.getMatches() != null && !section.getMatches().isEmpty()) {
+            try {
+                calendar.setTime(new SimpleDateFormat("dd/MM/yyyy", Locale.US)
+                        .parse(section.getMatches().get(0).getDate()));
+            } catch (Exception ignored) {
+                // Keep today's date if the API value cannot be parsed.
+            }
+        }
         new DatePickerDialog(
                 context,
                 (view, year, month, day) -> {
