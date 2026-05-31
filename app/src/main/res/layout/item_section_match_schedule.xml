@@ -1,52 +1,116 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical"
-    android:padding="8dp">
-
-    <TextView
-        android:id="@+id/tv_schedule_header"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="#2A2A2A"
-        android:padding="12dp"
-        android:textColor="#FFFFFF"
-        android:textSize="14sp"
-        android:textStyle="bold" />
+    android:layout_marginHorizontal="12dp"
+    android:layout_marginVertical="8dp"
+    app:cardCornerRadius="12dp"
+    app:cardElevation="2dp"
+    app:strokeWidth="1dp"
+    app:strokeColor="#2A2438"
+    app:cardBackgroundColor="#151515">
 
     <LinearLayout
-        android:id="@+id/match_list_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical" />
+        android:orientation="vertical">
 
-    <TextView
-        android:id="@+id/tv_empty_matches"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:padding="16dp"
-        android:text="@string/premier_league_empty_fixtures"
-        android:textColor="#AAAAAA"
-        android:visibility="gone" />
+        <!-- Branded Header with Premier League Purple -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingHorizontal="16dp"
+            android:paddingVertical="12dp"
+            android:background="#38003C"
+            android:gravity="center_vertical">
 
-    <Button
-        android:id="@+id/btn_select_fixture_date"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:backgroundTint="#4A246B"
-        android:text="@string/premier_league_select_date"
-        android:textColor="#FFFFFF" />
+            <!-- Branded Logo Circle Badge -->
+            <View
+                android:layout_width="6dp"
+                android:layout_height="24dp"
+                android:background="#00FF87"
+                android:layout_marginEnd="10dp" />
 
-    <Button
-        android:id="@+id/btn_view_all_matches"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:backgroundTint="#333333"
-        android:text="@string/view_all"
-        android:textColor="#FFFFFF" />
+            <TextView
+                android:id="@+id/tv_schedule_header"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:textColor="#FFFFFF"
+                android:textSize="15sp"
+                android:textStyle="bold" />
 
-</LinearLayout>
+            <ImageView
+                android:layout_width="22dp"
+                android:layout_height="22dp"
+                android:src="@drawable/ic_movies"
+                app:tint="#00FF87" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingHorizontal="12dp"
+            android:paddingBottom="12dp">
+
+            <LinearLayout
+                android:id="@+id/match_list_container"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_marginTop="4dp" />
+
+            <TextView
+                android:id="@+id/tv_empty_matches"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:padding="20dp"
+                android:text="@string/premier_league_empty_fixtures"
+                android:textColor="#AAAAAA"
+                android:textSize="14sp"
+                android:visibility="gone" />
+
+            <!-- Action Buttons Grid -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginTop="8dp">
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btn_select_fixture_date"
+                    style="@style/Widget.Cineflow.Button.Secondary"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    android:text="@string/premier_league_select_date"
+                    android:textSize="12sp"
+                    android:textStyle="bold"
+                    app:cornerRadius="8dp" />
+
+                <Space
+                    android:layout_width="12dp"
+                    android:layout_height="wrap_content" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btn_view_all_matches"
+                    style="@style/Widget.Cineflow.Button.Primary"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    android:text="@string/view_all"
+                    android:backgroundTint="#38003C"
+                    android:textColor="#00FF87"
+                    android:textSize="12sp"
+                    android:textStyle="bold"
+                    app:cornerRadius="8dp" />
+            </LinearLayout>
+
+        </LinearLayout>
+    </LinearLayout>
+</com.google.android.material.card.MaterialCardView>

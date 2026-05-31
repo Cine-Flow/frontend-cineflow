@@ -1,64 +1,106 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical"
-    android:background="#1A1A1A"
-    android:padding="8dp"
-    android:layout_marginTop="8dp">
+    android:layout_marginHorizontal="12dp"
+    android:layout_marginVertical="8dp"
+    app:cardCornerRadius="12dp"
+    app:cardElevation="2dp"
+    app:strokeWidth="1dp"
+    app:strokeColor="#2A2438"
+    app:cardBackgroundColor="#151515">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:padding="8dp"
-        android:background="#333333">
+        android:orientation="vertical">
 
-        <TextView
-            android:id="@+id/tv_standing_title"
-            android:layout_width="0dp"
+        <!-- Branded Header with Premier League Purple -->
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="@string/premier_league_season"
-            android:textColor="#FFFFFF"
-            android:textStyle="bold" />
+            android:orientation="horizontal"
+            android:paddingHorizontal="16dp"
+            android:paddingVertical="12dp"
+            android:background="#38003C"
+            android:gravity="center_vertical">
 
-        <ImageView
-            android:layout_width="24dp"
-            android:layout_height="24dp"
-            android:src="@drawable/ic_movies" /> <!-- Placeholder for PL logo -->
+            <!-- Branded Logo Circle Badge -->
+            <View
+                android:layout_width="6dp"
+                android:layout_height="24dp"
+                android:background="#00FF87"
+                android:layout_marginEnd="10dp" />
 
+            <TextView
+                android:id="@+id/tv_standing_title"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/premier_league_season"
+                android:textColor="#FFFFFF"
+                android:textSize="15sp"
+                android:textStyle="bold" />
+
+            <ImageView
+                android:layout_width="22dp"
+                android:layout_height="22dp"
+                android:src="@drawable/ic_movies"
+                app:tint="#00FF87" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingHorizontal="12dp"
+            android:paddingBottom="12dp">
+
+            <!-- Header Row with sports league standard columns -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:paddingVertical="10dp"
+                android:background="@android:color/transparent">
+                
+                <TextView android:layout_width="32dp" android:layout_height="wrap_content" android:text="@string/premier_league_rank" android:textColor="#888888" android:textSize="11sp" android:gravity="center" android:textStyle="bold"/>
+                <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="@string/premier_league_team" android:textColor="#888888" android:textSize="11sp" android:textStyle="bold" android:layout_marginStart="4dp"/>
+                <TextView android:layout_width="30dp" android:layout_height="wrap_content" android:text="@string/premier_league_played" android:textColor="#888888" android:textSize="11sp" android:gravity="center" android:textStyle="bold"/>
+                <TextView android:layout_width="22dp" android:layout_height="wrap_content" android:text="T" android:textColor="#888888" android:textSize="11sp" android:gravity="center" android:textStyle="bold"/>
+                <TextView android:layout_width="22dp" android:layout_height="wrap_content" android:text="H" android:textColor="#888888" android:textSize="11sp" android:gravity="center" android:textStyle="bold"/>
+                <TextView android:layout_width="22dp" android:layout_height="wrap_content" android:text="B" android:textColor="#888888" android:textSize="11sp" android:gravity="center" android:textStyle="bold"/>
+                <TextView android:layout_width="32dp" android:layout_height="wrap_content" android:text="HS" android:textColor="#888888" android:textSize="11sp" android:gravity="center" android:textStyle="bold"/>
+                <TextView android:layout_width="42dp" android:layout_height="wrap_content" android:text="@string/premier_league_points" android:textColor="#888888" android:textSize="11sp" android:gravity="center" android:textStyle="bold"/>
+            </LinearLayout>
+
+            <!-- Separator Line -->
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="#222222" />
+
+            <LinearLayout
+                android:id="@+id/standings_table_container"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical" />
+
+            <!-- Solid button with brand colors -->
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btn_view_all_standings"
+                style="@style/Widget.Cineflow.Button.Primary"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/view_all"
+                android:layout_marginTop="8dp"
+                android:backgroundTint="#38003C"
+                app:cornerRadius="8dp"
+                android:textColor="#00FF87"
+                android:textStyle="bold" />
+
+        </LinearLayout>
     </LinearLayout>
-
-    <!-- Header Row -->
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:paddingVertical="8dp">
-        <TextView android:layout_width="30dp" android:layout_height="wrap_content" android:text="@string/premier_league_rank" android:textColor="#888888" android:textSize="12sp" android:gravity="center"/>
-        <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="@string/premier_league_team" android:textColor="#888888" android:textSize="12sp"/>
-        <TextView android:layout_width="30dp" android:layout_height="wrap_content" android:text="@string/premier_league_played" android:textColor="#888888" android:textSize="12sp" android:gravity="center"/>
-        <TextView android:layout_width="20dp" android:layout_height="wrap_content" android:text="T" android:textColor="#888888" android:textSize="12sp" android:gravity="center"/>
-        <TextView android:layout_width="20dp" android:layout_height="wrap_content" android:text="H" android:textColor="#888888" android:textSize="12sp" android:gravity="center"/>
-        <TextView android:layout_width="20dp" android:layout_height="wrap_content" android:text="B" android:textColor="#888888" android:textSize="12sp" android:gravity="center"/>
-        <TextView android:layout_width="30dp" android:layout_height="wrap_content" android:text="HS" android:textColor="#888888" android:textSize="12sp" android:gravity="center"/>
-        <TextView android:layout_width="40dp" android:layout_height="wrap_content" android:text="@string/premier_league_points" android:textColor="#888888" android:textSize="12sp" android:gravity="center"/>
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/standings_table_container"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical" />
-
-    <Button
-        android:id="@+id/btn_view_all_standings"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/view_all"
-        android:backgroundTint="#333333"
-        android:textColor="#FFFFFF"
-        android:layout_marginTop="8dp"/>
-
-</LinearLayout>
+</com.google.android.material.card.MaterialCardView>

@@ -197,15 +197,17 @@ public class PremierLeagueAdapter extends BaseAdapter {
             tvAway.setText(m.getAwayTeamCode());
             loadTeamLogo(ivHome, m.getHomeTeamLogo());
             loadTeamLogo(ivAway, m.getAwayTeamLogo());
+            
+            tvCenter.setTextColor(Color.parseColor("#FFFFFF"));
             if (m.isLive()) {
                 tvCenter.setText("LIVE");
-                tvCenter.setBackgroundColor(Color.parseColor("#D32F2F"));
+                tvCenter.setBackgroundColor(Color.parseColor("#FF1744")); // Neon Red Live
             } else if (m.getHomeScore() != null && !m.getHomeScore().isEmpty()) {
                 tvCenter.setText(m.getHomeScore() + " - " + m.getAwayScore());
-                tvCenter.setBackgroundResource(0);
+                tvCenter.setBackgroundColor(Color.parseColor("#2A2A2A")); // Premium Grey Box
             } else {
                 tvCenter.setText(m.getTime());
-                tvCenter.setBackgroundColor(Color.parseColor("#333333"));
+                tvCenter.setBackgroundColor(Color.parseColor("#1F1F1F")); // Solid Time Box
             }
             return convertView;
         }
@@ -220,15 +222,43 @@ public class PremierLeagueAdapter extends BaseAdapter {
         @Override public View getView(int position, View convertView, ViewGroup parent) {
             if (convertView == null) convertView = LayoutInflater.from(ctx).inflate(R.layout.item_standing_row, parent, false);
             Standing s = standings.get(position);
-            ((TextView)convertView.findViewById(R.id.tv_rank)).setText(String.valueOf(s.getRank()));
-            ((TextView)convertView.findViewById(R.id.tv_team_code)).setText(s.getTeamCode());
+            
+            TextView tvRank = convertView.findViewById(R.id.tv_rank);
+            TextView tvTeamCode = convertView.findViewById(R.id.tv_team_code);
+            TextView tvPoints = convertView.findViewById(R.id.tv_points);
+            
+            tvRank.setText(String.valueOf(s.getRank()));
+            tvTeamCode.setText(s.getTeamCode());
             loadTeamLogo(convertView.findViewById(R.id.iv_team_logo), s.getTeamLogo());
             ((TextView)convertView.findViewById(R.id.tv_played)).setText(String.valueOf(s.getPlayed()));
             ((TextView)convertView.findViewById(R.id.tv_won)).setText(String.valueOf(s.getWon()));
             ((TextView)convertView.findViewById(R.id.tv_drawn)).setText(String.valueOf(s.getDrawn()));
             ((TextView)convertView.findViewById(R.id.tv_lost)).setText(String.valueOf(s.getLost()));
             ((TextView)convertView.findViewById(R.id.tv_gd)).setText(String.valueOf(s.getGoalDifference()));
-            ((TextView)convertView.findViewById(R.id.tv_points)).setText(String.valueOf(s.getPoints()));
+            tvPoints.setText(String.valueOf(s.getPoints()));
+            
+            // Dynamic UEFA Champions League, Europa League and Relegation Coloring
+            int rank = s.getRank();
+            if (rank >= 1 && rank <= 4) {
+                tvRank.setTextColor(Color.parseColor("#00E676")); // Neon Green for Champions League
+                tvRank.setTypeface(null, android.graphics.Typeface.BOLD);
+            } else if (rank == 5) {
+                tvRank.setTextColor(Color.parseColor("#FF9100")); // Orange for Europa League
+                tvRank.setTypeface(null, android.graphics.Typeface.BOLD);
+            } else if (rank >= 18) {
+                tvRank.setTextColor(Color.parseColor("#FF1744")); // Red for Relegation
+                tvRank.setTypeface(null, android.graphics.Typeface.BOLD);
+            } else {
+                tvRank.setTextColor(Color.parseColor("#FFFFFF")); // Standard text color
+                tvRank.setTypeface(null, android.graphics.Typeface.NORMAL);
+            }
+            
+            // Highlight team names and points with high contrast
+            tvTeamCode.setTextColor(Color.parseColor("#FFFFFF"));
+            tvTeamCode.setTypeface(null, android.graphics.Typeface.BOLD);
+            tvPoints.setTextColor(Color.parseColor("#FFFFFF"));
+            tvPoints.setTypeface(null, android.graphics.Typeface.BOLD);
+            
             return convertView;
         }
     }
