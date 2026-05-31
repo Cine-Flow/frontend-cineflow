@@ -25,7 +25,7 @@
             android:layout_margin="12dp"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:src="@drawable/ic_back"
-            android:contentDescription="Quay lại"
+            android:contentDescription="@string/player_back_desc"
             android:padding="8dp"
             android:scaleType="centerInside"
             android:layout_gravity="top|start"
@@ -44,28 +44,50 @@
             android:orientation="vertical"
             android:padding="16dp">
 
-            <TextView
-                android:id="@+id/tv_detail_title"
+            <!-- Horizontal Container for Badge and Title -->
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Đang chiếu phim"
-                android:textColor="#FFFFFF"
-                android:textSize="22sp"
-                android:textStyle="bold" />
+                android:orientation="horizontal"
+                android:gravity="center_vertical">
+
+                <TextView
+                    android:id="@+id/tv_content_badge"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="#38003C"
+                    android:paddingHorizontal="10dp"
+                    android:paddingVertical="4dp"
+                    android:textColor="#FFFFFF"
+                    android:textSize="12sp"
+                    android:textStyle="bold"
+                    android:visibility="gone"
+                    android:layout_marginEnd="8dp" />
+
+                <TextView
+                    android:id="@+id/tv_detail_title"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    android:text="@string/player_default_title"
+                    android:textColor="#FFFFFF"
+                    android:textSize="22sp"
+                    android:textStyle="bold" />
+            </LinearLayout>
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Mô tả chi tiết"
+                android:text="@string/player_desc_header"
                 android:textColor="#AAAAAA"
                 android:textSize="14sp"
-                android:layout_marginTop="8dp" />
+                android:layout_marginTop="16dp" />
 
             <TextView
                 android:id="@+id/tv_detail_desc"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Bộ phim hấp dẫn đang được phát ngẫu nhiên vì chưa có luồng gọi API lấy chi tiết phim. Để đầy đủ hơn, vui lòng xây dựng API lấy thông tin và danh sách tập phim!"
+                android:text="@string/player_default_desc"
                 android:textColor="#DFDFDF"
                 android:textSize="14sp"
                 android:layout_marginTop="8dp"
@@ -81,7 +103,7 @@
                     android:layout_width="0dp"
                     android:layout_weight="1"
                     android:layout_height="wrap_content"
-                    android:text="Thêm vào yêu thích"
+                    android:text="@string/player_btn_favorite"
                     android:backgroundTint="#2D2D2D"
                     android:textColor="#FFFFFF" />
                     
@@ -91,7 +113,7 @@
                     android:layout_width="0dp"
                     android:layout_weight="1"
                     android:layout_height="wrap_content"
-                    android:text="Chia sẻ"
+                    android:text="@string/player_btn_share"
                     android:backgroundTint="#2D2D2D"
                     android:textColor="#FFFFFF" />
             </LinearLayout>

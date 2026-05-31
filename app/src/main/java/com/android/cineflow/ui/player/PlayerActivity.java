@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageButton;
+import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -25,12 +26,16 @@ public class PlayerActivity extends AppCompatActivity {
     public static final String EXTRA_VIDEO_URL = "extra_video_url";
     public static final String EXTRA_EPISODE_ID = "extra_episode_id";
     public static final String EXTRA_RESUME_POSITION_SECONDS = "extra_resume_position_seconds";
+    public static final String EXTRA_TITLE = "extra_title";
+    public static final String EXTRA_BADGE = "extra_badge";
 
     private PlayerView playerView;
     private ExoPlayer player;
     private String videoUrl;
     private int episodeId = -1;
     private ImageButton btnBack;
+    private TextView tvDetailTitle;
+    private TextView tvContentBadge;
     
     // State management
     private boolean playWhenReady = true;
@@ -44,10 +49,13 @@ public class PlayerActivity extends AppCompatActivity {
         
         playerView = findViewById(R.id.player_view);
         btnBack = findViewById(R.id.btn_back);
+        tvDetailTitle = findViewById(R.id.tv_detail_title);
+        tvContentBadge = findViewById(R.id.tv_content_badge);
         
         videoUrl = getIntent().getStringExtra(EXTRA_VIDEO_URL);
         episodeId = getIntent().getIntExtra(EXTRA_EPISODE_ID, -1);
         playbackPosition = getIntent().getIntExtra(EXTRA_RESUME_POSITION_SECONDS, 0) * 1000L;
+        bindMetadata();
 
         btnBack.setOnClickListener(v -> finish());
 
@@ -62,6 +70,20 @@ public class PlayerActivity extends AppCompatActivity {
                 }).start();
             }
         });
+    }
+
+    private void bindMetadata() {
+        String title = getIntent().getStringExtra(EXTRA_TITLE);
+        if (title != null && !title.isEmpty()) {
+            tvDetailTitle.setText(title);
+        }
+
+        String badge = getIntent().getStringExtra(EXTRA_BADGE);
+        boolean hasBadge = badge != null && !badge.isEmpty();
+        tvContentBadge.setVisibility(hasBadge ? View.VISIBLE : View.GONE);
+        if (hasBadge) {
+            tvContentBadge.setText(badge);
+        }
     }
 
     private void initializePlayer() {

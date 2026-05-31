@@ -205,7 +205,9 @@ public class PremierLeagueRepository {
                     item.getTitle(),
                     item.getThumbnailUrl(),
                     item.getBadge(),
-                    cardStyle));
+                    cardStyle,
+                    item.getVideoUrl(),
+                    item.getContentType()));
         }
         if (!cards.isEmpty()) {
             sections.add(new PremierLeagueSection(sectionType, title, cards));

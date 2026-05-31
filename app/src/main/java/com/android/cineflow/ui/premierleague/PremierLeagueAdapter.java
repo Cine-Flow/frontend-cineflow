@@ -34,18 +34,25 @@ public class PremierLeagueAdapter extends BaseAdapter {
         void onDateSelected(String apiDate, String displayDate);
     }
 
+    public interface OnCardClickListener {
+        void onCardClick(ContentCard card);
+    }
+
     private final Context context;
     private final OnViewAllClickListener viewAllClickListener;
     private final OnFixtureDateSelectedListener fixtureDateSelectedListener;
+    private final OnCardClickListener cardClickListener;
     private List<PremierLeagueSection> sections;
 
     public PremierLeagueAdapter(Context context, List<PremierLeagueSection> sections,
                                 OnViewAllClickListener viewAllClickListener,
-                                OnFixtureDateSelectedListener fixtureDateSelectedListener) {
+                                OnFixtureDateSelectedListener fixtureDateSelectedListener,
+                                OnCardClickListener cardClickListener) {
         this.context = context;
         this.sections = sections;
         this.viewAllClickListener = viewAllClickListener;
         this.fixtureDateSelectedListener = fixtureDateSelectedListener;
+        this.cardClickListener = cardClickListener;
     }
 
     public void setSections(List<PremierLeagueSection> newSections) {
@@ -110,7 +117,8 @@ public class PremierLeagueAdapter extends BaseAdapter {
         LinearLayout container = v.findViewById(R.id.rv_banner_container);
         if (container != null) {
             container.removeAllViews();
-            ContentRowAdapter adapter = new ContentRowAdapter(context, section.getCards(), ContentCard.STYLE_BANNER, null);
+            ContentRowAdapter adapter = new ContentRowAdapter(context, section.getCards(), ContentCard.STYLE_BANNER,
+                    card -> { if (cardClickListener != null) cardClickListener.onCardClick(card); });
             for (int i = 0; i < adapter.getCount(); i++) {
                 container.addView(adapter.getView(i, null, container));
             }
@@ -123,7 +131,8 @@ public class PremierLeagueAdapter extends BaseAdapter {
         tvTitle.setText(section.getTitle());
         if (container != null) {
             container.removeAllViews();
-            ContentRowAdapter adapter = new ContentRowAdapter(context, section.getCards(), ContentCard.STYLE_LANDSCAPE, null);
+            ContentRowAdapter adapter = new ContentRowAdapter(context, section.getCards(), ContentCard.STYLE_LANDSCAPE,
+                    card -> { if (cardClickListener != null) cardClickListener.onCardClick(card); });
             for (int i = 0; i < adapter.getCount(); i++) {
                 container.addView(adapter.getView(i, null, container));
             }

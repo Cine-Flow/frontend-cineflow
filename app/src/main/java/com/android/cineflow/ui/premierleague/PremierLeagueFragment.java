@@ -1,5 +1,6 @@
 package com.android.cineflow.ui.premierleague;
 
+import android.content.Intent;
 import android.view.View;
 import android.widget.ListView;
 import android.widget.Toast;
@@ -8,6 +9,7 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.android.cineflow.R;
 import com.android.cineflow.ui.base.BaseFragment;
+import com.android.cineflow.ui.player.PlayerActivity;
 
 import java.util.ArrayList;
 
@@ -26,7 +28,19 @@ public class PremierLeagueFragment extends BaseFragment {
         ListView lvPremierLeague = view.findViewById(R.id.lv_premier_league);
         adapter = new PremierLeagueAdapter(requireContext(), new ArrayList<>(),
                 mode -> viewModel.expandSection(mode),
-                (apiDate, displayDate) -> viewModel.loadFixturesForDate(apiDate, displayDate));
+                (apiDate, displayDate) -> viewModel.loadFixturesForDate(apiDate, displayDate),
+                card -> {
+                    String videoUrl = card.getStreamUrl();
+                    if (videoUrl == null || videoUrl.isEmpty()) {
+                        Toast.makeText(requireContext(), "Nội dung này chưa có video phát sóng", Toast.LENGTH_SHORT).show();
+                    } else {
+                        Intent intent = new Intent(requireContext(), PlayerActivity.class);
+                        intent.putExtra(PlayerActivity.EXTRA_VIDEO_URL, videoUrl);
+                        intent.putExtra(PlayerActivity.EXTRA_TITLE, card.getTitle());
+                        intent.putExtra(PlayerActivity.EXTRA_BADGE, card.getBadgeLabel());
+                        startActivity(intent);
+                    }
+                });
         lvPremierLeague.setAdapter(adapter);
     }
 
