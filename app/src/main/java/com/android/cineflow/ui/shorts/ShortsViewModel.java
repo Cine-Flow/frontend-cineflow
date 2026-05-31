@@ -5,32 +5,74 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.android.cineflow.data.model.ShortVideo;
+import com.android.cineflow.data.network.dto.ApiResponseDto;
+import com.android.cineflow.data.network.dto.CommentDto;
+import com.android.cineflow.data.repository.ShortsRepository;
 
-import java.util.ArrayList;
 import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class ShortsViewModel extends ViewModel {
 
-    private final MutableLiveData<List<ShortVideo>> _shortVideos = new MutableLiveData<>();
-    public LiveData<List<ShortVideo>> shortVideos = _shortVideos;
+    private final ShortsRepository repository;
+
+    public LiveData<List<ShortVideo>> shortVideos;
+    public LiveData<Boolean> isLoading;
+    public LiveData<String> error;
 
     public ShortsViewModel() {
-        loadShorts();
+        repository = ShortsRepository.getInstance();
+        shortVideos = repository.getShortVideos();
+        isLoading = repository.isLoading();
+        error = repository.getError();
+
+        // Fetch shorts from backend on init
+        repository.fetchShorts();
     }
 
-    private void loadShorts() {
-        List<ShortVideo> list = new ArrayList<>();
-        // Mock data with a vertical aspect ratio video from public sources
-        // Note: For simplicity and since we need a working video URL, we reuse the sample video.
-        String sampleVideo = "https://storage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4";
-        String sampleVideo2 = "https://storage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4";
-        String sampleVideo3 = "https://storage.googleapis.com/gtv-videos-bucket/sample/TearsOfSteel.mp4";
-        
-        list.add(new ShortVideo("1", sampleVideo, "Cảnh quay hùng vĩ", "Nguyen Van A", ""));
-        list.add(new ShortVideo("2", sampleVideo2, "Khám phá thế giới", "Hau Hoang", ""));
-        list.add(new ShortVideo("3", sampleVideo3, "Khoảnh khắc đáng nhớ", "FPT Play", ""));
-        list.add(new ShortVideo("4", sampleVideo, "Thiên nhiên tuyệt đẹp", "Cineflow Official", ""));
+    /** Reload shorts from backend. */
+    public void refresh() {
+        repository.fetchShorts();
+    }
 
-        _shortVideos.setValue(list);
+    /** Load more shorts (pagination). */
+    public void loadMore() {
+        repository.loadMore();
+    }
+
+    public void toggleLike(ShortVideo video, boolean isLiked) {
+        if (isLiked) {
+            repository.likeShort(video.getId(), new Callback<ApiResponseDto<Void>>() {
+                @Override public void onResponse(Call<ApiResponseDto<Void>> call, Response<ApiResponseDto<Void>> response) {}
+                @Override public void onFailure(Call<ApiResponseDto<Void>> call, Throwable t) {}
+            });
+        } else {
+            repository.unlikeShort(video.getId(), new Callback<ApiResponseDto<Void>>() {
+                @Override public void onResponse(Call<ApiResponseDto<Void>> call, Response<ApiResponseDto<Void>> response) {}
+                @Override public void onFailure(Call<ApiResponseDto<Void>> call, Throwable t) {}
+            });
+        }
+    }
+
+    public LiveData<List<CommentDto>> getComments(String videoId) {
+        MutableLiveData<List<CommentDto>> comments = new MutableLiveData<>();
+        repository.getShortComments(videoId, new Callback<ApiResponseDto<List<CommentDto>>>() {
+            @Override
+            public void onResponse(Call<ApiResponseDto<List<CommentDto>>> call, Response<ApiResponseDto<List<CommentDto>>> response) {
+                if (response.isSuccessful() && response.body() != null && response.body().getData() != null) {
+                    comments.postValue(response.body().getData());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ApiResponseDto<List<CommentDto>>> call, Throwable t) {
+                // Return empty list or handle error
+                comments.postValue(null);
+            }
+        });
+        return comments;
     }
 }

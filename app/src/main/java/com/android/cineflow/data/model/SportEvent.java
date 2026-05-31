@@ -7,15 +7,18 @@ public class SportEvent {
     private String league;
     private boolean isLive;
     private String broadcastTime; // e.g. "11:30 - Ngày 1/3"
+    private String streamUrl;
 
     public SportEvent(String id, String title, String thumbnailUrl,
-                      String league, boolean isLive, String broadcastTime) {
+                      String league, boolean isLive, String broadcastTime,
+                      String streamUrl) {
         this.id = id;
         this.title = title;
         this.thumbnailUrl = thumbnailUrl;
         this.league = league;
         this.isLive = isLive;
         this.broadcastTime = broadcastTime;
+        this.streamUrl = streamUrl;
     }
 
     public String getId() { return id; }
@@ -24,4 +27,5 @@ public class SportEvent {
     public String getLeague() { return league; }
     public boolean isLive() { return isLive; }
     public String getBroadcastTime() { return broadcastTime; }
+    public String getStreamUrl() { return streamUrl; }
 }

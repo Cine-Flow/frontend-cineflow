@@ -15,6 +15,10 @@ import com.android.cineflow.data.network.dto.UpdateFilmRequestDto;
 import com.android.cineflow.data.network.dto.UpdateWatchHistoryRequestDto;
 import com.android.cineflow.data.network.dto.UserProfileDto;
 import com.android.cineflow.data.network.dto.WatchHistoryDto;
+import com.android.cineflow.data.network.dto.FilmDto;
+import com.android.cineflow.data.network.dto.ShortsResponseDto;
+import com.android.cineflow.data.network.dto.CommentDto;
+
 
 import java.util.List;
 
@@ -26,6 +30,7 @@ import retrofit2.http.POST;
 import retrofit2.http.PUT;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
+
 
 public interface FilmApiService {
 
@@ -59,6 +64,22 @@ public interface FilmApiService {
 
     @GET("user/me")
     Call<ApiResponseDto<UserProfileDto>> getProfile();
+    
+    @GET("films")
+    Call<ApiResponseDto<List<FilmDto>>> getFilmsByType(@Query("type") String type);
+
+    @GET("films/shorts")
+    Call<ApiResponseDto<ShortsResponseDto>> getShorts();
+
+    @POST("films/shorts/{id}/like")
+    Call<ApiResponseDto<Void>> likeShort(@Path("id") String id);
+
+    @DELETE("films/shorts/{id}/like")
+    Call<ApiResponseDto<Void>> unlikeShort(@Path("id") String id);
+
+    @GET("films/shorts/{id}/comments")
+    Call<ApiResponseDto<List<CommentDto>>> getShortComments(@Path("id") String id);
+    ////. ---- 
 
     // ── Auth ────────────────────────────────────────────────────────────────
 
@@ -91,3 +112,4 @@ public interface FilmApiService {
     @DELETE("admin/films/{id}")
     Call<ApiResponseDto<Void>> deleteFilm(@Path("id") Integer id);
 }
+

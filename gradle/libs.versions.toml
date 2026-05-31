@@ -13,6 +13,10 @@ retrofit = "2.11.0"
 glide = "4.16.0"
 okhttp = "4.12.0"
 swiperefreshlayout = "1.1.0"
+<<<<<<< HEAD
+=======
+room = "2.6.1"
+>>>>>>> 15ac71e (zzzzzzzzzzzz)
 
 [libraries]
 junit = { group = "junit", name = "junit", version.ref = "junit" }
@@ -31,6 +35,8 @@ converter-gson = { group = "com.squareup.retrofit2", name = "converter-gson", ve
 glide = { group = "com.github.bumptech.glide", name = "glide", version.ref = "glide" }
 okhttp-logging = { group = "com.squareup.okhttp3", name = "logging-interceptor", version.ref = "okhttp" }
 swiperefreshlayout = { group = "androidx.swiperefreshlayout", name = "swiperefreshlayout", version.ref = "swiperefreshlayout" }
+room-runtime = { group = "androidx.room", name = "room-runtime", version.ref = "room" }
+room-compiler = { group = "androidx.room", name = "room-compiler", version.ref = "room" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
