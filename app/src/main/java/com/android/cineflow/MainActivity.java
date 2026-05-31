@@ -9,11 +9,15 @@ import androidx.viewpager2.widget.ViewPager2;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationBarView;
+import com.android.cineflow.data.repository.PremierLeagueRepository;
 
 public class MainActivity extends AppCompatActivity {
 
+    private static final int PREMIER_LEAGUE_TAB_POSITION = 4;
+
     private ViewPager2 viewPager;
     private BottomNavigationView bottomNav;
+    private int selectedPagePosition = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,6 +35,11 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onPageSelected(int position) {
                 super.onPageSelected(position);
+                if (selectedPagePosition == PREMIER_LEAGUE_TAB_POSITION
+                        && position != PREMIER_LEAGUE_TAB_POSITION) {
+                    PremierLeagueRepository.getInstance().fetchData();
+                }
+                selectedPagePosition = position;
                 bottomNav.getMenu().getItem(position).setChecked(true);
             }
         });
@@ -60,6 +69,12 @@ public class MainActivity extends AppCompatActivity {
                     return true;
                 }
                 return false;
+            }
+        });
+
+        bottomNav.setOnItemReselectedListener(item -> {
+            if (item.getItemId() == R.id.premierLeagueFragment) {
+                PremierLeagueRepository.getInstance().fetchData();
             }
         });
 

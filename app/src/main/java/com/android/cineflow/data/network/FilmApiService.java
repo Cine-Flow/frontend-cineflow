@@ -48,7 +48,9 @@ public interface FilmApiService {
     Call<ApiResponseDto<PremierLeagueHomeDto>> getPremierLeagueHome();
 
     @GET("premier-league/matches")
-    Call<ApiResponseDto<List<FootballMatchDto>>> getPremierLeagueMatches(@Query("status") String status);
+    Call<ApiResponseDto<List<FootballMatchDto>>> getPremierLeagueMatches(
+            @Query("status") String status,
+            @Query("date") String date);
 
     @GET("premier-league/standings")
     Call<ApiResponseDto<List<FootballStandingDto>>> getPremierLeagueStandings();

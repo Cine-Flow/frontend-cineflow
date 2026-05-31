@@ -1,6 +1,7 @@
 package com.android.cineflow.ui.premierleague;
 
 import android.content.Context;
+import android.app.DatePickerDialog;
 import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,6 +20,8 @@ import com.android.cineflow.ui.home.ContentRowAdapter;
 import com.bumptech.glide.Glide;
 
 import java.util.List;
+import java.util.Calendar;
+import java.util.Locale;
 
 public class PremierLeagueAdapter extends BaseAdapter {
 
@@ -26,15 +29,22 @@ public class PremierLeagueAdapter extends BaseAdapter {
         void onViewAll(String mode);
     }
 
+    public interface OnFixtureDateSelectedListener {
+        void onDateSelected(String apiDate, String displayDate);
+    }
+
     private final Context context;
     private final OnViewAllClickListener viewAllClickListener;
+    private final OnFixtureDateSelectedListener fixtureDateSelectedListener;
     private List<PremierLeagueSection> sections;
 
     public PremierLeagueAdapter(Context context, List<PremierLeagueSection> sections,
-                                OnViewAllClickListener viewAllClickListener) {
+                                OnViewAllClickListener viewAllClickListener,
+                                OnFixtureDateSelectedListener fixtureDateSelectedListener) {
         this.context = context;
         this.sections = sections;
         this.viewAllClickListener = viewAllClickListener;
+        this.fixtureDateSelectedListener = fixtureDateSelectedListener;
     }
 
     public void setSections(List<PremierLeagueSection> newSections) {
@@ -123,8 +133,13 @@ public class PremierLeagueAdapter extends BaseAdapter {
         TextView tvHeader = v.findViewById(R.id.tv_schedule_header);
         LinearLayout container = v.findViewById(R.id.match_list_container);
         Button btnViewAll = v.findViewById(R.id.btn_view_all_matches);
+        Button btnSelectDate = v.findViewById(R.id.btn_select_fixture_date);
         tvHeader.setText(section.getTitle());
-        btnViewAll.setOnClickListener(view -> openFullList(section.getListMode()));
+        btnViewAll.setVisibility(section.isExpanded() ? View.GONE : View.VISIBLE);
+        btnViewAll.setOnClickListener(view -> expandSection(section.getListMode()));
+        boolean isFixtures = PremierLeagueSection.MODE_UPCOMING.equals(section.getListMode());
+        btnSelectDate.setVisibility(isFixtures ? View.VISIBLE : View.GONE);
+        btnSelectDate.setOnClickListener(view -> showFixtureDatePicker());
         if (container != null) {
             container.removeAllViews();
             MatchListAdapter adapter = new MatchListAdapter(context, section.getMatches());
@@ -139,7 +154,8 @@ public class PremierLeagueAdapter extends BaseAdapter {
         LinearLayout container = v.findViewById(R.id.standings_table_container);
         Button btnViewAll = v.findViewById(R.id.btn_view_all_standings);
         tvTitle.setText(section.getTitle());
-        btnViewAll.setOnClickListener(view -> openFullList(section.getListMode()));
+        btnViewAll.setVisibility(section.isExpanded() ? View.GONE : View.VISIBLE);
+        btnViewAll.setOnClickListener(view -> expandSection(section.getListMode()));
         if (container != null) {
             container.removeAllViews();
             StandingTableAdapter adapter = new StandingTableAdapter(context, section.getStandings());
@@ -204,10 +220,27 @@ public class PremierLeagueAdapter extends BaseAdapter {
         }
     }
 
-    private void openFullList(String mode) {
+    private void expandSection(String mode) {
         if (viewAllClickListener != null) {
             viewAllClickListener.onViewAll(mode);
         }
+    }
+
+    private void showFixtureDatePicker() {
+        Calendar calendar = Calendar.getInstance();
+        new DatePickerDialog(
+                context,
+                (view, year, month, day) -> {
+                    String apiDate = String.format(Locale.US, "%04d-%02d-%02d", year, month + 1, day);
+                    String displayDate = String.format(Locale.US, "%02d/%02d/%04d", day, month + 1, year);
+                    if (fixtureDateSelectedListener != null) {
+                        fixtureDateSelectedListener.onDateSelected(apiDate, displayDate);
+                    }
+                },
+                calendar.get(Calendar.YEAR),
+                calendar.get(Calendar.MONTH),
+                calendar.get(Calendar.DAY_OF_MONTH))
+                .show();
     }
 
     private void loadTeamLogo(ImageView imageView, String logoUrl) {

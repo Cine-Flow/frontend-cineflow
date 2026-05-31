@@ -24,4 +24,12 @@ public class PremierLeagueViewModel extends ViewModel {
     public void refresh() {
         repository.fetchData();
     }
+
+    public void expandSection(String mode) {
+        repository.expandSection(mode);
+    }
+
+    public void loadFixturesForDate(String apiDate, String displayDate) {
+        repository.loadFixturesForDate(apiDate, displayDate);
+    }
 }

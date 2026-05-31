@@ -10,9 +10,5 @@
     <string name="premier_league_played">Trận</string>
     <string name="premier_league_points">Điểm</string>
     <string name="view_all">Xem tất cả</string>
-    <string name="premier_league_fixtures">Lịch đấu</string>
-    <string name="premier_league_results">Kết quả gần nhất</string>
-    <string name="premier_league_standings">Premier League 2025/26</string>
-    <string name="premier_league_empty">Không có dữ liệu</string>
-    <string name="premier_league_load_error">Không thể tải dữ liệu Ngoại hạng Anh</string>
+    <string name="premier_league_select_date">Chọn ngày xem lịch đấu</string>
 </resources>

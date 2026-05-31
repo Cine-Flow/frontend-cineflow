@@ -22,6 +22,15 @@
         android:orientation="vertical" />
 
     <Button
+        android:id="@+id/btn_select_fixture_date"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:backgroundTint="#4A246B"
+        android:text="@string/premier_league_select_date"
+        android:textColor="#FFFFFF" />
+
+    <Button
         android:id="@+id/btn_view_all_matches"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

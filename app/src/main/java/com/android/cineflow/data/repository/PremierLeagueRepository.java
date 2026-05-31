@@ -93,6 +93,70 @@ public class PremierLeagueRepository {
                 });
     }
 
+    public void expandSection(String mode) {
+        loading.setValue(true);
+        errorMessage.setValue(null);
+
+        if (PremierLeagueSection.MODE_STANDINGS.equals(mode)) {
+            ApiClient.getFilmApiService().getPremierLeagueStandings()
+                    .enqueue(new Callback<ApiResponseDto<List<FootballStandingDto>>>() {
+                        @Override
+                        public void onResponse(Call<ApiResponseDto<List<FootballStandingDto>>> call,
+                                               Response<ApiResponseDto<List<FootballStandingDto>>> response) {
+                            loading.setValue(false);
+                            if (response.isSuccessful()
+                                    && response.body() != null
+                                    && response.body().getData() != null) {
+                                replaceStandingsSection(toStandings(response.body().getData()));
+                                return;
+                            }
+                            errorMessage.setValue("Unable to load Premier League standings");
+                        }
+
+                        @Override
+                        public void onFailure(Call<ApiResponseDto<List<FootballStandingDto>>> call, Throwable t) {
+                            loading.setValue(false);
+                            errorMessage.setValue("Unable to connect to the server");
+                            Log.e(TAG, "Premier League standings API call failed", t);
+                        }
+                    });
+            return;
+        }
+
+        loadMatches(mode, null, null);
+    }
+
+    public void loadFixturesForDate(String apiDate, String displayDate) {
+        loading.setValue(true);
+        errorMessage.setValue(null);
+        loadMatches(PremierLeagueSection.MODE_UPCOMING, apiDate, displayDate);
+    }
+
+    private void loadMatches(String mode, String apiDate, String displayDate) {
+        ApiClient.getFilmApiService().getPremierLeagueMatches(mode, apiDate)
+                .enqueue(new Callback<ApiResponseDto<List<FootballMatchDto>>>() {
+                    @Override
+                    public void onResponse(Call<ApiResponseDto<List<FootballMatchDto>>> call,
+                                           Response<ApiResponseDto<List<FootballMatchDto>>> response) {
+                        loading.setValue(false);
+                        if (response.isSuccessful()
+                                && response.body() != null
+                                && response.body().getData() != null) {
+                            replaceMatchSection(mode, toMatches(response.body().getData()), displayDate);
+                            return;
+                        }
+                        errorMessage.setValue("Unable to load Premier League matches");
+                    }
+
+                    @Override
+                    public void onFailure(Call<ApiResponseDto<List<FootballMatchDto>>> call, Throwable t) {
+                        loading.setValue(false);
+                        errorMessage.setValue("Unable to connect to the server");
+                        Log.e(TAG, "Premier League matches API call failed", t);
+                    }
+                });
+    }
+
     private List<PremierLeagueSection> toSections(PremierLeagueHomeDto data) {
         List<PremierLeagueSection> result = new ArrayList<>();
         addCardsSection(result, PremierLeagueSection.TYPE_BANNER, "", data.getBanners(), ContentCard.STYLE_BANNER);
@@ -104,7 +168,7 @@ public class PremierLeagueRepository {
                     PremierLeagueSection.TYPE_MATCH_SCHEDULE,
                     scheduleHeader(schedule),
                     schedule,
-                    "SCHEDULED"));
+                    PremierLeagueSection.MODE_UPCOMING));
         }
 
         List<Match> results = toMatches(data.getResults());
@@ -113,7 +177,7 @@ public class PremierLeagueRepository {
                     PremierLeagueSection.TYPE_MATCH_SCHEDULE,
                     "Kết quả gần nhất",
                     results,
-                    "FINISHED"));
+                    PremierLeagueSection.MODE_FINISHED));
         }
 
         List<Standing> standings = toStandings(data.getStandings());
@@ -122,8 +186,7 @@ public class PremierLeagueRepository {
                     PremierLeagueSection.TYPE_STANDINGS,
                     standingsHeader(data.getStandings()),
                     standings,
-                    true,
-                    true));
+                    false));
         }
 
         addCardsSection(result, PremierLeagueSection.TYPE_HORIZONTAL_LIST, "Bóng đá Anh", data.getNews(), ContentCard.STYLE_LANDSCAPE);
@@ -199,6 +262,45 @@ public class PremierLeagueRepository {
             return "Premier League";
         }
         return "Premier League " + standings.get(0).getSeason();
+    }
+
+    private void replaceMatchSection(String mode, List<Match> matches, String displayDate) {
+        List<PremierLeagueSection> current = sections.getValue();
+        if (current == null) return;
+
+        List<PremierLeagueSection> updated = new ArrayList<>(current);
+        for (int i = 0; i < updated.size(); i++) {
+            PremierLeagueSection section = updated.get(i);
+            if (mode.equals(section.getListMode())) {
+                updated.set(i, new PremierLeagueSection(
+                        PremierLeagueSection.TYPE_MATCH_SCHEDULE,
+                        displayDate != null ? "Lịch đấu - " + displayDate : section.getTitle(),
+                        matches,
+                        mode,
+                        true));
+                sections.setValue(updated);
+                return;
+            }
+        }
+    }
+
+    private void replaceStandingsSection(List<Standing> standings) {
+        List<PremierLeagueSection> current = sections.getValue();
+        if (current == null) return;
+
+        List<PremierLeagueSection> updated = new ArrayList<>(current);
+        for (int i = 0; i < updated.size(); i++) {
+            PremierLeagueSection section = updated.get(i);
+            if (PremierLeagueSection.MODE_STANDINGS.equals(section.getListMode())) {
+                updated.set(i, new PremierLeagueSection(
+                        PremierLeagueSection.TYPE_STANDINGS,
+                        section.getTitle(),
+                        standings,
+                        true));
+                sections.setValue(updated);
+                return;
+            }
+        }
     }
 
     private LocalDateTime parseDateTime(String value) {
