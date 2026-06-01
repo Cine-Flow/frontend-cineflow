@@ -32,4 +32,8 @@ public class PremierLeagueViewModel extends ViewModel {
     public void loadFixturesForDate(String apiDate, String displayDate) {
         repository.loadFixturesForDate(apiDate, displayDate);
     }
+
+    public void loadMatchesForDate(String mode, String apiDate, String displayDate) {
+        repository.loadMatchesForDate(mode, apiDate, displayDate);
+    }
 }

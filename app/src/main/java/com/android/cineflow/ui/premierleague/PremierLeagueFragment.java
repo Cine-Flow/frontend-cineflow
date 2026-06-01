@@ -28,7 +28,7 @@ public class PremierLeagueFragment extends BaseFragment {
         ListView lvPremierLeague = view.findViewById(R.id.lv_premier_league);
         adapter = new PremierLeagueAdapter(requireContext(), new ArrayList<>(),
                 mode -> viewModel.expandSection(mode),
-                (apiDate, displayDate) -> viewModel.loadFixturesForDate(apiDate, displayDate),
+                (mode, apiDate, displayDate) -> viewModel.loadMatchesForDate(mode, apiDate, displayDate),
                 card -> {
                     String videoUrl = card.getStreamUrl();
                     if (videoUrl == null || videoUrl.isEmpty()) {

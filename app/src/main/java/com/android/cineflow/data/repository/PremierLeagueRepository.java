@@ -38,6 +38,8 @@ public class PremierLeagueRepository {
     private final MutableLiveData<List<PremierLeagueSection>> sections = new MutableLiveData<>(new ArrayList<>());
     private final MutableLiveData<Boolean> loading = new MutableLiveData<>(false);
     private final MutableLiveData<String> errorMessage = new MutableLiveData<>();
+    private String selectedScheduleDate = null;
+    private String selectedResultsDate = null;
 
     public static PremierLeagueRepository getInstance() {
         if (instance == null) instance = new PremierLeagueRepository();
@@ -61,6 +63,8 @@ public class PremierLeagueRepository {
     }
 
     public void fetchData() {
+        selectedScheduleDate = null;
+        selectedResultsDate = null;
         loading.setValue(true);
         errorMessage.setValue(null);
 
@@ -123,13 +127,32 @@ public class PremierLeagueRepository {
             return;
         }
 
-        loadMatches(mode, null, null);
+        String apiDate = PremierLeagueSection.MODE_FINISHED.equals(mode) ? selectedResultsDate : selectedScheduleDate;
+        String displayDate = null;
+        if (apiDate != null) {
+            try {
+                String[] parts = apiDate.split("-");
+                if (parts.length == 3) {
+                    displayDate = parts[2] + "/" + parts[1] + "/" + parts[0];
+                }
+            } catch (Exception ignored) {}
+        }
+        loadMatches(mode, apiDate, displayDate);
     }
 
     public void loadFixturesForDate(String apiDate, String displayDate) {
+        loadMatchesForDate(PremierLeagueSection.MODE_UPCOMING, apiDate, displayDate);
+    }
+
+    public void loadMatchesForDate(String mode, String apiDate, String displayDate) {
+        if (PremierLeagueSection.MODE_FINISHED.equals(mode)) {
+            selectedResultsDate = apiDate;
+        } else {
+            selectedScheduleDate = apiDate;
+        }
         loading.setValue(true);
         errorMessage.setValue(null);
-        loadMatches(PremierLeagueSection.MODE_UPCOMING, apiDate, displayDate);
+        loadMatches(mode, apiDate, displayDate);
     }
 
     private void loadMatches(String mode, String apiDate, String displayDate) {
@@ -163,22 +186,18 @@ public class PremierLeagueRepository {
         addCardsSection(result, PremierLeagueSection.TYPE_HORIZONTAL_LIST, "Highlights", data.getHighlights(), ContentCard.STYLE_LANDSCAPE);
 
         List<Match> schedule = toMatches(data.getSchedule());
-        if (!schedule.isEmpty()) {
-            result.add(new PremierLeagueSection(
-                    PremierLeagueSection.TYPE_MATCH_SCHEDULE,
-                    scheduleHeader(schedule),
-                    schedule,
-                    PremierLeagueSection.MODE_UPCOMING));
-        }
+        result.add(new PremierLeagueSection(
+                PremierLeagueSection.TYPE_MATCH_SCHEDULE,
+                scheduleHeader(schedule),
+                schedule,
+                PremierLeagueSection.MODE_UPCOMING));
 
         List<Match> results = toMatches(data.getResults());
-        if (!results.isEmpty()) {
-            result.add(new PremierLeagueSection(
-                    PremierLeagueSection.TYPE_MATCH_SCHEDULE,
-                    "Kết quả gần nhất",
-                    results,
-                    PremierLeagueSection.MODE_FINISHED));
-        }
+        result.add(new PremierLeagueSection(
+                PremierLeagueSection.TYPE_MATCH_SCHEDULE,
+                "Kết quả gần nhất",
+                results,
+                PremierLeagueSection.MODE_FINISHED));
 
         List<Standing> standings = toStandings(data.getStandings());
         if (!standings.isEmpty()) {
@@ -255,6 +274,9 @@ public class PremierLeagueRepository {
     }
 
     private String scheduleHeader(List<Match> schedule) {
+        if (schedule == null || schedule.isEmpty()) {
+            return "Lịch đấu";
+        }
         String date = schedule.get(0).getDate();
         return date.isEmpty() ? "Lịch đấu" : "Lịch đấu - " + date;
     }
@@ -276,10 +298,10 @@ public class PremierLeagueRepository {
             if (mode.equals(section.getListMode())) {
                 updated.set(i, new PremierLeagueSection(
                         PremierLeagueSection.TYPE_MATCH_SCHEDULE,
-                        displayDate != null ? "Lịch đấu - " + displayDate : section.getTitle(),
+                        displayDate != null ? (PremierLeagueSection.MODE_FINISHED.equals(mode) ? "Kết quả - " + displayDate : "Lịch đấu - " + displayDate) : section.getTitle(),
                         matches,
                         mode,
-                        true));
+                        section.isExpanded()));
                 sections.setValue(updated);
                 return;
             }

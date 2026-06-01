@@ -31,7 +31,7 @@ public class PremierLeagueAdapter extends BaseAdapter {
     }
 
     public interface OnFixtureDateSelectedListener {
-        void onDateSelected(String apiDate, String displayDate);
+        void onDateSelected(String mode, String apiDate, String displayDate);
     }
 
     public interface OnCardClickListener {
@@ -148,14 +148,31 @@ public class PremierLeagueAdapter extends BaseAdapter {
         tvHeader.setText(section.getTitle());
         btnViewAll.setVisibility(section.isExpanded() ? View.GONE : View.VISIBLE);
         btnViewAll.setOnClickListener(view -> expandSection(section.getListMode()));
-        boolean isFixtures = PremierLeagueSection.MODE_UPCOMING.equals(section.getListMode());
-        btnSelectDate.setVisibility(isFixtures ? View.VISIBLE : View.GONE);
+        boolean isMatchSection = PremierLeagueSection.MODE_UPCOMING.equals(section.getListMode()) ||
+                                 PremierLeagueSection.MODE_FINISHED.equals(section.getListMode());
+        btnSelectDate.setVisibility(isMatchSection ? View.VISIBLE : View.GONE);
+        if (isMatchSection) {
+            if (PremierLeagueSection.MODE_FINISHED.equals(section.getListMode())) {
+                btnSelectDate.setText("Chọn ngày xem kết quả");
+            } else {
+                btnSelectDate.setText("Chọn ngày xem lịch đấu");
+            }
+        }
         btnSelectDate.setOnClickListener(view -> showFixtureDatePicker(section));
         boolean hasMatches = section.getMatches() != null && !section.getMatches().isEmpty();
-        tvEmptyMatches.setVisibility(hasMatches ? View.GONE : View.VISIBLE);
+        if (hasMatches) {
+            tvEmptyMatches.setVisibility(View.GONE);
+        } else {
+            tvEmptyMatches.setVisibility(View.VISIBLE);
+            if (PremierLeagueSection.MODE_FINISHED.equals(section.getListMode())) {
+                tvEmptyMatches.setText("Không có kết quả đấu trong ngày này");
+            } else {
+                tvEmptyMatches.setText("Không có lịch thi đấu trong ngày này");
+            }
+        }
         if (container != null) {
             container.removeAllViews();
-            MatchListAdapter adapter = new MatchListAdapter(context, section.getMatches());
+            MatchListAdapter adapter = new MatchListAdapter(context, section.getMatches(), section.getListMode());
             for (int i = 0; i < adapter.getCount(); i++) {
                 container.addView(adapter.getView(i, null, container));
             }
@@ -180,8 +197,12 @@ public class PremierLeagueAdapter extends BaseAdapter {
 
     // --- Inner Adapters ---
     class MatchListAdapter extends BaseAdapter {
-        Context ctx; List<Match> matches;
-        MatchListAdapter(Context ctx, List<Match> matches) { this.ctx = ctx; this.matches = matches; }
+        Context ctx; List<Match> matches; String listMode;
+        MatchListAdapter(Context ctx, List<Match> matches, String listMode) {
+            this.ctx = ctx;
+            this.matches = matches;
+            this.listMode = listMode;
+        }
         @Override public int getCount() { return matches != null ? matches.size() : 0; }
         @Override public Object getItem(int position) { return matches.get(position); }
         @Override public long getItemId(int position) { return position; }
@@ -199,13 +220,15 @@ public class PremierLeagueAdapter extends BaseAdapter {
             loadTeamLogo(ivAway, m.getAwayTeamLogo());
             
             tvCenter.setTextColor(Color.parseColor("#FFFFFF"));
-            if (m.isLive()) {
-                tvCenter.setText("LIVE");
-                tvCenter.setBackgroundColor(Color.parseColor("#FF1744")); // Neon Red Live
-            } else if (m.getHomeScore() != null && !m.getHomeScore().isEmpty()) {
-                tvCenter.setText(m.getHomeScore() + " - " + m.getAwayScore());
+            if (PremierLeagueSection.MODE_FINISHED.equals(listMode)) {
+                // Results section: always show score
+                String score = (m.getHomeScore() != null && !m.getHomeScore().isEmpty())
+                        ? m.getHomeScore() + " - " + m.getAwayScore()
+                        : "0 - 0";
+                tvCenter.setText(score);
                 tvCenter.setBackgroundColor(Color.parseColor("#2A2A2A")); // Premium Grey Box
             } else {
+                // Schedule section: always show kickoff time (match hour)
                 tvCenter.setText(m.getTime());
                 tvCenter.setBackgroundColor(Color.parseColor("#1F1F1F")); // Solid Time Box
             }
@@ -285,7 +308,7 @@ public class PremierLeagueAdapter extends BaseAdapter {
                     String apiDate = String.format(Locale.US, "%04d-%02d-%02d", year, month + 1, day);
                     String displayDate = String.format(Locale.US, "%02d/%02d/%04d", day, month + 1, year);
                     if (fixtureDateSelectedListener != null) {
-                        fixtureDateSelectedListener.onDateSelected(apiDate, displayDate);
+                        fixtureDateSelectedListener.onDateSelected(section.getListMode(), apiDate, displayDate);
                     }
                 },
                 calendar.get(Calendar.YEAR),
