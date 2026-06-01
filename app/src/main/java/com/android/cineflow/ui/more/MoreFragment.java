@@ -46,7 +46,7 @@ public class MoreFragment extends BaseFragment {
 
             switch (section.getType()) {
                 case MoreSection.TYPE_HEADER_LOGIN:
-                    openAccountOrLogin();
+                    openAccountOrLogin(null);
                     break;
                 case MoreSection.TYPE_ADMIN_ENTRY:
                     startActivity(new Intent(requireContext(), AdminDashboardActivity.class));
@@ -96,20 +96,14 @@ public class MoreFragment extends BaseFragment {
                 new MoreSection.MoreItem("Sản phẩm yêu thích", R.drawable.ic_heart, null, MoreSection.ACTION_FAVORITES)
         )));
 
-        // 4. Apps
-        data.add(new MoreSection(MoreSection.TYPE_APPS_SECTION, "Ứng dụng", Arrays.asList(
-                new MoreSection.MoreItem("VietjetAir", R.drawable.vietjetair_logo, null),
-                new MoreSection.MoreItem("Vietnam Airlines", R.drawable.vn_airlines, null),
-                new MoreSection.MoreItem("Nạp tiền điện thoại", R.drawable.card, null),
-                new MoreSection.MoreItem("Khách hàng thân thiết", R.drawable.customer_logo, null)
+        // 4. App Settings & Support
+        data.add(new MoreSection(MoreSection.TYPE_ACTION_GRID, "Cài đặt & Hỗ trợ", Arrays.asList(
+                new MoreSection.MoreItem("Cài đặt", R.drawable.ic_settings, null, MoreSection.ACTION_SETTINGS),
+                new MoreSection.MoreItem("Liên hệ hỗ trợ", R.drawable.ic_help, null, MoreSection.ACTION_SUPPORT),
+                new MoreSection.MoreItem("Điều khoản & Chính sách", R.drawable.ic_shield, null, MoreSection.ACTION_TERMS)
         )));
 
-        // 5. Help
-        data.add(new MoreSection(MoreSection.TYPE_HELP_ITEM, "Trợ giúp", Arrays.asList(
-                new MoreSection.MoreItem("Thông tin liên hệ", 0, null)
-        )));
-
-        // 6. Sign In / Sign Out button (always visible)
+        // 5. Sign In / Sign Out button (always visible)
         boolean isLogged = authManager != null && authManager.isLoggedIn();
         data.add(new MoreSection(MoreSection.TYPE_LOGOUT, isLogged ? "Sign Out" : "Sign In", null));
 
@@ -134,6 +128,19 @@ public class MoreFragment extends BaseFragment {
             openProtectedList(UserContentListActivity.MODE_LIBRARY);
         } else if (MoreSection.ACTION_FAVORITES.equals(item.getAction())) {
             openProtectedList(UserContentListActivity.MODE_FAVORITES);
+        } else if (MoreSection.ACTION_GIFT.equals(item.getAction())) {
+            android.widget.Toast.makeText(requireContext(), "Chức năng đổi mã quà tặng sẽ sớm ra mắt!", android.widget.Toast.LENGTH_SHORT).show();
+        } else if (MoreSection.ACTION_SETTINGS.equals(item.getAction())) {
+            openAccountOrLogin("settings");
+        } else if (MoreSection.ACTION_SUPPORT.equals(item.getAction())) {
+            openAccountOrLogin("support");
+        } else if (MoreSection.ACTION_TERMS.equals(item.getAction())) {
+            openAccountOrLogin("terms");
+        } else {
+            String label = item.getLabel();
+            if (label != null) {
+                android.widget.Toast.makeText(requireContext(), "Chức năng liên kết với " + label + " đang được phát triển!", android.widget.Toast.LENGTH_SHORT).show();
+            }
         }
     }
 
@@ -148,12 +155,16 @@ public class MoreFragment extends BaseFragment {
         startActivity(intent);
     }
 
-    private void openAccountOrLogin() {
+    private void openAccountOrLogin(String targetSection) {
         AuthManager auth = AuthManager.getInstance();
         if (auth == null || !auth.isLoggedIn()) {
             openLogin();
         } else {
-            startActivity(new Intent(requireContext(), AccountActivity.class));
+            Intent intent = new Intent(requireContext(), AccountActivity.class);
+            if (targetSection != null) {
+                intent.putExtra("target_section", targetSection);
+            }
+            startActivity(intent);
         }
     }
 

@@ -94,7 +94,6 @@
                 android:fontFamily="sans-serif-medium" />
 
             <TextView
-                android:id="@+id/tv_history_count"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Yêu thích"
@@ -116,7 +115,7 @@
             android:gravity="center">
 
             <TextView
-                android:id="@+id/tv_download_count"
+                android:id="@+id/tv_history_count"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="0"
@@ -146,6 +145,7 @@
             android:gravity="center">
 
             <TextView
+                android:id="@+id/tv_download_count"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="0"

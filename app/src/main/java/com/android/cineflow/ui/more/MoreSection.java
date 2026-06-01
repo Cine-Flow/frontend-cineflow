@@ -13,6 +13,10 @@ public class MoreSection {
     public static final String ACTION_LIBRARY = "library";
     public static final String ACTION_GIFT = "gift";
     public static final String ACTION_FAVORITES = "favorites";
+    public static final String ACTION_SETTINGS = "settings";
+    public static final String ACTION_TERMS = "terms";
+    public static final String ACTION_PRIVACY = "privacy";
+    public static final String ACTION_SUPPORT = "support";
 
     private final int type;
     private final String title;
