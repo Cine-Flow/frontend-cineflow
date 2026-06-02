@@ -83,6 +83,10 @@ public class UserContentListActivity extends AppCompatActivity {
             intent.putExtra(PlayerActivity.EXTRA_VIDEO_URL, item.history.getEpisode().getVideoUrl());
             intent.putExtra(PlayerActivity.EXTRA_EPISODE_ID, item.history.getEpisode().getId());
             intent.putExtra(PlayerActivity.EXTRA_RESUME_POSITION_SECONDS, item.history.getResumePositionSeconds());
+            if (item.film != null) {
+                intent.putExtra("extra_film_id", item.film.getId());
+                intent.putExtra(PlayerActivity.EXTRA_TITLE, item.film.getTitle() + " - " + (item.history.getEpisode().getTitle() != null ? item.history.getEpisode().getTitle() : ("Tập " + item.history.getEpisode().getEpisodeNumber())));
+            }
             startActivity(intent);
         } else if (item.film != null) {
             Intent intent = new Intent(this, FilmDetailActivity.class);

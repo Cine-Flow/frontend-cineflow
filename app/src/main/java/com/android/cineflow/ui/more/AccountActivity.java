@@ -2,6 +2,7 @@ package com.android.cineflow.ui.more;
 
 import android.os.Bundle;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -10,10 +11,13 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SwitchCompat;
 
 import com.android.cineflow.R;
+import com.android.cineflow.data.auth.AuthManager;
 import com.android.cineflow.data.network.ApiClient;
 import com.android.cineflow.data.network.dto.ApiResponseDto;
 import com.android.cineflow.data.network.dto.SubscriptionDto;
 import com.android.cineflow.data.network.dto.UserProfileDto;
+import com.android.cineflow.data.network.dto.UpdateProfileRequestDto;
+import com.android.cineflow.data.network.dto.ChangePasswordRequestDto;
 import com.android.cineflow.data.settings.SettingsManager;
 
 import java.io.File;
@@ -84,6 +88,15 @@ public class AccountActivity extends AppCompatActivity {
 
         // Back button action
         findViewById(R.id.btn_back).setOnClickListener(v -> finish());
+
+        // Edit Profile Quick Action
+        findViewById(R.id.layout_profile_name_edit).setOnClickListener(v -> showEditProfileDialog());
+
+        // Edit Profile row action
+        findViewById(R.id.row_edit_profile).setOnClickListener(v -> showEditProfileDialog());
+
+        // Change Password row action
+        findViewById(R.id.row_change_password).setOnClickListener(v -> showChangePasswordDialog());
 
         // Video Quality row action
         findViewById(R.id.row_video_quality).setOnClickListener(v -> showQualityDialog());
@@ -311,5 +324,126 @@ public class AccountActivity extends AppCompatActivity {
         } catch (android.content.ActivityNotFoundException e) {
             Toast.makeText(this, "Thiết bị không hỗ trợ cuộc gọi", Toast.LENGTH_SHORT).show();
         }
+    }
+
+    // --- Edit Profile Dialog ---
+    private void showEditProfileDialog() {
+        View dialogView = getLayoutInflater().inflate(R.layout.dialog_edit_profile, null);
+        EditText etFullName = dialogView.findViewById(R.id.et_full_name);
+
+        // Pre-fill the current display name
+        etFullName.setText(tvName.getText().toString());
+        etFullName.setSelection(etFullName.getText().length());
+
+        AlertDialog dialog = new AlertDialog.Builder(this)
+                .setView(dialogView)
+                .create();
+
+        // Safe check for background transparent corner styling
+        if (dialog.getWindow() != null) {
+            dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+        }
+
+        dialogView.findViewById(R.id.btn_cancel).setOnClickListener(v -> dialog.dismiss());
+        dialogView.findViewById(R.id.btn_save).setOnClickListener(v -> {
+            String newName = etFullName.getText().toString().trim();
+            if (newName.isEmpty()) {
+                Toast.makeText(this, "Họ và tên không được để trống", Toast.LENGTH_SHORT).show();
+                return;
+            }
+            performUpdateProfileApi(newName, dialog);
+        });
+
+        dialog.show();
+    }
+
+    private void performUpdateProfileApi(String newName, AlertDialog dialog) {
+        UpdateProfileRequestDto request = new UpdateProfileRequestDto(newName);
+        ApiClient.getFilmApiService().updateProfile(request).enqueue(new Callback<ApiResponseDto<UserProfileDto>>() {
+            @Override
+            public void onResponse(Call<ApiResponseDto<UserProfileDto>> call, Response<ApiResponseDto<UserProfileDto>> response) {
+                if (response.isSuccessful() && response.body() != null && response.body().getData() != null) {
+                    dialog.dismiss();
+                    Toast.makeText(AccountActivity.this, "Cập nhật hồ sơ thành công!", Toast.LENGTH_SHORT).show();
+                    bindProfile(response.body().getData());
+                } else {
+                    Toast.makeText(AccountActivity.this, "Không thể cập nhật hồ sơ", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ApiResponseDto<UserProfileDto>> call, Throwable t) {
+                Toast.makeText(AccountActivity.this, "Lỗi kết nối máy chủ", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    // --- Change Password Dialog ---
+    private void showChangePasswordDialog() {
+        View dialogView = getLayoutInflater().inflate(R.layout.dialog_change_password, null);
+        EditText etOldPassword = dialogView.findViewById(R.id.et_old_password);
+        EditText etNewPassword = dialogView.findViewById(R.id.et_new_password);
+        EditText etConfirmPassword = dialogView.findViewById(R.id.et_confirm_password);
+
+        AlertDialog dialog = new AlertDialog.Builder(this)
+                .setView(dialogView)
+                .create();
+
+        if (dialog.getWindow() != null) {
+            dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+        }
+
+        dialogView.findViewById(R.id.btn_cancel).setOnClickListener(v -> dialog.dismiss());
+        dialogView.findViewById(R.id.btn_save).setOnClickListener(v -> {
+            String oldPass = etOldPassword.getText().toString();
+            String newPass = etNewPassword.getText().toString();
+            String confirmPass = etConfirmPassword.getText().toString();
+
+            if (oldPass.isEmpty() || newPass.isEmpty() || confirmPass.isEmpty()) {
+                Toast.makeText(this, "Vui lòng nhập đầy đủ thông tin", Toast.LENGTH_SHORT).show();
+                return;
+            }
+            if (newPass.length() < 6) {
+                Toast.makeText(this, "Mật khẩu mới phải có tối thiểu 6 ký tự", Toast.LENGTH_SHORT).show();
+                return;
+            }
+            if (!newPass.equals(confirmPass)) {
+                Toast.makeText(this, "Xác nhận mật khẩu mới không khớp", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            performChangePasswordApi(oldPass, newPass, dialog);
+        });
+
+        dialog.show();
+    }
+
+    private void performChangePasswordApi(String oldPass, String newPass, AlertDialog dialog) {
+        ChangePasswordRequestDto request = new ChangePasswordRequestDto(oldPass, newPass);
+        ApiClient.getFilmApiService().changePassword(request).enqueue(new Callback<ApiResponseDto<Void>>() {
+            @Override
+            public void onResponse(Call<ApiResponseDto<Void>> call, Response<ApiResponseDto<Void>> response) {
+                if (response.isSuccessful()) {
+                    dialog.dismiss();
+                    Toast.makeText(AccountActivity.this, "Đổi mật khẩu thành công!", Toast.LENGTH_SHORT).show();
+                } else {
+                    String errorMsg = "Mật khẩu cũ không chính xác hoặc lỗi hệ thống";
+                    try {
+                        if (response.errorBody() != null) {
+                            String errStr = response.errorBody().string();
+                            if (errStr.contains("Mật khẩu cũ không chính xác")) {
+                                errorMsg = "Mật khẩu cũ không chính xác";
+                            }
+                        }
+                    } catch (Exception ignored) {}
+                    Toast.makeText(AccountActivity.this, errorMsg, Toast.LENGTH_LONG).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ApiResponseDto<Void>> call, Throwable t) {
+                Toast.makeText(AccountActivity.this, "Lỗi kết nối máy chủ", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 }

@@ -125,6 +125,10 @@ public class FilmDetailActivity extends AppCompatActivity {
         Intent intent = new Intent(this, PlayerActivity.class);
         intent.putExtra(PlayerActivity.EXTRA_VIDEO_URL, episode.getVideoUrl());
         intent.putExtra(PlayerActivity.EXTRA_EPISODE_ID, episode.getId());
+        if (currentFilm != null) {
+            intent.putExtra("extra_film_id", currentFilm.getId());
+            intent.putExtra(PlayerActivity.EXTRA_TITLE, currentFilm.getTitle() + " - " + (episode.getTitle() != null ? episode.getTitle() : ("Tập " + episode.getEpisodeNumber())));
+        }
         startActivity(intent);
     }
 

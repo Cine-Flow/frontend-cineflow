@@ -92,7 +92,7 @@ public class MoreFragment extends BaseFragment {
         // 3. Action Grid
         data.add(new MoreSection(MoreSection.TYPE_ACTION_GRID, null, Arrays.asList(
                 new MoreSection.MoreItem("Thư viện", R.drawable.ic_library, null, MoreSection.ACTION_LIBRARY),
-                new MoreSection.MoreItem("Đổi mã quà tặng", R.drawable.ic_gift, null, MoreSection.ACTION_GIFT),
+                new MoreSection.MoreItem("Thống kê cá nhân", R.drawable.ic_admin_stats, null, MoreSection.ACTION_ANALYTICS),
                 new MoreSection.MoreItem("Sản phẩm yêu thích", R.drawable.ic_heart, null, MoreSection.ACTION_FAVORITES)
         )));
 
@@ -128,8 +128,8 @@ public class MoreFragment extends BaseFragment {
             openProtectedList(UserContentListActivity.MODE_LIBRARY);
         } else if (MoreSection.ACTION_FAVORITES.equals(item.getAction())) {
             openProtectedList(UserContentListActivity.MODE_FAVORITES);
-        } else if (MoreSection.ACTION_GIFT.equals(item.getAction())) {
-            android.widget.Toast.makeText(requireContext(), "Chức năng đổi mã quà tặng sẽ sớm ra mắt!", android.widget.Toast.LENGTH_SHORT).show();
+        } else if (MoreSection.ACTION_ANALYTICS.equals(item.getAction())) {
+            openProtectedAnalytics();
         } else if (MoreSection.ACTION_SETTINGS.equals(item.getAction())) {
             openAccountOrLogin("settings");
         } else if (MoreSection.ACTION_SUPPORT.equals(item.getAction())) {
@@ -142,6 +142,15 @@ public class MoreFragment extends BaseFragment {
                 android.widget.Toast.makeText(requireContext(), "Chức năng liên kết với " + label + " đang được phát triển!", android.widget.Toast.LENGTH_SHORT).show();
             }
         }
+    }
+
+    private void openProtectedAnalytics() {
+        AuthManager auth = AuthManager.getInstance();
+        if (auth == null || !auth.isLoggedIn()) {
+            openLogin();
+            return;
+        }
+        startActivity(new Intent(requireContext(), UserAnalyticsActivity.class));
     }
 
     private void openProtectedList(String mode) {

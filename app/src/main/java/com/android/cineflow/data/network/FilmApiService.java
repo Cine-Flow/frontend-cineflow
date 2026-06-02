@@ -15,6 +15,9 @@ import com.android.cineflow.data.network.dto.PremierLeagueHomeDto;
 import com.android.cineflow.data.network.dto.RegisterRequestDto;
 import com.android.cineflow.data.network.dto.UpdateFilmRequestDto;
 import com.android.cineflow.data.network.dto.UpdateWatchHistoryRequestDto;
+import com.android.cineflow.data.network.dto.UpdateProfileRequestDto;
+import com.android.cineflow.data.network.dto.ChangePasswordRequestDto;
+import com.android.cineflow.data.network.dto.UserAnalyticsDto;
 import com.android.cineflow.data.network.dto.UserProfileDto;
 import com.android.cineflow.data.network.dto.WatchHistoryDto;
 import com.android.cineflow.data.network.dto.FilmDto;
@@ -74,6 +77,15 @@ public interface FilmApiService {
 
     @GET("user/me")
     Call<ApiResponseDto<UserProfileDto>> getProfile();
+
+    @GET("user/analytics")
+    Call<ApiResponseDto<UserAnalyticsDto>> getUserAnalytics();
+
+    @PUT("user/profile")
+    Call<ApiResponseDto<UserProfileDto>> updateProfile(@Body UpdateProfileRequestDto request);
+
+    @POST("user/change-password")
+    Call<ApiResponseDto<Void>> changePassword(@Body ChangePasswordRequestDto request);
     
     @GET("films")
     Call<ApiResponseDto<List<FilmDto>>> getFilmsByType(@Query("type") String type);

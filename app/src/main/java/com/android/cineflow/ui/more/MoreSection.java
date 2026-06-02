@@ -11,7 +11,7 @@ public class MoreSection {
     public static final int TYPE_ADMIN_ENTRY = 5;
     public static final int TYPE_LOGOUT = 6;
     public static final String ACTION_LIBRARY = "library";
-    public static final String ACTION_GIFT = "gift";
+    public static final String ACTION_ANALYTICS = "analytics";
     public static final String ACTION_FAVORITES = "favorites";
     public static final String ACTION_SETTINGS = "settings";
     public static final String ACTION_TERMS = "terms";
