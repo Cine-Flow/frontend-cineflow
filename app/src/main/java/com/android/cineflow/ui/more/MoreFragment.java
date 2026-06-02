@@ -48,6 +48,9 @@ public class MoreFragment extends BaseFragment {
                 case MoreSection.TYPE_HEADER_LOGIN:
                     openAccountOrLogin(null);
                     break;
+                case MoreSection.TYPE_DOWNLOAD_BANNER:
+                    startActivity(new Intent(requireContext(), DownloadManagerActivity.class));
+                    break;
                 case MoreSection.TYPE_ADMIN_ENTRY:
                     startActivity(new Intent(requireContext(), AdminDashboardActivity.class));
                     break;
@@ -56,6 +59,13 @@ public class MoreFragment extends BaseFragment {
                     break;
             }
         });
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        buildSections();
+        loadProfileStats();
     }
 
     @Override

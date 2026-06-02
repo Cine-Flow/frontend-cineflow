@@ -123,8 +123,12 @@ public class AccountActivity extends AppCompatActivity {
         switchAutoplay.setOnCheckedChangeListener((buttonView, isChecked) -> 
             settings.setAutoplayEnabled(isChecked));
 
-        switchNotifications.setOnCheckedChangeListener((buttonView, isChecked) -> 
-            settings.setNotificationsEnabled(isChecked));
+        switchNotifications.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            settings.setNotificationsEnabled(isChecked);
+            if (isChecked) {
+                triggerLocalWelcomeNotification();
+            }
+        });
 
         // Initial cache size display
         updateCacheSizeText();
@@ -445,5 +449,33 @@ public class AccountActivity extends AppCompatActivity {
                 Toast.makeText(AccountActivity.this, "Lỗi kết nối máy chủ", Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+    private void triggerLocalWelcomeNotification() {
+        android.content.Context context = this;
+        String channelId = "cineflow_notifications";
+        String channelName = "Cine-Flow Recommendations";
+        
+        android.app.NotificationManager notificationManager = (android.app.NotificationManager) getSystemService(android.content.Context.NOTIFICATION_SERVICE);
+        if (notificationManager == null) return;
+
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+            android.app.NotificationChannel channel = new android.app.NotificationChannel(
+                    channelId,
+                    channelName,
+                    android.app.NotificationManager.IMPORTANCE_DEFAULT
+            );
+            channel.setDescription("Thông báo giới thiệu phim từ Cine-Flow");
+            notificationManager.createNotificationChannel(channel);
+        }
+
+        androidx.core.app.NotificationCompat.Builder builder = new androidx.core.app.NotificationCompat.Builder(context, channelId)
+                .setSmallIcon(R.drawable.ic_movies)
+                .setContentTitle("Chào mừng trở lại Cine-Flow! 🎬")
+                .setContentText("Bạn đã bật thông báo thành công. Khám phá ngay các bộ phim bom tấn mới nhất hôm nay!")
+                .setPriority(androidx.core.app.NotificationCompat.PRIORITY_DEFAULT)
+                .setAutoCancel(true);
+
+        notificationManager.notify(1001, builder.build());
     }
 }

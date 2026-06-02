@@ -106,6 +106,7 @@ public class FilmDetailActivity extends AppCompatActivity {
                 .into(ivCover);
 
         if (film.getEpisodes() != null && !film.getEpisodes().isEmpty()) {
+            episodeAdapter.setFilmContext(String.valueOf(film.getId()), film.getTitle(), film.getThumbnailUrl());
             episodeAdapter.setEpisodes(film.getEpisodes());
             btnPlayMain.setOnClickListener(v -> playEpisode(film.getEpisodes().get(0)));
         } else if ("LIVE".equals(film.getType()) && film.getTrailerUrl() != null && !film.getTrailerUrl().isEmpty()) {

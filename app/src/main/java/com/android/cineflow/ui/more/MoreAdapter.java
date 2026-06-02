@@ -159,7 +159,8 @@ public class MoreAdapter extends BaseAdapter {
             }
             tvFavoriteCount.setText(String.valueOf(favoriteCount));
             tvHistoryCount.setText(String.valueOf(historyCount));
-            tvDownloadCount.setText("0");
+            int downloadCount = com.android.cineflow.data.download.OfflineDownloadManager.getInstance().getDownloadedCount();
+            tvDownloadCount.setText(String.valueOf(downloadCount));
         } else {
             tvLoginText.setText("Đăng nhập");
             tvSubtitle.setText("Tap to sign in to your account");

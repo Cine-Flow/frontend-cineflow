@@ -3,6 +3,7 @@ package com.android.cineflow;
 import android.app.Application;
 
 import com.android.cineflow.data.auth.AuthManager;
+import com.android.cineflow.data.download.OfflineDownloadManager;
 import com.android.cineflow.data.settings.SettingsManager;
 
 public class CineflowApp extends Application {
@@ -11,5 +12,6 @@ public class CineflowApp extends Application {
         super.onCreate();
         AuthManager.init(this);
         SettingsManager.init(this);
+        OfflineDownloadManager.init(this);
     }
 }

@@ -50,6 +50,7 @@
         <activity android:name=".ui.more.UserContentListActivity" />
         <activity android:name=".ui.more.AccountActivity" />
         <activity android:name=".ui.more.UserAnalyticsActivity" />
+        <activity android:name=".ui.more.DownloadManagerActivity" />
         <activity
             android:name=".ui.category.CategoryActivity"
             android:theme="@style/Theme.Cineflow.NoActionBar" />
