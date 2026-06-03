@@ -12,9 +12,13 @@ import com.android.cineflow.data.network.ApiClient;
 import com.android.cineflow.data.network.FilmApiService;
 import com.android.cineflow.data.network.dto.ApiResponseDto;
 import com.android.cineflow.data.network.dto.RegisterRequestDto;
+import com.google.gson.Gson;
+import com.google.gson.JsonSyntaxException;
 import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputEditText;
+
+import java.io.IOException;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -76,10 +80,8 @@ public class RegisterActivity extends AppCompatActivity {
                             setResult(RESULT_OK);
                             finish();
                         } else {
-                            String msg = "Registration failed";
-                            if (response.body() != null && response.body().getMessage() != null) {
-                                msg = response.body().getMessage();
-                            }
+                            String msg = extractErrorMessage(response);
+                            if (msg.toLowerCase().contains("email")) etEmail.setError(msg);
                             showError(msg);
                         }
                     }
@@ -101,5 +103,25 @@ public class RegisterActivity extends AppCompatActivity {
     private void showError(String message) {
         tvError.setText(message);
         tvError.setVisibility(View.VISIBLE);
+    }
+
+    private String extractErrorMessage(Response<ApiResponseDto<Void>> response) {
+        if (response.body() != null && response.body().getMessage() != null) {
+            return response.body().getMessage();
+        }
+
+        if (response.errorBody() != null) {
+            try {
+                ApiResponseDto<?> error = new Gson().fromJson(response.errorBody().string(), ApiResponseDto.class);
+                if (error != null && error.getMessage() != null && !error.getMessage().isEmpty()) {
+                    return error.getMessage();
+                }
+            } catch (IOException | JsonSyntaxException ignored) {
+                // Fall through to a status-aware message.
+            }
+        }
+
+        if (response.code() == 409) return "Email already exists";
+        return "Registration failed";
     }
 }
