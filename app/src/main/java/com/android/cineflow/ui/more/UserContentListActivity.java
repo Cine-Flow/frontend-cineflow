@@ -44,6 +44,7 @@ public class UserContentListActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_content_list);
         mode = getIntent().getStringExtra(EXTRA_MODE);
+        findViewById(R.id.btn_back).setOnClickListener(v -> finish());
         ((TextView) findViewById(R.id.tv_title)).setText(
                 MODE_LIBRARY.equals(mode) ? "Thư viện" : "Sản phẩm yêu thích");
         ListView listView = findViewById(R.id.lv_items);
