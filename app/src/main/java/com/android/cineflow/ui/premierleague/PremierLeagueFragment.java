@@ -107,7 +107,7 @@ public class PremierLeagueFragment extends BaseFragment {
     public void onResume() {
         super.onResume();
         if (viewModel != null) {
-            viewModel.refresh();
+            viewModel.fetchDataIfNeeded();
         }
     }
 }

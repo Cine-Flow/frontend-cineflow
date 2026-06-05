@@ -40,6 +40,8 @@ public class PremierLeagueRepository {
     private final MutableLiveData<String> errorMessage = new MutableLiveData<>();
     private String selectedScheduleDate = null;
     private String selectedResultsDate = null;
+    private long lastFetchTime = 0;
+    private static final long CACHE_DURATION_MS = 5 * 60 * 1000; // 5 minutes cache
 
     public static PremierLeagueRepository getInstance() {
         if (instance == null) instance = new PremierLeagueRepository();
@@ -77,6 +79,7 @@ public class PremierLeagueRepository {
                         if (response.isSuccessful()
                                 && response.body() != null
                                 && response.body().getData() != null) {
+                            lastFetchTime = System.currentTimeMillis();
                             sections.setValue(toSections(response.body().getData()));
                             return;
                         }
@@ -95,6 +98,17 @@ public class PremierLeagueRepository {
                         Log.e(TAG, "Premier League API call failed", t);
                     }
                 });
+    }
+
+    public void fetchDataIfNeeded() {
+        if (loading.getValue() != null && loading.getValue()) {
+            return;
+        }
+        long now = System.currentTimeMillis();
+        List<PremierLeagueSection> current = sections.getValue();
+        if (current == null || current.isEmpty() || (now - lastFetchTime > CACHE_DURATION_MS)) {
+            fetchData();
+        }
     }
 
     public void expandSection(String mode) {

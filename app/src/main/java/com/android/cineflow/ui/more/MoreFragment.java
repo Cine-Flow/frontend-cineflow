@@ -28,6 +28,7 @@ public class MoreFragment extends BaseFragment {
 
     private MoreAdapter moreAdapter;
     private static final int REQUEST_LOGIN = 1001;
+    private boolean isFirstLoad = true;
 
     @Override
     protected int getLayoutId() {
@@ -64,6 +65,10 @@ public class MoreFragment extends BaseFragment {
     @Override
     public void onResume() {
         super.onResume();
+        if (isFirstLoad) {
+            isFirstLoad = false;
+            return;
+        }
         buildSections();
         loadProfileStats();
     }

@@ -25,6 +25,10 @@ public class PremierLeagueViewModel extends ViewModel {
         repository.fetchData();
     }
 
+    public void fetchDataIfNeeded() {
+        repository.fetchDataIfNeeded();
+    }
+
     public void expandSection(String mode) {
         repository.expandSection(mode);
     }
