@@ -83,5 +83,24 @@ public class MainActivity extends AppCompatActivity {
         //     viewPager.setCurrentItem(index, false);
         //     return true;
         // });
+        // Verify saved authentication token on startup
+        com.android.cineflow.data.auth.AuthManager authManager = com.android.cineflow.data.auth.AuthManager.getInstance();
+        if (authManager != null && authManager.isLoggedIn()) {
+            com.android.cineflow.data.network.ApiClient.getFilmApiService().getProfile()
+                    .enqueue(new retrofit2.Callback<com.android.cineflow.data.network.dto.ApiResponseDto<com.android.cineflow.data.network.dto.UserProfileDto>>() {
+                        @Override
+                        public void onResponse(retrofit2.Call<com.android.cineflow.data.network.dto.ApiResponseDto<com.android.cineflow.data.network.dto.UserProfileDto>> call,
+                                               retrofit2.Response<com.android.cineflow.data.network.dto.ApiResponseDto<com.android.cineflow.data.network.dto.UserProfileDto>> response) {
+                            if (!response.isSuccessful() && response.code() == 401) {
+                                authManager.clearSession();
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(retrofit2.Call<com.android.cineflow.data.network.dto.ApiResponseDto<com.android.cineflow.data.network.dto.UserProfileDto>> call, Throwable t) {
+                            // Offline or network error: keep session to allow offline access
+                        }
+                    });
+        }
     }
 }

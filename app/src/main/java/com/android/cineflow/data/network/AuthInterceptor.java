@@ -22,6 +22,13 @@ public class AuthInterceptor implements Interceptor {
                 builder.header("Authorization", "Bearer " + token);
             }
         }
-        return chain.proceed(builder.build());
+        Response response = chain.proceed(builder.build());
+        if (response.code() == 401) {
+            AuthManager authManager = AuthManager.getInstance();
+            if (authManager != null && authManager.isLoggedIn()) {
+                authManager.clearSession();
+            }
+        }
+        return response;
     }
 }

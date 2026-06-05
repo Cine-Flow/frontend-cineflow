@@ -30,6 +30,22 @@ public class MoreFragment extends BaseFragment {
     private static final int REQUEST_LOGIN = 1001;
     private boolean isFirstLoad = true;
 
+    private final AuthManager.AuthListener authListener = new AuthManager.AuthListener() {
+        @Override
+        public void onAuthStatusChanged(boolean isLoggedIn) {
+            if (getActivity() != null) {
+                getActivity().runOnUiThread(() -> {
+                    buildSections();
+                    if (isLoggedIn) {
+                        loadProfileStats();
+                    } else {
+                        moreAdapter.setProfileStats(0, 0);
+                    }
+                });
+            }
+        }
+    };
+
     @Override
     protected int getLayoutId() {
         return R.layout.fragment_more;
@@ -60,6 +76,24 @@ public class MoreFragment extends BaseFragment {
                     break;
             }
         });
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        AuthManager auth = AuthManager.getInstance();
+        if (auth != null) {
+            auth.addListener(authListener);
+        }
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        AuthManager auth = AuthManager.getInstance();
+        if (auth != null) {
+            auth.removeListener(authListener);
+        }
     }
 
     @Override
@@ -219,6 +253,11 @@ public class MoreFragment extends BaseFragment {
                 if (response.isSuccessful() && response.body() != null && response.body().getData() != null) {
                     UserProfileDto profile = response.body().getData();
                     moreAdapter.setProfileStats(profile.getFavoriteCount(), profile.getWatchHistoryCount());
+                } else if (response.code() == 401) {
+                    AuthManager auth = AuthManager.getInstance();
+                    if (auth != null) {
+                        auth.clearSession();
+                    }
                 }
             }
             @Override public void onFailure(Call<ApiResponseDto<UserProfileDto>> call, Throwable t) {}
