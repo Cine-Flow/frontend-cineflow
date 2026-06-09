@@ -37,6 +37,7 @@ public class FilmDetailActivity extends AppCompatActivity {
     private TextView tvDescription;
     private Button btnPlayMain;
     private Button btnAddFavorite;
+    private TextView tvEpisodesTitle;
     private RecyclerView rvEpisodes;
     private EpisodeAdapter episodeAdapter;
 
@@ -62,7 +63,13 @@ public class FilmDetailActivity extends AppCompatActivity {
         tvDescription = findViewById(R.id.tv_film_description);
         btnPlayMain = findViewById(R.id.btn_play_main);
         btnAddFavorite = findViewById(R.id.btn_add_favorite);
+        tvEpisodesTitle = findViewById(R.id.tv_episodes_title);
         rvEpisodes = findViewById(R.id.rv_episodes);
+
+        btnPlayMain.setVisibility(android.view.View.GONE);
+        btnAddFavorite.setVisibility(android.view.View.GONE);
+        tvEpisodesTitle.setVisibility(android.view.View.GONE);
+        rvEpisodes.setVisibility(android.view.View.GONE);
 
         rvEpisodes.setLayoutManager(new LinearLayoutManager(this));
         episodeAdapter = new EpisodeAdapter(new ArrayList<>(), this::playEpisode);
@@ -97,7 +104,17 @@ public class FilmDetailActivity extends AppCompatActivity {
         btnAddFavorite.setOnClickListener(v -> addFavorite(film.getId()));
         tvTitle.setText(film.getTitle());
         tvYear.setText(String.valueOf(film.getReleaseYear()));
-        tvType.setText(film.getType());
+        
+        if ("SPORTS".equals(film.getType())) {
+            if (film.getTrailerUrl() == null || film.getTrailerUrl().isEmpty()) {
+                tvType.setText("Tin tức");
+            } else {
+                tvType.setText("Bóng đá");
+            }
+        } else {
+            tvType.setText(film.getType());
+        }
+        
         tvDescription.setText(film.getDescription());
 
         Glide.with(this)
@@ -105,20 +122,43 @@ public class FilmDetailActivity extends AppCompatActivity {
                 .centerCrop()
                 .into(ivCover);
 
-        if (film.getEpisodes() != null && !film.getEpisodes().isEmpty()) {
+        boolean hasEpisodes = film.getEpisodes() != null && !film.getEpisodes().isEmpty();
+        boolean hasVideoUrl = film.getTrailerUrl() != null && !film.getTrailerUrl().isEmpty();
+
+        if (hasEpisodes) {
+            btnPlayMain.setVisibility(android.view.View.VISIBLE);
+            btnAddFavorite.setVisibility(android.view.View.VISIBLE);
+            tvEpisodesTitle.setVisibility(android.view.View.VISIBLE);
+            rvEpisodes.setVisibility(android.view.View.VISIBLE);
+
             episodeAdapter.setFilmContext(String.valueOf(film.getId()), film.getTitle(), film.getThumbnailUrl());
             episodeAdapter.setEpisodes(film.getEpisodes());
             btnPlayMain.setOnClickListener(v -> playEpisode(film.getEpisodes().get(0)));
-        } else if ("LIVE".equals(film.getType()) && film.getTrailerUrl() != null && !film.getTrailerUrl().isEmpty()) {
-            btnPlayMain.setText("▶  Xem trực tiếp");
+        } else if (hasVideoUrl) {
+            btnPlayMain.setVisibility(android.view.View.VISIBLE);
+            btnAddFavorite.setVisibility(android.view.View.VISIBLE);
+            tvEpisodesTitle.setVisibility(android.view.View.GONE);
+            rvEpisodes.setVisibility(android.view.View.GONE);
+
+            if ("LIVE".equals(film.getType())) {
+                btnPlayMain.setText("▶  Xem trực tiếp");
+            } else {
+                btnPlayMain.setText(" Xem ngay");
+            }
+            btnPlayMain.setEnabled(true);
             btnPlayMain.setOnClickListener(v -> {
                 Intent intent = new Intent(this, PlayerActivity.class);
                 intent.putExtra(PlayerActivity.EXTRA_VIDEO_URL, film.getTrailerUrl());
+                intent.putExtra(PlayerActivity.EXTRA_TITLE, film.getTitle());
+                intent.putExtra(PlayerActivity.EXTRA_BADGE, film.getType());
                 startActivity(intent);
             });
         } else {
-            btnPlayMain.setEnabled(false);
-            btnPlayMain.setText("Chưa khả dụng");
+            // News article / Text content with no video
+            btnPlayMain.setVisibility(android.view.View.GONE);
+            btnAddFavorite.setVisibility(android.view.View.GONE);
+            tvEpisodesTitle.setVisibility(android.view.View.GONE);
+            rvEpisodes.setVisibility(android.view.View.GONE);
         }
     }
 

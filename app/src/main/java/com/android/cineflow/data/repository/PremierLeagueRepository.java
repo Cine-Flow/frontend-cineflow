@@ -264,7 +264,8 @@ public class PremierLeagueRepository {
                     valueOrEmpty(item.getRound()),
                     "LIVE".equals(item.getStatus()),
                     item.getHomeScore() != null ? String.valueOf(item.getHomeScore()) : "",
-                    item.getAwayScore() != null ? String.valueOf(item.getAwayScore()) : ""));
+                    item.getAwayScore() != null ? String.valueOf(item.getAwayScore()) : "",
+                    item.getHighlightUrl() != null ? item.getHighlightUrl() : ""));
         }
         return matches;
     }

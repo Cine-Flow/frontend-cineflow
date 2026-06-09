@@ -12,8 +12,9 @@ public class Match {
     private final boolean isLive;
     private final String homeScore;    // For results
     private final String awayScore;    // For results
+    private final String highlightUrl;
 
-    public Match(String id, String homeTeamCode, String homeTeamLogo, String awayTeamCode, String awayTeamLogo, String time, String date, String round, boolean isLive, String homeScore, String awayScore) {
+    public Match(String id, String homeTeamCode, String homeTeamLogo, String awayTeamCode, String awayTeamLogo, String time, String date, String round, boolean isLive, String homeScore, String awayScore, String highlightUrl) {
         this.id = id;
         this.homeTeamCode = homeTeamCode;
         this.homeTeamLogo = homeTeamLogo;
@@ -25,6 +26,7 @@ public class Match {
         this.isLive = isLive;
         this.homeScore = homeScore;
         this.awayScore = awayScore;
+        this.highlightUrl = highlightUrl;
     }
 
     public String getId() { return id; }
@@ -38,4 +40,5 @@ public class Match {
     public boolean isLive() { return isLive; }
     public String getHomeScore() { return homeScore; }
     public String getAwayScore() { return awayScore; }
+    public String getHighlightUrl() { return highlightUrl; }
 }

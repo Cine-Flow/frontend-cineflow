@@ -38,25 +38,71 @@ public class PremierLeagueAdapter extends BaseAdapter {
         void onCardClick(ContentCard card);
     }
 
+    public interface OnMatchClickListener {
+        void onMatchClick(Match match, String listMode);
+    }
+
     private final Context context;
     private final OnViewAllClickListener viewAllClickListener;
     private final OnFixtureDateSelectedListener fixtureDateSelectedListener;
     private final OnCardClickListener cardClickListener;
+    private final OnMatchClickListener matchClickListener;
     private List<PremierLeagueSection> sections;
 
     public PremierLeagueAdapter(Context context, List<PremierLeagueSection> sections,
                                 OnViewAllClickListener viewAllClickListener,
                                 OnFixtureDateSelectedListener fixtureDateSelectedListener,
-                                OnCardClickListener cardClickListener) {
+                                OnCardClickListener cardClickListener,
+                                OnMatchClickListener matchClickListener) {
         this.context = context;
         this.sections = sections;
         this.viewAllClickListener = viewAllClickListener;
         this.fixtureDateSelectedListener = fixtureDateSelectedListener;
         this.cardClickListener = cardClickListener;
+        this.matchClickListener = matchClickListener;
     }
 
     public void setSections(List<PremierLeagueSection> newSections) {
-        this.sections = newSections;
+        this.allSections = newSections != null ? newSections : new java.util.ArrayList<>();
+        applyFilter();
+        // notifyDataSetChanged is called inside applyFilter()
+    }
+
+    private List<PremierLeagueSection> allSections = new java.util.ArrayList<>();
+    private String searchQuery = "";
+
+    public void filter(String query) {
+        this.searchQuery = query != null ? query.trim().toLowerCase() : "";
+        applyFilter();
+    }
+
+    private void applyFilter() {
+        if (searchQuery.isEmpty()) {
+            this.sections = this.allSections;
+        } else {
+            List<PremierLeagueSection> filtered = new java.util.ArrayList<>();
+            for (PremierLeagueSection section : allSections) {
+                if (section.getMatches() != null) {
+                    List<Match> filteredMatches = new java.util.ArrayList<>();
+                    for (Match match : section.getMatches()) {
+                        if ((match.getHomeTeamCode() != null && match.getHomeTeamCode().toLowerCase().contains(searchQuery)) ||
+                            (match.getAwayTeamCode() != null && match.getAwayTeamCode().toLowerCase().contains(searchQuery))) {
+                            filteredMatches.add(match);
+                        }
+                    }
+                    filtered.add(new PremierLeagueSection(
+                        section.getType(),
+                        section.getTitle(),
+                        filteredMatches,
+                        section.getListMode(),
+                        section.isExpanded()
+                    ));
+                } else {
+                    filtered.add(section);
+                }
+            }
+            this.sections = filtered;
+        }
         notifyDataSetChanged();
     }
 
@@ -232,6 +278,11 @@ public class PremierLeagueAdapter extends BaseAdapter {
                 tvCenter.setText(m.getTime());
                 tvCenter.setBackgroundColor(Color.parseColor("#1F1F1F")); // Solid Time Box
             }
+            convertView.setOnClickListener(v -> {
+                if (matchClickListener != null) {
+                    matchClickListener.onMatchClick(m, listMode);
+                }
+            });
             return convertView;
         }
     }
