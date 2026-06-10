@@ -4,13 +4,13 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="#0D0D0D">
+    android:background="@color/surface_primary">
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar_category"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
-        android:background="#1A1A1A"
+        android:background="@color/surface_secondary"
         app:titleTextColor="#FFFFFF"
         app:navigationIconTint="#FFFFFF" />
 
@@ -43,7 +43,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:text="Không thể tải dữ liệu"
-            android:textColor="#AAAAAA"
+            android:textColor="@color/text_secondary"
             android:textSize="15sp"
             android:visibility="gone" />
 

@@ -8,8 +8,8 @@
     app:cardCornerRadius="12dp"
     app:cardElevation="2dp"
     app:strokeWidth="1dp"
-    app:strokeColor="#2A2438"
-    app:cardBackgroundColor="#151515">
+    app:strokeColor="@color/divider"
+    app:cardBackgroundColor="@color/surface_card">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -23,14 +23,14 @@
             android:orientation="horizontal"
             android:paddingHorizontal="16dp"
             android:paddingVertical="12dp"
-            android:background="#38003C"
+            android:background="@color/surface_secondary"
             android:gravity="center_vertical">
 
             <!-- Branded Logo Circle Badge -->
             <View
                 android:layout_width="6dp"
                 android:layout_height="24dp"
-                android:background="#00FF87"
+                android:background="@color/brand_accent"
                 android:layout_marginEnd="10dp" />
 
             <TextView
@@ -38,7 +38,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:textColor="#FFFFFF"
+                android:textColor="@color/text_primary"
                 android:textSize="15sp"
                 android:textStyle="bold" />
 
@@ -46,7 +46,7 @@
                 android:layout_width="22dp"
                 android:layout_height="22dp"
                 android:src="@drawable/ic_movies"
-                app:tint="#00FF87" />
+                app:tint="@color/brand_accent" />
 
         </LinearLayout>
 
@@ -71,7 +71,7 @@
                 android:gravity="center"
                 android:padding="20dp"
                 android:text="@string/premier_league_empty_fixtures"
-                android:textColor="#AAAAAA"
+                android:textColor="@color/text_secondary"
                 android:textSize="14sp"
                 android:visibility="gone" />
 
@@ -104,8 +104,8 @@
                     android:layout_weight="1"
                     android:layout_height="wrap_content"
                     android:text="@string/view_all"
-                    android:backgroundTint="#38003C"
-                    android:textColor="#00FF87"
+                    android:backgroundTint="@color/surface_secondary"
+                    android:textColor="@color/brand_accent"
                     android:textSize="12sp"
                     android:textStyle="bold"
                     app:cornerRadius="8dp" />

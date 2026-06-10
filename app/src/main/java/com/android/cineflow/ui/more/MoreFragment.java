@@ -12,6 +12,7 @@ import com.android.cineflow.data.auth.AuthManager;
 import com.android.cineflow.data.network.ApiClient;
 import com.android.cineflow.data.network.dto.ApiResponseDto;
 import com.android.cineflow.data.network.dto.UserProfileDto;
+import com.android.cineflow.data.settings.SettingsManager;
 import com.android.cineflow.ui.admin.AdminDashboardActivity;
 import com.android.cineflow.ui.auth.LoginActivity;
 import com.android.cineflow.ui.base.BaseFragment;
@@ -148,6 +149,7 @@ public class MoreFragment extends BaseFragment {
         // 4. App Settings & Support
         data.add(new MoreSection(MoreSection.TYPE_ACTION_GRID, "Cài đặt & Hỗ trợ", Arrays.asList(
                 new MoreSection.MoreItem("Cài đặt", R.drawable.ic_settings, null, MoreSection.ACTION_SETTINGS),
+                new MoreSection.MoreItem("Giao diện", R.drawable.ic_launcher_foreground, null, MoreSection.ACTION_THEME),
                 new MoreSection.MoreItem("Liên hệ hỗ trợ", R.drawable.ic_help, null, MoreSection.ACTION_SUPPORT),
                 new MoreSection.MoreItem("Điều khoản & Chính sách", R.drawable.ic_shield, null, MoreSection.ACTION_TERMS)
         )));
@@ -181,6 +183,8 @@ public class MoreFragment extends BaseFragment {
             openProtectedAnalytics();
         } else if (MoreSection.ACTION_SETTINGS.equals(item.getAction())) {
             openAccountOrLogin("settings");
+        } else if (MoreSection.ACTION_THEME.equals(item.getAction())) {
+            showThemeSelectionDialog();
         } else if (MoreSection.ACTION_SUPPORT.equals(item.getAction())) {
             openAccountOrLogin("support");
         } else if (MoreSection.ACTION_TERMS.equals(item.getAction())) {
@@ -191,6 +195,34 @@ public class MoreFragment extends BaseFragment {
                 android.widget.Toast.makeText(requireContext(), "Chức năng liên kết với " + label + " đang được phát triển!", android.widget.Toast.LENGTH_SHORT).show();
             }
         }
+    }
+
+    private void showThemeSelectionDialog() {
+        String[] options = {"Theo hệ thống", "Sáng", "Tối"};
+        int currentMode = SettingsManager.getInstance().getThemeMode();
+        int checkedItem = 0;
+        if (currentMode == androidx.appcompat.app.AppCompatDelegate.MODE_NIGHT_NO) {
+            checkedItem = 1;
+        } else if (currentMode == androidx.appcompat.app.AppCompatDelegate.MODE_NIGHT_YES) {
+            checkedItem = 2;
+        }
+
+        new androidx.appcompat.app.AlertDialog.Builder(requireContext())
+                .setTitle("Chọn giao diện")
+                .setSingleChoiceItems(options, checkedItem, (dialog, which) -> {
+                    int selectedMode;
+                    if (which == 1) {
+                        selectedMode = androidx.appcompat.app.AppCompatDelegate.MODE_NIGHT_NO;
+                    } else if (which == 2) {
+                        selectedMode = androidx.appcompat.app.AppCompatDelegate.MODE_NIGHT_YES;
+                    } else {
+                        selectedMode = androidx.appcompat.app.AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM;
+                    }
+                    SettingsManager.getInstance().setThemeMode(selectedMode);
+                    androidx.appcompat.app.AppCompatDelegate.setDefaultNightMode(selectedMode);
+                    dialog.dismiss();
+                })
+                .show();
     }
 
     private void openProtectedAnalytics() {
