@@ -17,6 +17,7 @@ public class MoreSection {
     public static final String ACTION_TERMS = "terms";
     public static final String ACTION_PRIVACY = "privacy";
     public static final String ACTION_SUPPORT = "support";
+    public static final String ACTION_THEME = "theme";
 
     private final int type;
     private final String title;

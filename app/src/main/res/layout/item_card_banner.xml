@@ -9,7 +9,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:scaleType="centerCrop"
-        android:background="#2A2A2A" />
+        android:background="@color/surface_card" />
 
     <TextView
         android:id="@+id/tv_card_badge"
@@ -22,7 +22,7 @@
         android:paddingEnd="6dp"
         android:paddingTop="3dp"
         android:paddingBottom="3dp"
-        android:textColor="#FFFFFF"
+        android:textColor="@color/text_primary"
         android:textSize="11sp"
         android:visibility="gone" />
 
@@ -35,7 +35,7 @@
         android:maxLines="2"
         android:ellipsize="end"
         android:padding="8dp"
-        android:textColor="#FFFFFF"
+        android:textColor="@color/text_primary"
         android:textSize="13sp"
         android:visibility="gone" />
 

@@ -59,4 +59,12 @@ public class SettingsManager {
     public void setNotificationsEnabled(boolean enabled) {
         prefs.edit().putBoolean(KEY_NOTIFICATIONS, enabled).apply();
     }
+
+    public int getThemeMode() {
+        return prefs.getInt("pref_theme_mode", androidx.appcompat.app.AppCompatDelegate.MODE_NIGHT_YES);
+    }
+
+    public void setThemeMode(int mode) {
+        prefs.edit().putInt("pref_theme_mode", mode).apply();
+    }
 }
