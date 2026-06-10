@@ -13,6 +13,7 @@ public class AuthManager {
 
     private static final String PREFS_NAME = "cineflow_auth";
     private static final String KEY_TOKEN = "access_token";
+    private static final String KEY_REFRESH_TOKEN = "refresh_token";
     private static final String KEY_USER_ID = "user_id";
     private static final String KEY_USERNAME = "username";
     private static final String KEY_EMAIL = "email";
@@ -65,9 +66,10 @@ public class AuthManager {
         }
     }
 
-    public void saveSession(String token, String userId, String username, String email, String role) {
+    public void saveSession(String token, String refreshToken, String userId, String username, String email, String role) {
         prefs.edit()
                 .putString(KEY_TOKEN, token)
+                .putString(KEY_REFRESH_TOKEN, refreshToken)
                 .putString(KEY_USER_ID, userId)
                 .putString(KEY_USERNAME, username)
                 .putString(KEY_EMAIL, email)
@@ -76,12 +78,22 @@ public class AuthManager {
         notifyListeners(true);
     }
 
+    public void updateTokens(String accessToken, String refreshToken) {
+        if (prefs != null) {
+            prefs.edit()
+                    .putString(KEY_TOKEN, accessToken)
+                    .putString(KEY_REFRESH_TOKEN, refreshToken)
+                    .apply();
+        }
+    }
+
     public void clearSession() {
         prefs.edit().clear().apply();
         notifyListeners(false);
     }
 
     public String getToken() { return prefs != null ? prefs.getString(KEY_TOKEN, null) : null; }
+    public String getRefreshToken() { return prefs != null ? prefs.getString(KEY_REFRESH_TOKEN, null) : null; }
     public String getUserId() { return prefs != null ? prefs.getString(KEY_USER_ID, null) : null; }
     public String getUsername() { return prefs != null ? prefs.getString(KEY_USERNAME, null) : null; }
     public String getEmail() { return prefs != null ? prefs.getString(KEY_EMAIL, null) : null; }
