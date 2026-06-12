@@ -45,6 +45,9 @@
             android:name=".ui.admin.AdminCategoryListActivity"
             android:theme="@style/Theme.Cineflow.Admin" />
         <activity
+            android:name=".ui.admin.AdminAnalyticsActivity"
+            android:theme="@style/Theme.Cineflow.Admin" />
+        <activity
             android:name=".ui.auth.LoginActivity"
             android:theme="@style/Theme.Cineflow.Admin" />
         <activity

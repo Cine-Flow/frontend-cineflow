@@ -79,7 +79,7 @@ public class AdminDashboardActivity extends AppCompatActivity {
                 startActivity(new Intent(this, AdminCategoryListActivity.class));
                 break;
             case MODULE_STATS:
-                // Future: startActivity(new Intent(this, AdminStatsActivity.class));
+                startActivity(new Intent(this, AdminAnalyticsActivity.class));
                 break;
         }
     }
