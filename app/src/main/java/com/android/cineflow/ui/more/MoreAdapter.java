@@ -25,6 +25,7 @@ public class MoreAdapter extends BaseAdapter {
     private final OnMoreItemClickListener listener;
     private long favoriteCount;
     private long historyCount;
+    private String userDisplayName;
     private List<MoreSection> sections;
 
     public MoreAdapter(Context context, List<MoreSection> sections) {
@@ -43,6 +44,11 @@ public class MoreAdapter extends BaseAdapter {
     }
 
     public void setProfileStats(long favoriteCount, long historyCount) {
+        setProfileStats(null, favoriteCount, historyCount);
+    }
+
+    public void setProfileStats(String displayName, long favoriteCount, long historyCount) {
+        this.userDisplayName = displayName;
         this.favoriteCount = favoriteCount;
         this.historyCount = historyCount;
         notifyDataSetChanged();
@@ -152,7 +158,8 @@ public class MoreAdapter extends BaseAdapter {
         TextView tvDownloadCount = v.findViewById(R.id.tv_download_count);
 
         if (section.getTitle() != null) {
-            tvLoginText.setText(section.getTitle());
+            String nameToDisplay = (userDisplayName != null && !userDisplayName.isEmpty()) ? userDisplayName : section.getTitle();
+            tvLoginText.setText(nameToDisplay);
             tvSubtitle.setText("Tap to manage your account");
             if (quickStats != null) {
                 quickStats.setVisibility(View.VISIBLE);

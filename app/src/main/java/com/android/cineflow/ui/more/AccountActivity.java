@@ -31,8 +31,10 @@ public class AccountActivity extends AppCompatActivity {
 
     private TextView tvName;
     private TextView tvEmail;
+    private TextView tvPhone;
     private TextView tvStats;
     private TextView tvSubscription;
+    private UserProfileDto currentProfile;
     
     private TextView tvSelectedQuality;
     private SwitchCompat switchAutoplay;
@@ -78,6 +80,7 @@ public class AccountActivity extends AppCompatActivity {
     private void initViews() {
         tvName = findViewById(R.id.tv_name);
         tvEmail = findViewById(R.id.tv_email);
+        tvPhone = findViewById(R.id.tv_phone);
         tvStats = findViewById(R.id.tv_stats);
         tvSubscription = findViewById(R.id.tv_subscription);
 
@@ -153,8 +156,14 @@ public class AccountActivity extends AppCompatActivity {
     }
 
     private void bindProfile(UserProfileDto profile) {
+        this.currentProfile = profile;
         tvName.setText(profile.getFullName() != null ? profile.getFullName() : profile.getUsername());
         tvEmail.setText(profile.getEmail());
+        if (tvPhone != null) {
+            tvPhone.setText(profile.getPhoneNumber() != null && !profile.getPhoneNumber().isEmpty()
+                    ? "SĐT: " + profile.getPhoneNumber()
+                    : "SĐT: Chưa cập nhật");
+        }
         tvStats.setText("Yêu thích: " + profile.getFavoriteCount() + "   Lịch sử xem: " + profile.getWatchHistoryCount());
         
         SubscriptionDto subscription = profile.getCurrentSubscription();
@@ -334,9 +343,15 @@ public class AccountActivity extends AppCompatActivity {
     private void showEditProfileDialog() {
         View dialogView = getLayoutInflater().inflate(R.layout.dialog_edit_profile, null);
         EditText etFullName = dialogView.findViewById(R.id.et_full_name);
+        EditText etPhoneNumber = dialogView.findViewById(R.id.et_phone_number);
 
-        // Pre-fill the current display name
-        etFullName.setText(tvName.getText().toString());
+        // Pre-fill the current display name and phone number
+        if (currentProfile != null) {
+            etFullName.setText(currentProfile.getFullName() != null ? currentProfile.getFullName() : "");
+            etPhoneNumber.setText(currentProfile.getPhoneNumber() != null ? currentProfile.getPhoneNumber() : "");
+        } else {
+            etFullName.setText(tvName.getText().toString());
+        }
         etFullName.setSelection(etFullName.getText().length());
 
         AlertDialog dialog = new AlertDialog.Builder(this)
@@ -351,18 +366,19 @@ public class AccountActivity extends AppCompatActivity {
         dialogView.findViewById(R.id.btn_cancel).setOnClickListener(v -> dialog.dismiss());
         dialogView.findViewById(R.id.btn_save).setOnClickListener(v -> {
             String newName = etFullName.getText().toString().trim();
+            String newPhone = etPhoneNumber.getText().toString().trim();
             if (newName.isEmpty()) {
                 Toast.makeText(this, "Họ và tên không được để trống", Toast.LENGTH_SHORT).show();
                 return;
             }
-            performUpdateProfileApi(newName, dialog);
+            performUpdateProfileApi(newName, newPhone, dialog);
         });
 
         dialog.show();
     }
 
-    private void performUpdateProfileApi(String newName, AlertDialog dialog) {
-        UpdateProfileRequestDto request = new UpdateProfileRequestDto(newName);
+    private void performUpdateProfileApi(String newName, String newPhone, AlertDialog dialog) {
+        UpdateProfileRequestDto request = new UpdateProfileRequestDto(newName, newPhone);
         ApiClient.getFilmApiService().updateProfile(request).enqueue(new Callback<ApiResponseDto<UserProfileDto>>() {
             @Override
             public void onResponse(Call<ApiResponseDto<UserProfileDto>> call, Response<ApiResponseDto<UserProfileDto>> response) {

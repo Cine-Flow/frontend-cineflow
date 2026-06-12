@@ -284,7 +284,7 @@ public class MoreFragment extends BaseFragment {
             @Override public void onResponse(Call<ApiResponseDto<UserProfileDto>> call, Response<ApiResponseDto<UserProfileDto>> response) {
                 if (response.isSuccessful() && response.body() != null && response.body().getData() != null) {
                     UserProfileDto profile = response.body().getData();
-                    moreAdapter.setProfileStats(profile.getFavoriteCount(), profile.getWatchHistoryCount());
+                    moreAdapter.setProfileStats(profile.getFullName(), profile.getFavoriteCount(), profile.getWatchHistoryCount());
                 } else if (response.code() == 401) {
                     AuthManager auth = AuthManager.getInstance();
                     if (auth != null) {

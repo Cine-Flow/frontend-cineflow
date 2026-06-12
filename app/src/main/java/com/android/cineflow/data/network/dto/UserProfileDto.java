@@ -4,6 +4,7 @@ public class UserProfileDto {
     private String username;
     private String email;
     private String fullName;
+    private String phoneNumber;
     private String avatarUrl;
     private long favoriteCount;
     private long watchHistoryCount;
@@ -12,6 +13,7 @@ public class UserProfileDto {
     public String getUsername() { return username; }
     public String getEmail() { return email; }
     public String getFullName() { return fullName; }
+    public String getPhoneNumber() { return phoneNumber; }
     public String getAvatarUrl() { return avatarUrl; }
     public long getFavoriteCount() { return favoriteCount; }
     public long getWatchHistoryCount() { return watchHistoryCount; }
