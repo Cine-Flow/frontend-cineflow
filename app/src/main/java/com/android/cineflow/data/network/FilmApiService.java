@@ -114,6 +114,12 @@ public interface FilmApiService {
     @POST("auth/forgot-password")
     Call<ApiResponseDto<Void>> forgotPassword(@Body ForgotPasswordRequestDto request);
 
+    @POST("auth/refresh-token")
+    Call<ApiResponseDto<LoginResponseDto>> refreshToken(@Body com.android.cineflow.data.network.dto.TokenRefreshRequestDto request);
+
+    @POST("auth/logout")
+    Call<ApiResponseDto<Void>> logout(@Body com.android.cineflow.data.network.dto.TokenRefreshRequestDto request);
+
     // ── Admin: Films ────────────────────────────────────────────────────────
 
     @GET("admin/films")

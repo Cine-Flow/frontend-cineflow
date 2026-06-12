@@ -99,6 +99,7 @@ public class LoginActivity extends AppCompatActivity {
                     LoginResponseDto data = response.body().getData();
                     AuthManager.getInstance().saveSession(
                             data.getAccessToken(),
+                            data.getRefreshToken(),
                             data.getId(),
                             data.getUsername(),
                             data.getEmail(),

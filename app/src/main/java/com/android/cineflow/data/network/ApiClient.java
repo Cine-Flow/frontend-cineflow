@@ -25,6 +25,7 @@ public class ApiClient {
             OkHttpClient client = new OkHttpClient.Builder()
                     .addInterceptor(authInterceptor)
                     .addInterceptor(logging)
+                    .authenticator(new TokenAuthenticator())
                     .build();
 
             Retrofit retrofit = new Retrofit.Builder()
