@@ -1,6 +1,5 @@
 package com.android.cineflow.ui.admin;
 
-import android.graphics.Color;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -11,6 +10,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.widget.NestedScrollView;
 
 import com.android.cineflow.R;
 import com.android.cineflow.ui.admin.view.BarChartView;
@@ -27,9 +27,19 @@ import java.util.Random;
 
 public class AdminAnalyticsActivity extends AppCompatActivity {
 
+    private enum Section { OVERVIEW, CATALOG, SUBSCRIPTIONS }
+
     private TextView chip7, chip30, chip90;
     private int period = 30;
+    private Section currentSection = Section.OVERVIEW;
     private final Random rng = new Random(42);
+
+    private TextView tvSectionTitle, tvSectionSubtitle;
+
+    private NestedScrollView sectionOverview, sectionCatalog, sectionSubs;
+    private LinearLayout tabOverview, tabCatalog, tabSubs;
+    private ImageView iconOverview, iconCatalog, iconSubs;
+    private TextView labelOverview, labelCatalog, labelSubs;
 
     private LineChartView chartSignups, chartWatch;
     private TextView tvSignupsTotal, tvWatchTotal;
@@ -55,12 +65,33 @@ public class AdminAnalyticsActivity extends AppCompatActivity {
         btnExport.setOnClickListener(v ->
                 Toast.makeText(this, "CSV export queued (mock)", Toast.LENGTH_SHORT).show());
 
+        tvSectionTitle = findViewById(R.id.tv_section_title);
+        tvSectionSubtitle = findViewById(R.id.tv_section_subtitle);
+
+        sectionOverview = findViewById(R.id.section_overview);
+        sectionCatalog = findViewById(R.id.section_catalog);
+        sectionSubs = findViewById(R.id.section_subscriptions);
+
+        tabOverview = findViewById(R.id.tab_overview);
+        tabCatalog = findViewById(R.id.tab_catalog);
+        tabSubs = findViewById(R.id.tab_subscriptions);
+        iconOverview = findViewById(R.id.icon_overview);
+        iconCatalog = findViewById(R.id.icon_catalog);
+        iconSubs = findViewById(R.id.icon_subscriptions);
+        labelOverview = findViewById(R.id.label_overview);
+        labelCatalog = findViewById(R.id.label_catalog);
+        labelSubs = findViewById(R.id.label_subscriptions);
+
+        tabOverview.setOnClickListener(v -> switchTo(Section.OVERVIEW));
+        tabCatalog.setOnClickListener(v -> switchTo(Section.CATALOG));
+        tabSubs.setOnClickListener(v -> switchTo(Section.SUBSCRIPTIONS));
+
         chip7 = findViewById(R.id.chip_7d);
         chip30 = findViewById(R.id.chip_30d);
         chip90 = findViewById(R.id.chip_90d);
-        chip7.setOnClickListener(v -> { period = 7; refreshChips(); refreshAll(); });
-        chip30.setOnClickListener(v -> { period = 30; refreshChips(); refreshAll(); });
-        chip90.setOnClickListener(v -> { period = 90; refreshChips(); refreshAll(); });
+        chip7.setOnClickListener(v -> { period = 7; refreshChips(); refreshOverview(); refreshSubscriptions(); });
+        chip30.setOnClickListener(v -> { period = 30; refreshChips(); refreshOverview(); refreshSubscriptions(); });
+        chip90.setOnClickListener(v -> { period = 90; refreshChips(); refreshOverview(); refreshSubscriptions(); });
 
         chartSignups = findViewById(R.id.chart_signups);
         chartWatch = findViewById(R.id.chart_watch);
@@ -76,9 +107,44 @@ public class AdminAnalyticsActivity extends AppCompatActivity {
         tvSubsExpiring = findViewById(R.id.tv_subs_expiring);
         tvSubsExpired = findViewById(R.id.tv_subs_expired);
 
-        bindStaticPanels();
+        bindCatalog();
+        bindStaticSubscriptionHealth();
         refreshChips();
-        refreshAll();
+        refreshOverview();
+        refreshSubscriptions();
+        switchTo(Section.OVERVIEW);
+    }
+
+    private void switchTo(Section section) {
+        currentSection = section;
+        sectionOverview.setVisibility(section == Section.OVERVIEW ? View.VISIBLE : View.GONE);
+        sectionCatalog.setVisibility(section == Section.CATALOG ? View.VISIBLE : View.GONE);
+        sectionSubs.setVisibility(section == Section.SUBSCRIPTIONS ? View.VISIBLE : View.GONE);
+
+        styleTab(iconOverview, labelOverview, section == Section.OVERVIEW);
+        styleTab(iconCatalog, labelCatalog, section == Section.CATALOG);
+        styleTab(iconSubs, labelSubs, section == Section.SUBSCRIPTIONS);
+
+        switch (section) {
+            case OVERVIEW:
+                tvSectionTitle.setText("Overview");
+                tvSectionSubtitle.setText("Engagement KPIs and trends over the selected window");
+                break;
+            case CATALOG:
+                tvSectionTitle.setText("Catalog");
+                tvSectionSubtitle.setText("Film distribution, category coverage and most-viewed titles");
+                break;
+            case SUBSCRIPTIONS:
+                tvSectionTitle.setText("Subscriptions");
+                tvSectionSubtitle.setText("Revenue, package mix and renewal health");
+                break;
+        }
+    }
+
+    private void styleTab(ImageView icon, TextView label, boolean selected) {
+        int color = getColor(selected ? R.color.brand_primary : R.color.text_tertiary);
+        icon.setColorFilter(color);
+        label.setTextColor(color);
     }
 
     private void refreshChips() {
@@ -101,58 +167,9 @@ public class AdminAnalyticsActivity extends AppCompatActivity {
         chip.setBackground(bg);
     }
 
-    /** Sections that don't depend on the time window. */
-    private void bindStaticPanels() {
-        // Donut: catalog mix (films.type) — totals from DB
-        int single = 312, series = 84, live = 14;
-        List<DonutChartView.Slice> filmSlices = new ArrayList<>();
-        filmSlices.add(new DonutChartView.Slice("Movies (SINGLE)", single, getColor(R.color.badge_movie)));
-        filmSlices.add(new DonutChartView.Slice("Series", series, getColor(R.color.badge_series)));
-        filmSlices.add(new DonutChartView.Slice("Live", live, getColor(R.color.badge_live)));
-        donutFilmType.setSlices(filmSlices);
-        donutFilmType.setCenterText(String.valueOf(single + series + live), "films");
-        renderLegend(legendFilmType, filmSlices, true);
+    // ============================ OVERVIEW ============================
 
-        // Donut: active subs by package
-        int monthly = 1248, annual = 506, trial = 92;
-        List<DonutChartView.Slice> subSlices = new ArrayList<>();
-        subSlices.add(new DonutChartView.Slice("Premium Monthly", monthly, getColor(R.color.brand_primary)));
-        subSlices.add(new DonutChartView.Slice("Premium Annual", annual, getColor(R.color.badge_premium)));
-        subSlices.add(new DonutChartView.Slice("Free Trial", trial, getColor(R.color.status_info)));
-        donutSubs.setSlices(subSlices);
-        int activeTotal = monthly + annual + trial;
-        donutSubs.setCenterText(formatNumber(activeTotal), "active");
-        renderLegend(legendSubs, subSlices, true);
-
-        // Subscription health
-        tvSubsActive.setText(formatNumber(activeTotal));
-        tvSubsExpiring.setText("147");
-        tvSubsExpired.setText("89");
-
-        // Top categories (film_categories COUNT GROUP BY category)
-        List<BarChartView.Bar> catBars = new ArrayList<>();
-        catBars.add(new BarChartView.Bar("Action", 142, "142", getColor(R.color.brand_primary)));
-        catBars.add(new BarChartView.Bar("Drama", 98, "98", getColor(R.color.badge_series)));
-        catBars.add(new BarChartView.Bar("Adventure", 81, "81", getColor(R.color.badge_movie)));
-        catBars.add(new BarChartView.Bar("Comedy", 76, "76", getColor(R.color.status_warning)));
-        catBars.add(new BarChartView.Bar("Thriller", 65, "65", getColor(R.color.badge_live)));
-        catBars.add(new BarChartView.Bar("Romance", 61, "61", getColor(R.color.badge_premium)));
-        barsCategories.setBars(catBars);
-
-        // Top films (SUM episodes.view_count GROUP BY film)
-        List<BarChartView.Bar> filmBars = new ArrayList<>();
-        filmBars.add(new BarChartView.Bar("Oppenheimer", 482_104, "482.1k", getColor(R.color.brand_primary)));
-        filmBars.add(new BarChartView.Bar("Dune: Part Two", 396_337, "396.3k", getColor(R.color.badge_series)));
-        filmBars.add(new BarChartView.Bar("The Bear S3", 318_572, "318.6k", getColor(R.color.badge_movie)));
-        filmBars.add(new BarChartView.Bar("Inside Out 2", 287_415, "287.4k", getColor(R.color.status_warning)));
-        filmBars.add(new BarChartView.Bar("Squid Game S2", 251_900, "251.9k", getColor(R.color.badge_live)));
-        filmBars.add(new BarChartView.Bar("Furiosa", 198_044, "198.0k", getColor(R.color.badge_premium)));
-        barsTopFilms.setBars(filmBars);
-    }
-
-    /** Recomputes the time-window sections. */
-    private void refreshAll() {
-        // KPIs
+    private void refreshOverview() {
         bindKpi(findViewById(R.id.kpi_users),
                 "TOTAL USERS", "12,418", "+3.2%", true,
                 "all-time (users)", R.color.brand_primary);
@@ -161,14 +178,6 @@ public class AdminAnalyticsActivity extends AppCompatActivity {
                 "NEW SIGN-UPS", formatNumber(signupsInPeriod),
                 deltaPct(8.5f), true,
                 "last " + period + " days", R.color.status_info);
-        bindKpi(findViewById(R.id.kpi_premium),
-                "PREMIUM USERS", "1,754", "+5.1%", true,
-                "active subscriptions", R.color.badge_premium);
-        long revenue = 75_000_000L + (long) period * 2_400_000L;
-        bindKpi(findViewById(R.id.kpi_revenue),
-                "REVENUE", formatVnd(revenue), "+12.4%", true,
-                "last " + period + " days · packages.price",
-                R.color.status_success);
         long totalViews = 9_847_000L + (long) period * 38_000L;
         bindKpi(findViewById(R.id.kpi_views),
                 "EPISODE VIEWS", formatNumber(totalViews),
@@ -181,20 +190,80 @@ public class AdminAnalyticsActivity extends AppCompatActivity {
                 "last " + period + " days · watch_history",
                 R.color.badge_series);
 
-        // Sign-ups line
         List<LineChartView.Point> signupSeries = generateSeries(period, 18, 12, 1.2f);
         chartSignups.setData(signupSeries, getColor(R.color.brand_primary));
         int total = 0;
         for (LineChartView.Point p : signupSeries) total += p.value;
         tvSignupsTotal.setText(formatNumber(total));
 
-        // Watch sessions line
         List<LineChartView.Point> watchSeries = generateSeries(period, 6_200, 1_900, 1.05f);
         chartWatch.setData(watchSeries, getColor(R.color.badge_movie));
         int watchTotal = 0;
         for (LineChartView.Point p : watchSeries) watchTotal += p.value;
         tvWatchTotal.setText(formatNumber(watchTotal));
     }
+
+    // ============================ CATALOG ============================
+
+    private void bindCatalog() {
+        int single = 312, series = 84, live = 14;
+        List<DonutChartView.Slice> filmSlices = new ArrayList<>();
+        filmSlices.add(new DonutChartView.Slice("Movies (SINGLE)", single, getColor(R.color.badge_movie)));
+        filmSlices.add(new DonutChartView.Slice("Series", series, getColor(R.color.badge_series)));
+        filmSlices.add(new DonutChartView.Slice("Live", live, getColor(R.color.badge_live)));
+        donutFilmType.setSlices(filmSlices);
+        donutFilmType.setCenterText(String.valueOf(single + series + live), "films");
+        renderLegend(legendFilmType, filmSlices);
+
+        List<BarChartView.Bar> catBars = new ArrayList<>();
+        catBars.add(new BarChartView.Bar("Action", 142, "142", getColor(R.color.brand_primary)));
+        catBars.add(new BarChartView.Bar("Drama", 98, "98", getColor(R.color.badge_series)));
+        catBars.add(new BarChartView.Bar("Adventure", 81, "81", getColor(R.color.badge_movie)));
+        catBars.add(new BarChartView.Bar("Comedy", 76, "76", getColor(R.color.status_warning)));
+        catBars.add(new BarChartView.Bar("Thriller", 65, "65", getColor(R.color.badge_live)));
+        catBars.add(new BarChartView.Bar("Romance", 61, "61", getColor(R.color.badge_premium)));
+        barsCategories.setBars(catBars);
+
+        List<BarChartView.Bar> filmBars = new ArrayList<>();
+        filmBars.add(new BarChartView.Bar("Oppenheimer", 482_104, "482.1k", getColor(R.color.brand_primary)));
+        filmBars.add(new BarChartView.Bar("Dune: Part Two", 396_337, "396.3k", getColor(R.color.badge_series)));
+        filmBars.add(new BarChartView.Bar("The Bear S3", 318_572, "318.6k", getColor(R.color.badge_movie)));
+        filmBars.add(new BarChartView.Bar("Inside Out 2", 287_415, "287.4k", getColor(R.color.status_warning)));
+        filmBars.add(new BarChartView.Bar("Squid Game S2", 251_900, "251.9k", getColor(R.color.badge_live)));
+        filmBars.add(new BarChartView.Bar("Furiosa", 198_044, "198.0k", getColor(R.color.badge_premium)));
+        barsTopFilms.setBars(filmBars);
+    }
+
+    // ============================ SUBSCRIPTIONS ============================
+
+    private void refreshSubscriptions() {
+        bindKpi(findViewById(R.id.kpi_premium),
+                "PREMIUM USERS", "1,754", "+5.1%", true,
+                "active subscriptions", R.color.badge_premium);
+        long revenue = 75_000_000L + (long) period * 2_400_000L;
+        bindKpi(findViewById(R.id.kpi_revenue),
+                "REVENUE", formatVnd(revenue), "+12.4%", true,
+                "last " + period + " days · packages.price",
+                R.color.status_success);
+    }
+
+    private void bindStaticSubscriptionHealth() {
+        int monthly = 1248, annual = 506, trial = 92;
+        List<DonutChartView.Slice> subSlices = new ArrayList<>();
+        subSlices.add(new DonutChartView.Slice("Premium Monthly", monthly, getColor(R.color.brand_primary)));
+        subSlices.add(new DonutChartView.Slice("Premium Annual", annual, getColor(R.color.badge_premium)));
+        subSlices.add(new DonutChartView.Slice("Free Trial", trial, getColor(R.color.status_info)));
+        donutSubs.setSlices(subSlices);
+        int activeTotal = monthly + annual + trial;
+        donutSubs.setCenterText(formatNumber(activeTotal), "active");
+        renderLegend(legendSubs, subSlices);
+
+        tvSubsActive.setText(formatNumber(activeTotal));
+        tvSubsExpiring.setText("147");
+        tvSubsExpired.setText("89");
+    }
+
+    // ============================ HELPERS ============================
 
     private void bindKpi(View kpi, String label, String value,
                          String delta, boolean up, String sub, int accentColor) {
@@ -214,9 +283,7 @@ public class AdminAnalyticsActivity extends AppCompatActivity {
         vAccent.setBackgroundColor(getColor(accentColor));
     }
 
-    private void renderLegend(LinearLayout container,
-                              List<DonutChartView.Slice> slices,
-                              boolean showShare) {
+    private void renderLegend(LinearLayout container, List<DonutChartView.Slice> slices) {
         container.removeAllViews();
         LayoutInflater inflater = LayoutInflater.from(this);
         float total = 0;
@@ -236,7 +303,7 @@ public class AdminAnalyticsActivity extends AppCompatActivity {
 
             label.setText(s.label);
             value.setText(formatNumber((long) s.value));
-            if (showShare && total > 0) {
+            if (total > 0) {
                 share.setText(String.format(Locale.ROOT,
                         "(%.1f%%)", s.value * 100f / total));
             } else {
@@ -246,10 +313,8 @@ public class AdminAnalyticsActivity extends AppCompatActivity {
         }
     }
 
-    private List<LineChartView.Point> generateSeries(int days,
-                                                     float base,
-                                                     float swing,
-                                                     float trend) {
+    private List<LineChartView.Point> generateSeries(int days, float base,
+                                                     float swing, float trend) {
         List<LineChartView.Point> data = new ArrayList<>();
         Calendar cal = Calendar.getInstance();
         cal.add(Calendar.DAY_OF_YEAR, -days + 1);
@@ -286,7 +351,4 @@ public class AdminAnalyticsActivity extends AppCompatActivity {
         }
         return formatNumber(n) + " ₫";
     }
-
-    // Suppress unused-import warning from Color/random helpers if optimizer removes references.
-    @SuppressWarnings("unused") private void touch() { Color.parseColor("#000"); }
 }
