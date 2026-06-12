@@ -73,9 +73,13 @@ public class AdminDashboardActivity extends AppCompatActivity {
                 startActivity(new Intent(this, AdminFilmListActivity.class));
                 break;
             case MODULE_USERS:
+                startActivity(new Intent(this, AdminUserListActivity.class));
+                break;
             case MODULE_CATEGORIES:
+                startActivity(new Intent(this, AdminCategoryListActivity.class));
+                break;
             case MODULE_STATS:
-                // Future: startActivity(new Intent(this, AdminXxxActivity.class));
+                startActivity(new Intent(this, AdminAnalyticsActivity.class));
                 break;
         }
     }
