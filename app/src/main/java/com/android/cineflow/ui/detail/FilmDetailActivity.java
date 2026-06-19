@@ -1,9 +1,14 @@
 package com.android.cineflow.ui.detail;
 
+import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -13,14 +18,19 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.android.cineflow.R;
+import com.android.cineflow.data.auth.AuthManager;
 import com.android.cineflow.data.network.ApiClient;
 import com.android.cineflow.data.network.dto.ApiResponseDto;
+import com.android.cineflow.data.network.dto.CreateCommentRequestDto;
 import com.android.cineflow.data.network.dto.EpisodeDto;
+import com.android.cineflow.data.network.dto.FilmCommentDto;
 import com.android.cineflow.data.network.dto.FilmDetailDto;
+import com.android.cineflow.ui.auth.LoginActivity;
 import com.android.cineflow.ui.player.PlayerActivity;
 import com.bumptech.glide.Glide;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -42,6 +52,17 @@ public class FilmDetailActivity extends AppCompatActivity {
     private EpisodeAdapter episodeAdapter;
 
     private FilmDetailDto currentFilm;
+
+    // ── Comments ──
+    private RecyclerView rvComments;
+    private FilmCommentAdapter commentAdapter;
+    private ProgressBar progressComments;
+    private TextView tvCommentsEmpty;
+    private TextView tvCommentCount;
+    private LinearLayout llCommentInput;
+    private EditText etCommentInput;
+    private Button btnSendComment;
+    private TextView tvCommentLoginHint;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,10 +96,155 @@ public class FilmDetailActivity extends AppCompatActivity {
         episodeAdapter = new EpisodeAdapter(new ArrayList<>(), this::playEpisode);
         rvEpisodes.setAdapter(episodeAdapter);
 
+        setupCommentsSection();
+
         String filmIdStr = getIntent().getStringExtra(EXTRA_FILM_ID);
         if (filmIdStr != null) {
-            fetchFilmDetails(Integer.parseInt(filmIdStr));
+            int filmId = Integer.parseInt(filmIdStr);
+            fetchFilmDetails(filmId);
+            fetchComments(filmId);
         }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        // Refresh input state in case user logged in from another activity
+        updateCommentInputState();
+    }
+
+    private void setupCommentsSection() {
+        rvComments         = findViewById(R.id.rv_comments);
+        progressComments   = findViewById(R.id.progress_comments);
+        tvCommentsEmpty    = findViewById(R.id.tv_comments_empty);
+        tvCommentCount     = findViewById(R.id.tv_comment_count);
+        llCommentInput     = findViewById(R.id.ll_comment_input);
+        etCommentInput     = findViewById(R.id.et_comment_input);
+        btnSendComment     = findViewById(R.id.btn_send_comment);
+        tvCommentLoginHint = findViewById(R.id.tv_comment_login_hint);
+
+        rvComments.setLayoutManager(new LinearLayoutManager(this));
+        commentAdapter = new FilmCommentAdapter();
+        AuthManager auth = AuthManager.getInstance();
+        if (auth != null) commentAdapter.setCurrentUserId(auth.getUserId());
+        commentAdapter.setOnCommentActionListener(this::confirmDeleteComment);
+        rvComments.setAdapter(commentAdapter);
+
+        btnSendComment.setOnClickListener(v -> submitComment());
+        updateCommentInputState();
+    }
+
+    private void updateCommentInputState() {
+        AuthManager auth = AuthManager.getInstance();
+        boolean loggedIn = auth != null && auth.isLoggedIn();
+        llCommentInput.setVisibility(loggedIn ? View.VISIBLE : View.GONE);
+        tvCommentLoginHint.setVisibility(loggedIn ? View.GONE : View.VISIBLE);
+        if (!loggedIn) {
+            tvCommentLoginHint.setOnClickListener(v ->
+                    startActivity(new Intent(this, LoginActivity.class)));
+        }
+        if (auth != null) commentAdapter.setCurrentUserId(auth.getUserId());
+    }
+
+    private void fetchComments(int filmId) {
+        progressComments.setVisibility(View.VISIBLE);
+        tvCommentsEmpty.setVisibility(View.GONE);
+        ApiClient.getFilmApiService().getFilmComments(filmId)
+                .enqueue(new Callback<ApiResponseDto<List<FilmCommentDto>>>() {
+                    @Override
+                    public void onResponse(Call<ApiResponseDto<List<FilmCommentDto>>> call,
+                                           Response<ApiResponseDto<List<FilmCommentDto>>> response) {
+                        progressComments.setVisibility(View.GONE);
+                        if (response.isSuccessful()
+                                && response.body() != null
+                                && response.body().getData() != null) {
+                            commentAdapter.submit(response.body().getData());
+                        }
+                        renderCommentCount();
+                    }
+
+                    @Override
+                    public void onFailure(Call<ApiResponseDto<List<FilmCommentDto>>> call, Throwable t) {
+                        progressComments.setVisibility(View.GONE);
+                        renderCommentCount();
+                    }
+                });
+    }
+
+    private void submitComment() {
+        if (currentFilm == null) return;
+        String text = etCommentInput.getText().toString().trim();
+        if (text.isEmpty()) {
+            etCommentInput.setError("Nội dung không được để trống");
+            return;
+        }
+        btnSendComment.setEnabled(false);
+        ApiClient.getFilmApiService()
+                .postFilmComment(currentFilm.getId(), new CreateCommentRequestDto(text))
+                .enqueue(new Callback<ApiResponseDto<FilmCommentDto>>() {
+                    @Override
+                    public void onResponse(Call<ApiResponseDto<FilmCommentDto>> call,
+                                           Response<ApiResponseDto<FilmCommentDto>> response) {
+                        btnSendComment.setEnabled(true);
+                        if (response.isSuccessful()
+                                && response.body() != null
+                                && response.body().getData() != null) {
+                            commentAdapter.prepend(response.body().getData());
+                            etCommentInput.setText("");
+                            renderCommentCount();
+                        } else if (response.code() == 401 || response.code() == 403) {
+                            Toast.makeText(FilmDetailActivity.this,
+                                    "Vui lòng đăng nhập để bình luận", Toast.LENGTH_SHORT).show();
+                        } else {
+                            Toast.makeText(FilmDetailActivity.this,
+                                    "Không thể đăng bình luận", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<ApiResponseDto<FilmCommentDto>> call, Throwable t) {
+                        btnSendComment.setEnabled(true);
+                        Toast.makeText(FilmDetailActivity.this,
+                                "Lỗi mạng", Toast.LENGTH_SHORT).show();
+                    }
+                });
+    }
+
+    private void confirmDeleteComment(FilmCommentDto comment) {
+        new AlertDialog.Builder(this)
+                .setMessage("Xóa bình luận này?")
+                .setNegativeButton("Hủy", null)
+                .setPositiveButton("Xóa", (d, w) -> deleteComment(comment))
+                .show();
+    }
+
+    private void deleteComment(FilmCommentDto comment) {
+        ApiClient.getFilmApiService().deleteFilmComment(comment.getId())
+                .enqueue(new Callback<ApiResponseDto<Void>>() {
+                    @Override
+                    public void onResponse(Call<ApiResponseDto<Void>> call,
+                                           Response<ApiResponseDto<Void>> response) {
+                        if (response.isSuccessful()) {
+                            commentAdapter.remove(comment);
+                            renderCommentCount();
+                        } else {
+                            Toast.makeText(FilmDetailActivity.this,
+                                    "Không thể xóa bình luận", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<ApiResponseDto<Void>> call, Throwable t) {
+                        Toast.makeText(FilmDetailActivity.this,
+                                "Lỗi mạng", Toast.LENGTH_SHORT).show();
+                    }
+                });
+    }
+
+    private void renderCommentCount() {
+        int n = commentAdapter.size();
+        tvCommentCount.setText(n + (n == 1 ? " bình luận" : " bình luận"));
+        tvCommentsEmpty.setVisibility(n == 0 ? View.VISIBLE : View.GONE);
     }
 
     private void fetchFilmDetails(int filmId) {

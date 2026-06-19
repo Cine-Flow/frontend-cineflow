@@ -5,6 +5,8 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 
+import com.android.cineflow.ui.catalog.MoviesFragment;
+import com.android.cineflow.ui.catalog.SeriesFragment;
 import com.android.cineflow.ui.home.HomeFragment;
 import com.android.cineflow.ui.more.MoreFragment;
 import com.android.cineflow.ui.premierleague.PremierLeagueFragment;
@@ -22,8 +24,8 @@ public class MainPagerAdapter extends FragmentStateAdapter {
         switch (position) {
             case 0: return new HomeFragment();
             case 1: return new ShortsFragment();
-            case 2: return new HomeFragment(); // Series placeholder
-            case 3: return new HomeFragment(); // Movies placeholder
+            case 2: return new SeriesFragment();
+            case 3: return new MoviesFragment();
             case 4: return new PremierLeagueFragment();
             case 5: return new MoreFragment();
             default: return new HomeFragment();
