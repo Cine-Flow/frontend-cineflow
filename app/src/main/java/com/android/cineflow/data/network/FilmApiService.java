@@ -23,16 +23,21 @@ import com.android.cineflow.data.network.dto.WatchHistoryDto;
 import com.android.cineflow.data.network.dto.FilmDto;
 import com.android.cineflow.data.network.dto.ShortsResponseDto;
 import com.android.cineflow.data.network.dto.CommentDto;
+import com.android.cineflow.data.network.dto.CreateEpisodeRequestDto;
+import com.android.cineflow.data.network.dto.EpisodeDto;
 
 
 import java.util.List;
 
+import okhttp3.MultipartBody;
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.DELETE;
 import retrofit2.http.GET;
+import retrofit2.http.Multipart;
 import retrofit2.http.POST;
 import retrofit2.http.PUT;
+import retrofit2.http.Part;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
 
@@ -139,5 +144,22 @@ public interface FilmApiService {
 
     @DELETE("admin/films/{id}")
     Call<ApiResponseDto<Void>> deleteFilm(@Path("id") Integer id);
+
+    // ── Admin: Episodes ──────────────────────────────────────────────────────
+
+    @POST("admin/films/{filmId}/episodes")
+    Call<ApiResponseDto<EpisodeDto>> createEpisode(@Path("filmId") int filmId, @Body CreateEpisodeRequestDto request);
+
+    @PUT("admin/episodes/{id}")
+    Call<ApiResponseDto<EpisodeDto>> updateEpisode(@Path("id") int id, @Body CreateEpisodeRequestDto request);
+
+    @DELETE("admin/episodes/{id}")
+    Call<ApiResponseDto<Void>> deleteEpisode(@Path("id") int id);
+
+    // ── File Upload ──────────────────────────────────────────────────────────
+
+    @Multipart
+    @POST("files/upload")
+    Call<ApiResponseDto<String>> uploadFile(@Part MultipartBody.Part file, @Query("folder") String folder);
 }
 

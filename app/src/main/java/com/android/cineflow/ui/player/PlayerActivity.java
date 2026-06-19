@@ -108,6 +108,13 @@ public class PlayerActivity extends AppCompatActivity {
         }
     }
 
+    private String resolveLocalhostUrl(String url) {
+        if (url != null && url.contains("localhost:9000")) {
+            return url.replace("localhost:9000", "10.0.2.2:9000");
+        }
+        return url;
+    }
+
     private void initializePlayer() {
         if (player == null) {
             trackSelector = new DefaultTrackSelector(this);
@@ -118,7 +125,7 @@ public class PlayerActivity extends AppCompatActivity {
                     .build();
             playerView.setPlayer(player);
             
-            String urlToPlay = videoUrl;
+            String urlToPlay = resolveLocalhostUrl(videoUrl);
             if (urlToPlay == null || urlToPlay.isEmpty()) {
                 urlToPlay = "https://storage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4";
             }
@@ -281,7 +288,8 @@ public class PlayerActivity extends AppCompatActivity {
             tvDetailTitle.setText(nextTitle);
             
             if (player != null) {
-                MediaItem mediaItem = MediaItem.fromUri(videoUrl != null && !videoUrl.isEmpty() ? videoUrl : "https://storage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4");
+                String urlToPlay = resolveLocalhostUrl(videoUrl != null && !videoUrl.isEmpty() ? videoUrl : "https://storage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4");
+                MediaItem mediaItem = MediaItem.fromUri(urlToPlay);
                 player.setMediaItem(mediaItem);
                 player.seekTo(0, 0);
                 player.prepare();
