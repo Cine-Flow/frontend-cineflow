@@ -17,6 +17,8 @@ import com.android.cineflow.data.network.dto.UpdateFilmRequestDto;
 import com.android.cineflow.data.network.dto.UpdateWatchHistoryRequestDto;
 import com.android.cineflow.data.network.dto.UpdateProfileRequestDto;
 import com.android.cineflow.data.network.dto.ChangePasswordRequestDto;
+import com.android.cineflow.data.network.dto.CreateCommentRequestDto;
+import com.android.cineflow.data.network.dto.FilmCommentDto;
 import com.android.cineflow.data.network.dto.UserAnalyticsDto;
 import com.android.cineflow.data.network.dto.UserProfileDto;
 import com.android.cineflow.data.network.dto.WatchHistoryDto;
@@ -106,7 +108,20 @@ public interface FilmApiService {
 
     @GET("films/shorts/{id}/comments")
     Call<ApiResponseDto<List<CommentDto>>> getShortComments(@Path("id") String id);
-    ////. ---- 
+    ////. ----
+
+    // ── Film comments ───────────────────────────────────────────────────────
+
+    @GET("films/{filmId}/comments")
+    Call<ApiResponseDto<List<FilmCommentDto>>> getFilmComments(@Path("filmId") Integer filmId);
+
+    @POST("films/{filmId}/comments")
+    Call<ApiResponseDto<FilmCommentDto>> postFilmComment(
+            @Path("filmId") Integer filmId,
+            @Body CreateCommentRequestDto request);
+
+    @DELETE("films/comments/{commentId}")
+    Call<ApiResponseDto<Void>> deleteFilmComment(@Path("commentId") Integer commentId);
 
     // ── Auth ────────────────────────────────────────────────────────────────
 
