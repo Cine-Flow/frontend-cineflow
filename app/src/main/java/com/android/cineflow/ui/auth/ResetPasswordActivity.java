@@ -97,8 +97,33 @@ public class ResetPasswordActivity extends com.android.cineflow.ui.base.BaseActi
         setLoading(true);
 
         FilmApiService api = ApiClient.getFilmApiService();
-        ResetPasswordRequestDto request = new ResetPasswordRequestDto(token, newPassword, confirmPassword);
+        api.validateResetToken(token).enqueue(new Callback<ApiResponseDto<Boolean>>() {
+            @Override
+            public void onResponse(Call<ApiResponseDto<Boolean>> call,
+                                   Response<ApiResponseDto<Boolean>> response) {
+                boolean valid = response.isSuccessful()
+                        && response.body() != null
+                        && Boolean.TRUE.equals(response.body().getData());
+                if (!valid) {
+                    setLoading(false);
+                    tvError.setText(R.string.reset_password_invalid_token);
+                    tvError.setVisibility(View.VISIBLE);
+                    return;
+                }
+                submitReset(api, token, newPassword, confirmPassword);
+            }
 
+            @Override
+            public void onFailure(Call<ApiResponseDto<Boolean>> call, Throwable t) {
+                setLoading(false);
+                tvError.setText(getString(R.string.reset_password_network_error, t.getMessage()));
+                tvError.setVisibility(View.VISIBLE);
+            }
+        });
+    }
+
+    private void submitReset(FilmApiService api, String token, String newPassword, String confirmPassword) {
+        ResetPasswordRequestDto request = new ResetPasswordRequestDto(token, newPassword, confirmPassword);
         api.resetPassword(request).enqueue(new Callback<ApiResponseDto<Void>>() {
             @Override
             public void onResponse(Call<ApiResponseDto<Void>> call,
