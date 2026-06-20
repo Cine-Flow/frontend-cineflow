@@ -39,7 +39,7 @@ import com.android.cineflow.data.network.Callback;
 import com.android.cineflow.data.network.Response;
 
 @UnstableApi
-public class PlayerActivity extends AppCompatActivity {
+public class PlayerActivity extends com.android.cineflow.ui.base.BaseActivity {
 
     public static final String EXTRA_VIDEO_URL = "extra_video_url";
     public static final String EXTRA_EPISODE_ID = "extra_episode_id";

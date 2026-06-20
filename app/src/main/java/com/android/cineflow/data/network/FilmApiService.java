@@ -20,6 +20,7 @@ import com.android.cineflow.data.network.dto.LoginResponseDto;
 import com.android.cineflow.data.network.dto.PagedResponseDto;
 import com.android.cineflow.data.network.dto.PremierLeagueHomeDto;
 import com.android.cineflow.data.network.dto.RegisterRequestDto;
+import com.android.cineflow.data.network.dto.ResetPasswordRequestDto;
 import com.android.cineflow.data.network.dto.ShortsResponseDto;
 import com.android.cineflow.data.network.dto.TokenRefreshRequestDto;
 import com.android.cineflow.data.network.dto.UpdateFilmRequestDto;
@@ -86,6 +87,8 @@ public interface FilmApiService {
     Call<ApiResponseDto<Void>> register(RegisterRequestDto request);
 
     Call<ApiResponseDto<Void>> forgotPassword(ForgotPasswordRequestDto request);
+
+    Call<ApiResponseDto<Void>> resetPassword(ResetPasswordRequestDto request);
 
     Call<ApiResponseDto<LoginResponseDto>> refreshToken(TokenRefreshRequestDto request);
 

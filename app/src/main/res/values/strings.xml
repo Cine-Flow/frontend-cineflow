@@ -1,9 +1,23 @@
 <resources>
     <string name="app_name">cineflow</string>
+
+    <!-- More Fragment -->
     <string name="more_download_title">Nội dung tải xuống</string>
     <string name="more_download_subtitle">Xem bất kỳ lúc nào, ở bất kỳ nơi nào</string>
     <string name="more_support_title">Hỗ trợ</string>
     <string name="more_contact_info">Thông tin liên hệ</string>
+    <string name="more_library">Thư viện</string>
+    <string name="more_analytics">Thống kê cá nhân</string>
+    <string name="more_favorites">Sản phẩm yêu thích</string>
+    <string name="more_settings_support">Cài đặt &amp; Hỗ trợ</string>
+    <string name="more_settings">Cài đặt</string>
+    <string name="more_theme">Giao diện</string>
+    <string name="more_help">Liên hệ hỗ trợ</string>
+    <string name="more_terms">Điều khoản &amp; Chính sách</string>
+    <string name="more_sign_out">Đăng xuất</string>
+    <string name="more_sign_in">Đăng nhập</string>
+
+    <!-- Premier League -->
     <string name="premier_league_season">Premier League 2025/26</string>
     <string name="premier_league_rank">Hạng</string>
     <string name="premier_league_team">Đội bóng</string>
@@ -12,10 +26,208 @@
     <string name="view_all">Xem tất cả</string>
     <string name="premier_league_select_date">Chọn ngày xem lịch đấu</string>
     <string name="premier_league_empty_fixtures">Không có lịch đấu trong ngày đã chọn</string>
+
+    <!-- Player -->
     <string name="player_default_title">Đang chiếu phim</string>
     <string name="player_desc_header">Mô tả chi tiết</string>
     <string name="player_default_desc">Bộ phim hấp dẫn đang được phát ngẫu nhiên vì chưa có luồng gọi API lấy chi tiết phim. Để đầy đủ hơn, vui lòng xây dựng API lấy thông tin và danh sách tập phim!</string>
     <string name="player_btn_favorite">Thêm vào yêu thích</string>
     <string name="player_btn_share">Chia sẻ</string>
     <string name="player_back_desc">Quay lại</string>
+
+    <!-- Account & Settings Screen -->
+    <string name="account_title">Tài khoản &amp; Cài đặt</string>
+    <string name="account_username_default">Tên người dùng</string>
+    <string name="account_email_default">user@email.com</string>
+    <string name="account_phone_default">SĐT: Chưa cập nhật</string>
+    <string name="account_phone_prefix">SĐT: %s</string>
+    <string name="account_phone_not_set">SĐT: Chưa cập nhật</string>
+    <string name="account_stats_format">Yêu thích: %1$d   Lịch sử xem: %2$d</string>
+    <string name="account_no_subscription">Chưa đăng ký gói dịch vụ</string>
+    <string name="account_subscription_format">Gói dịch vụ hiện tại: %s</string>
+
+    <string name="section_account_security">TÀI KHOẢN &amp; BẢO MẬT</string>
+    <string name="row_edit_profile">Chỉnh sửa thông tin hồ sơ</string>
+    <string name="row_change_password">Đổi mật khẩu</string>
+
+    <string name="section_general_settings">CÀI ĐẶT CHUNG</string>
+    <string name="row_video_quality">Chất lượng phát mặc định</string>
+    <string name="row_autoplay_next">Tự động phát tập tiếp theo</string>
+    <string name="row_language">Ngôn ngữ</string>
+    <string name="language_vietnamese">Tiếng Việt</string>
+    <string name="language_english">English</string>
+
+    <string name="section_notifications_storage">THÔNG BÁO &amp; LƯU TRỮ</string>
+    <string name="row_push_notifications">Nhận thông báo đẩy</string>
+    <string name="row_clear_cache">Dọn dẹp bộ nhớ đệm</string>
+
+    <string name="section_info_support">THÔNG TIN &amp; HỖ TRỢ</string>
+    <string name="row_terms_policy">Điều khoản &amp; Chính sách bảo mật</string>
+    <string name="row_contact_support">Liên hệ hỗ trợ kỹ thuật</string>
+
+    <string name="app_version">Cine-Flow v1.0.0 (Premium Cinema Edition)</string>
+
+    <!-- Dialogs & Toasts -->
+    <string name="dialog_quality_title">Chọn chất lượng phát mặc định</string>
+    <string name="dialog_quality_updated">Đã cập nhật chất lượng mặc định: %s</string>
+    <string name="dialog_language_title">Chọn ngôn ngữ</string>
+    <string name="dialog_theme_title">Chọn giao diện</string>
+    <string name="theme_system">Theo hệ thống</string>
+    <string name="theme_light">Sáng</string>
+    <string name="theme_dark">Tối</string>
+    <string name="cancel">Hủy</string>
+    <string name="agree">Đồng ý</string>
+    <string name="save">Lưu</string>
+
+    <string name="toast_profile_updated">Cập nhật hồ sơ thành công!</string>
+    <string name="toast_profile_error">Không thể cập nhật hồ sơ</string>
+    <string name="toast_password_changed">Đổi mật khẩu thành công!</string>
+    <string name="toast_password_old_wrong">Mật khẩu cũ không chính xác</string>
+    <string name="toast_password_error">Mật khẩu cũ không chính xác hoặc lỗi hệ thống</string>
+    <string name="toast_fill_all_fields">Vui lòng nhập đầy đủ thông tin</string>
+    <string name="toast_password_min_length">Mật khẩu mới phải có tối thiểu 6 ký tự</string>
+    <string name="toast_password_mismatch">Xác nhận mật khẩu mới không khớp</string>
+    <string name="toast_name_required">Họ và tên không được để trống</string>
+    <string name="toast_cache_cleared">Dọn dẹp bộ nhớ đệm thành công!</string>
+    <string name="toast_cache_error">Không thể dọn dẹp toàn bộ bộ nhớ đệm</string>
+    <string name="toast_cache_exception">Lỗi khi xóa bộ nhớ đệm</string>
+    <string name="toast_load_account_error">Không thể tải thông tin tài khoản</string>
+    <string name="toast_server_error">Lỗi kết nối máy chủ</string>
+    <string name="toast_no_email_app">Không tìm thấy ứng dụng gửi email phù hợp</string>
+    <string name="toast_no_phone_support">Thiết bị không hỗ trợ cuộc gọi</string>
+    <string name="toast_language_changed">Đã chuyển ngôn ngữ sang %s</string>
+
+    <!-- Support Dialog -->
+    <string name="dialog_support_title">Liên hệ Hỗ trợ khách hàng</string>
+    <string name="support_email_option">Gửi Email hỗ trợ (support@cineflow.com)</string>
+    <string name="support_hotline_option">Gọi Hotline hỗ trợ (1900 1234)</string>
+    <string name="support_email_chooser">Chọn ứng dụng gửi Email</string>
+
+    <!-- Notification -->
+    <string name="notification_channel_name">Cine-Flow Recommendations</string>
+    <string name="notification_channel_desc">Thông báo giới thiệu phim từ Cine-Flow</string>
+    <string name="notification_welcome_title">Chào mừng trở lại Cine-Flow! 🎬</string>
+    <string name="notification_welcome_text">Bạn đã bật thông báo thành công. Khám phá ngay các bộ phim bom tấn mới nhất hôm nay!</string>
+
+    <!-- Auth - Forgot & Reset Password -->
+    <string name="forgot_password_title">Quên mật khẩu</string>
+    <string name="forgot_password_desc">Nhập địa chỉ email của bạn, chúng tôi sẽ gửi liên kết đặt lại mật khẩu.</string>
+    <string name="forgot_password_hint_email">Email</string>
+    <string name="forgot_password_btn_send">Gửi liên kết đặt lại</string>
+    <string name="forgot_password_success">Liên kết đặt lại mật khẩu đã được gửi đến email của bạn</string>
+    <string name="forgot_password_error">Không thể gửi email đặt lại mật khẩu</string>
+    <string name="forgot_password_email_required">Email là bắt buộc</string>
+    <string name="forgot_password_have_token">Đã có mã token? Nhập tại đây</string>
+
+    <string name="reset_password_title">Đặt lại mật khẩu</string>
+    <string name="reset_password_desc">Nhập mã token nhận được từ email và mật khẩu mới của bạn.</string>
+    <string name="reset_password_hint_token">Mã Token từ Email</string>
+    <string name="reset_password_hint_new_password">Mật khẩu mới</string>
+    <string name="reset_password_hint_confirm">Xác nhận mật khẩu mới</string>
+    <string name="reset_password_btn">Đặt lại mật khẩu</string>
+    <string name="reset_password_token_required">Mã token là bắt buộc</string>
+    <string name="reset_password_password_required">Mật khẩu mới là bắt buộc</string>
+    <string name="reset_password_confirm_required">Xác nhận mật khẩu là bắt buộc</string>
+    <string name="reset_password_password_min">Mật khẩu phải có ít nhất 6 ký tự</string>
+    <string name="reset_password_mismatch">Mật khẩu xác nhận không khớp</string>
+    <string name="reset_password_success">Đặt lại mật khẩu thành công! Đang chuyển về đăng nhập…</string>
+    <string name="reset_password_error">Đặt lại mật khẩu thất bại</string>
+    <string name="reset_password_network_error">Lỗi kết nối: %s</string>
+
+    <!-- Terms Dialog -->
+    <string name="dialog_terms_title">Điều khoản &amp; Chính sách bảo mật</string>
+
+    <!-- Navigation Menu -->
+    <string name="nav_home">Trang chủ</string>
+    <string name="nav_shorts">Shorts</string>
+    <string name="nav_series">Phim bộ</string>
+    <string name="nav_movies">Phim lẻ</string>
+    <string name="nav_premier_league">Ngoại hạng</string>
+    <string name="nav_more">Mở rộng</string>
+
+    <!-- More Fragment Additionals -->
+    <string name="more_manage_account">Nhấn để quản lý tài khoản của bạn</string>
+    <string name="more_tap_to_sign_in">Nhấn để đăng nhập vào tài khoản của bạn</string>
+    <string name="more_favorites_label">Yêu thích</string>
+    <string name="more_history_label">Lịch sử</string>
+    <string name="more_download_label">Tải xuống</string>
+    <string name="toast_feature_under_development">Chức năng %s đang được phát triển!</string>
+    <string name="app_version_short">CineFlow v1.0</string>
+
+    <!-- Film Catalog -->
+    <string name="filter_all">Tất cả</string>
+    <string name="filter_new">Mới nhất</string>
+    <string name="filter_premium">Premium</string>
+    <string name="filter_free">Miễn phí</string>
+    <string name="catalog_subtitle_format">%d tựa phim</string>
+    <string name="catalog_err_load_data">Lỗi tải dữ liệu</string>
+    <string name="catalog_err_no_matching_films">Không có phim phù hợp với bộ lọc</string>
+
+    <!-- Account Additional -->
+    <string name="account_stats_default">Yêu thích: 0   Lịch sử: 0</string>
+    <string name="quality_auto">Tự động</string>
+
+    <!-- Login & Register Auth -->
+    <string name="login_subtitle">Đăng nhập để tiếp tục</string>
+    <string name="login_hint_identifier">Email, tên đăng nhập hoặc số điện thoại</string>
+    <string name="login_hint_password">Mật khẩu</string>
+    <string name="login_forgot_password">Quên mật khẩu?</string>
+    <string name="login_btn_signin">Đăng nhập</string>
+    <string name="login_no_account">Chưa có tài khoản? </string>
+    <string name="login_signup">Đăng ký</string>
+    <string name="login_err_identifier_required">Email, tên đăng nhập hoặc SĐT là bắt buộc</string>
+    <string name="login_err_password_required">Mật khẩu là bắt buộc</string>
+    <string name="login_err_failed">Đăng nhập thất bại</string>
+    <string name="login_err_invalid_credentials">Thông tin đăng nhập không hợp lệ</string>
+    <string name="register_title">Tạo tài khoản</string>
+    <string name="register_subtitle">Đăng ký tài khoản để bắt đầu xem phim</string>
+    <string name="register_hint_username">Tên đăng nhập</string>
+    <string name="register_err_username_required">Tên đăng nhập là bắt buộc</string>
+    <string name="register_err_email_exists">Email đã tồn tại</string>
+    <string name="register_err_failed">Đăng ký thất bại</string>
+
+    <!-- Premier League Additional -->
+    <string name="premier_league_search_hint">Tìm kiếm trận đấu (ví dụ: CHE, MUN...)</string>
+    <string name="pl_schedule">Lịch đấu</string>
+    <string name="pl_schedule_format">Lịch đấu - %s</string>
+    <string name="pl_results_format">Kết quả - %s</string>
+    <string name="pl_highlights">Highlights</string>
+    <string name="pl_recent_results">Kết quả gần nhất</string>
+    <string name="pl_english_football">Bóng đá Anh</string>
+
+    <!-- Dialog Edit Profile -->
+    <string name="dialog_edit_profile_title">Chỉnh sửa thông tin</string>
+    <string name="dialog_edit_profile_name">Họ và tên</string>
+    <string name="dialog_edit_profile_name_hint">Nhập họ và tên của bạn</string>
+    <string name="dialog_edit_profile_phone">Số điện thoại</string>
+    <string name="dialog_edit_profile_phone_hint">Nhập số điện thoại của bạn</string>
+
+    <!-- Dialog Change Password -->
+    <string name="dialog_change_password_old">Mật khẩu cũ</string>
+    <string name="dialog_change_password_old_hint">Nhập mật khẩu hiện tại</string>
+    <string name="dialog_change_password_new_hint">Tối thiểu 6 ký tự</string>
+    <string name="dialog_change_password_confirm_hint">Nhập lại mật khẩu mới</string>
+
+    <!-- Film Detail -->
+    <string name="detail_btn_play">Phát</string>
+    <string name="detail_episode_list">Danh sách tập</string>
+    <string name="detail_comments">Bình luận</string>
+    <string name="detail_hint_write_comment">Viết bình luận...</string>
+    <string name="detail_btn_send">Gửi</string>
+    <string name="detail_login_to_comment">Đăng nhập để bình luận</string>
+    <string name="detail_empty_comments">Hãy là người đầu tiên bình luận</string>
+
+    <!-- Download Manager Extra -->
+    <string name="download_manager_title">Quản lý tải ngoại tuyến</string>
+    <string name="download_manager_clear_all">Xóa tất cả</string>
+    <string name="download_manager_empty_title">Chưa có tập phim offline</string>
+    <string name="download_manager_empty_desc">Tải các tập phim yêu thích để thưởng thức mọi lúc mọi nơi ngay cả khi ngắt kết nối mạng hoàn toàn.</string>
+
+    <!-- Homepage Localization -->
+    <string name="home_new_releases">Mới ra mắt</string>
+    <string name="home_sports_events">Sự kiện Thể thao</string>
+    <string name="home_hot_series">Phim bộ hot</string>
+    <string name="home_daily_movies">Cày phim hay mỗi ngày</string>
+    <string name="home_view_more">Xem thêm</string>
+    <string name="home_toast_event_not_started">Sự kiện chưa bắt đầu phát sóng</string>
 </resources>

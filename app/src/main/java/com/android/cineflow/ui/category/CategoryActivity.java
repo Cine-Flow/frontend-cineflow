@@ -27,7 +27,7 @@ import com.android.cineflow.data.network.Response;
  * Displays a full grid of films for a given category (film type).
  * Launched from the "Xem thêm" action on the home page.
  */
-public class CategoryActivity extends AppCompatActivity {
+public class CategoryActivity extends com.android.cineflow.ui.base.BaseActivity {
 
     public static final String EXTRA_CATEGORY_TITLE = "extra_category_title";
     public static final String EXTRA_CATEGORY_TYPE  = "extra_category_type";

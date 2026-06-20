@@ -30,7 +30,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
-            android:text="Tài khoản &amp; Cài đặt"
+            android:text="@string/account_title"
             android:textColor="@color/text_primary"
             android:textSize="20sp"
             android:fontFamily="sans-serif-medium" />
@@ -72,7 +72,7 @@
                         android:id="@+id/tv_name"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Tên người dùng"
+                        android:text="@string/account_username_default"
                         android:textColor="@color/text_primary"
                         android:textSize="20sp"
                         android:fontFamily="sans-serif-medium" />
@@ -91,7 +91,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="6dp"
-                    android:text="user@email.com"
+                    android:text="@string/account_email_default"
                     android:textColor="@color/text_secondary"
                     android:textSize="14sp" />
 
@@ -100,7 +100,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="6dp"
-                    android:text="SĐT: Chưa cập nhật"
+                    android:text="@string/account_phone_default"
                     android:textColor="@color/text_secondary"
                     android:textSize="14sp" />
 
@@ -114,7 +114,7 @@
                     android:id="@+id/tv_stats"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Yêu thích: 0   Lịch sử: 0"
+                    android:text="@string/account_stats_default"
                     android:textColor="@color/text_primary"
                     android:textSize="14sp" />
 
@@ -123,7 +123,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
-                    android:text="Chưa đăng ký gói dịch vụ"
+                    android:text="@string/account_no_subscription"
                     android:textColor="@color/brand_accent"
                     android:textSize="14sp"
                     android:fontFamily="sans-serif-medium" />
@@ -133,7 +133,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="TÀI KHOẢN &amp; BẢO MẬT"
+                android:text="@string/section_account_security"
                 android:textColor="@color/text_secondary"
                 android:textSize="12sp"
                 android:fontFamily="sans-serif-medium"
@@ -171,7 +171,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:layout_marginStart="14dp"
-                        android:text="Chỉnh sửa thông tin hồ sơ"
+                        android:text="@string/row_edit_profile"
                         android:textColor="@color/text_primary"
                         android:textSize="15sp" />
 
@@ -210,7 +210,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:layout_marginStart="14dp"
-                        android:text="Đổi mật khẩu"
+                        android:text="@string/row_change_password"
                         android:textColor="@color/text_primary"
                         android:textSize="15sp" />
 
@@ -223,12 +223,12 @@
                 </LinearLayout>
             </LinearLayout>
 
-            <!-- SECTION 1: VIDEO SETTINGS -->
+            <!-- SECTION 1: GENERAL SETTINGS -->
             <TextView
                 android:id="@+id/section_video_settings"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="CÀI ĐẶT VIDEO"
+                android:text="@string/section_general_settings"
                 android:textColor="@color/text_secondary"
                 android:textSize="12sp"
                 android:fontFamily="sans-serif-medium"
@@ -266,7 +266,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:layout_marginStart="14dp"
-                        android:text="Chất lượng phát mặc định"
+                        android:text="@string/row_video_quality"
                         android:textColor="@color/text_primary"
                         android:textSize="15sp" />
 
@@ -274,7 +274,7 @@
                         android:id="@+id/tv_selected_quality"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Tự động"
+                        android:text="@string/quality_auto"
                         android:textColor="@color/text_secondary"
                         android:textSize="14sp"
                         android:layout_marginEnd="8dp" />
@@ -310,7 +310,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:layout_marginStart="14dp"
-                        android:text="Tự động phát tập tiếp theo"
+                        android:text="@string/row_autoplay_next"
                         android:textColor="@color/text_primary"
                         android:textSize="15sp" />
 
@@ -321,13 +321,61 @@
                         app:thumbTint="@color/white"
                         app:trackTint="@color/brand_primary" />
                 </LinearLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="@color/divider" />
+
+                <!-- Language Row -->
+                <LinearLayout
+                    android:id="@+id/row_language"
+                    android:layout_width="match_parent"
+                    android:layout_height="60dp"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:background="?android:attr/selectableItemBackground"
+                    android:clickable="true"
+                    android:focusable="true">
+
+                    <ImageView
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:src="@drawable/ic_help"
+                        app:tint="@color/text_primary" />
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:layout_marginStart="14dp"
+                        android:text="@string/row_language"
+                        android:textColor="@color/text_primary"
+                        android:textSize="15sp" />
+
+                    <TextView
+                        android:id="@+id/tv_selected_language"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/language_vietnamese"
+                        android:textColor="@color/text_secondary"
+                        android:textSize="14sp"
+                        android:layout_marginEnd="8dp" />
+
+                    <ImageView
+                        android:layout_width="16dp"
+                        android:layout_height="16dp"
+                        android:src="@drawable/ic_arrow_right"
+                        app:tint="@color/text_secondary"
+                        android:alpha="0.5" />
+                </LinearLayout>
             </LinearLayout>
 
             <!-- SECTION 2: NOTIFICATIONS & STORAGE -->
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="THÔNG BÁO &amp; LƯU TRỮ"
+                android:text="@string/section_notifications_storage"
                 android:textColor="@color/text_secondary"
                 android:textSize="12sp"
                 android:fontFamily="sans-serif-medium"
@@ -361,7 +409,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:layout_marginStart="14dp"
-                        android:text="Nhận thông báo đẩy"
+                        android:text="@string/row_push_notifications"
                         android:textColor="@color/text_primary"
                         android:textSize="15sp" />
 
@@ -400,7 +448,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:layout_marginStart="14dp"
-                        android:text="Dọn dẹp bộ nhớ đệm"
+                        android:text="@string/row_clear_cache"
                         android:textColor="@color/text_primary"
                         android:textSize="15sp" />
 
@@ -427,7 +475,7 @@
                 android:id="@+id/section_support"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="THÔNG TIN &amp; HỖ TRỢ"
+                android:text="@string/section_info_support"
                 android:textColor="@color/text_secondary"
                 android:textSize="12sp"
                 android:fontFamily="sans-serif-medium"
@@ -465,7 +513,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:layout_marginStart="14dp"
-                        android:text="Điều khoản &amp; Chính sách bảo mật"
+                        android:text="@string/row_terms_policy"
                         android:textColor="@color/text_primary"
                         android:textSize="15sp" />
 
@@ -504,7 +552,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:layout_marginStart="14dp"
-                        android:text="Liên hệ hỗ trợ kỹ thuật"
+                        android:text="@string/row_contact_support"
                         android:textColor="@color/text_primary"
                         android:textSize="15sp" />
 
@@ -522,7 +570,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
-                android:text="Cine-Flow v1.0.0 (Premium Cinema Edition)"
+                android:text="@string/app_version"
                 android:textColor="@color/text_tertiary"
                 android:textSize="11sp"
                 android:fontFamily="sans-serif"

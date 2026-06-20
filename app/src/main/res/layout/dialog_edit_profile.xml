@@ -9,7 +9,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Chỉnh sửa thông tin"
+        android:text="@string/dialog_edit_profile_title"
         android:textColor="@color/text_primary"
         android:textSize="18sp"
         android:textStyle="bold"
@@ -18,7 +18,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Họ và tên"
+        android:text="@string/dialog_edit_profile_name"
         android:textColor="@color/text_secondary"
         android:textSize="12sp"
         android:layout_marginBottom="4dp" />
@@ -33,7 +33,7 @@
         android:textSize="14sp"
         android:paddingStart="12dp"
         android:paddingEnd="12dp"
-        android:hint="Nhập họ và tên của bạn"
+        android:hint="@string/dialog_edit_profile_name_hint"
         android:singleLine="true"
         android:inputType="textPersonName"
         android:layout_marginBottom="16dp" />
@@ -41,7 +41,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Số điện thoại"
+        android:text="@string/dialog_edit_profile_phone"
         android:textColor="@color/text_secondary"
         android:textSize="12sp"
         android:layout_marginBottom="4dp" />
@@ -56,7 +56,7 @@
         android:textSize="14sp"
         android:paddingStart="12dp"
         android:paddingEnd="12dp"
-        android:hint="Nhập số điện thoại của bạn"
+        android:hint="@string/dialog_edit_profile_phone_hint"
         android:singleLine="true"
         android:inputType="phone"
         android:layout_marginBottom="20dp" />
@@ -72,7 +72,7 @@
             style="@style/Widget.Cineflow.Button.Secondary"
             android:layout_width="wrap_content"
             android:layout_height="40dp"
-            android:text="Hủy"
+            android:text="@string/cancel"
             android:layout_marginEnd="8dp" />
 
         <com.google.android.material.button.MaterialButton
@@ -80,7 +80,7 @@
             style="@style/Widget.Cineflow.Button.Primary"
             android:layout_width="wrap_content"
             android:layout_height="40dp"
-            android:text="Lưu" />
+            android:text="@string/save" />
     </LinearLayout>
 
 </LinearLayout>

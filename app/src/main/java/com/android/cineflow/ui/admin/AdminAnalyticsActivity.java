@@ -25,7 +25,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Random;
 
-public class AdminAnalyticsActivity extends AppCompatActivity {
+public class AdminAnalyticsActivity extends com.android.cineflow.ui.base.BaseActivity {
 
     private enum Section { OVERVIEW, CATALOG, SUBSCRIPTIONS }
 

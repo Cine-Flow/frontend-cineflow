@@ -197,7 +197,7 @@ public class PremierLeagueRepository {
     private List<PremierLeagueSection> toSections(PremierLeagueHomeDto data) {
         List<PremierLeagueSection> result = new ArrayList<>();
         addCardsSection(result, PremierLeagueSection.TYPE_BANNER, "", data.getBanners(), ContentCard.STYLE_BANNER);
-        addCardsSection(result, PremierLeagueSection.TYPE_HORIZONTAL_LIST, "Highlights", data.getHighlights(), ContentCard.STYLE_LANDSCAPE);
+        addCardsSection(result, PremierLeagueSection.TYPE_HORIZONTAL_LIST, getString(com.android.cineflow.R.string.pl_highlights), data.getHighlights(), ContentCard.STYLE_LANDSCAPE);
 
         List<Match> schedule = toMatches(data.getSchedule());
         result.add(new PremierLeagueSection(
@@ -209,7 +209,7 @@ public class PremierLeagueRepository {
         List<Match> results = toMatches(data.getResults());
         result.add(new PremierLeagueSection(
                 PremierLeagueSection.TYPE_MATCH_SCHEDULE,
-                "Kết quả gần nhất",
+                getString(com.android.cineflow.R.string.pl_recent_results),
                 results,
                 PremierLeagueSection.MODE_FINISHED));
 
@@ -222,7 +222,7 @@ public class PremierLeagueRepository {
                     false));
         }
 
-        addCardsSection(result, PremierLeagueSection.TYPE_HORIZONTAL_LIST, "Bóng đá Anh", data.getNews(), ContentCard.STYLE_LANDSCAPE);
+        addCardsSection(result, PremierLeagueSection.TYPE_HORIZONTAL_LIST, getString(com.android.cineflow.R.string.pl_english_football), data.getNews(), ContentCard.STYLE_LANDSCAPE);
         return result;
     }
 
@@ -288,12 +288,20 @@ public class PremierLeagueRepository {
         return standings;
     }
 
+    private String getString(int resId) {
+        return com.android.cineflow.CineflowApp.getInstance().getString(resId);
+    }
+
+    private String getString(int resId, Object... formatArgs) {
+        return com.android.cineflow.CineflowApp.getInstance().getString(resId, formatArgs);
+    }
+
     private String scheduleHeader(List<Match> schedule) {
         if (schedule == null || schedule.isEmpty()) {
-            return "Lịch đấu";
+            return getString(com.android.cineflow.R.string.pl_schedule);
         }
         String date = schedule.get(0).getDate();
-        return date.isEmpty() ? "Lịch đấu" : "Lịch đấu - " + date;
+        return date.isEmpty() ? getString(com.android.cineflow.R.string.pl_schedule) : getString(com.android.cineflow.R.string.pl_schedule_format, date);
     }
 
     private String standingsHeader(List<FootballStandingDto> standings) {
@@ -313,7 +321,7 @@ public class PremierLeagueRepository {
             if (mode.equals(section.getListMode())) {
                 updated.set(i, new PremierLeagueSection(
                         PremierLeagueSection.TYPE_MATCH_SCHEDULE,
-                        displayDate != null ? (PremierLeagueSection.MODE_FINISHED.equals(mode) ? "Kết quả - " + displayDate : "Lịch đấu - " + displayDate) : section.getTitle(),
+                        displayDate != null ? (PremierLeagueSection.MODE_FINISHED.equals(mode) ? getString(com.android.cineflow.R.string.pl_results_format, displayDate) : getString(com.android.cineflow.R.string.pl_schedule_format, displayDate)) : section.getTitle(),
                         matches,
                         mode,
                         section.isExpanded()));

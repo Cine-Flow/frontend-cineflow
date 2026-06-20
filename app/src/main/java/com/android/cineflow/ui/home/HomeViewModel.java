@@ -7,6 +7,7 @@ import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MediatorLiveData;
 
+import com.android.cineflow.R;
 import com.android.cineflow.data.common.uimodel.ContentCard;
 import com.android.cineflow.data.common.uimodel.HomeMapper;
 import com.android.cineflow.data.common.uimodel.HomeSection;
@@ -73,27 +74,27 @@ public class HomeViewModel extends AndroidViewModel {
 
         if (!banners.isEmpty()) {
             result.add(new HomeSection(
-                    HomeSection.TYPE_BANNER, null, null,
+                    HomeSection.TYPE_BANNER, 0, 0,
                     HomeMapper.fromMovies(banners, ContentCard.STYLE_BANNER)));
         }
         if (!newReleases.isEmpty()) {
             result.add(new HomeSection(
-                    HomeSection.TYPE_SECTION_ROW, "Mới ra mắt", null,
+                    HomeSection.TYPE_SECTION_ROW, R.string.home_new_releases, 0,
                     HomeMapper.fromMovies(newReleases, ContentCard.STYLE_PORTRAIT)));
         }
         if (!sports.isEmpty()) {
             result.add(new HomeSection(
-                    HomeSection.TYPE_SPORT_ROW, "Sự kiện Thể thao", null,
+                    HomeSection.TYPE_SPORT_ROW, R.string.home_sports_events, 0,
                     HomeMapper.fromSportEvents(sports)));
         }
         if (!hotSeries.isEmpty()) {
             result.add(new HomeSection(
-                    HomeSection.TYPE_SECTION_ROW, "Phim bộ hot", "Xem thêm",
+                    HomeSection.TYPE_SECTION_ROW, R.string.home_hot_series, R.string.home_view_more,
                     HomeMapper.fromMovies(hotSeries, ContentCard.STYLE_PORTRAIT)));
         }
         if (!daily.isEmpty()) {
             result.add(new HomeSection(
-                    HomeSection.TYPE_SECTION_ROW, "Cày phim hay mỗi ngày", "Xem thêm",
+                    HomeSection.TYPE_SECTION_ROW, R.string.home_daily_movies, R.string.home_view_more,
                     HomeMapper.fromMovies(daily, ContentCard.STYLE_PORTRAIT)));
         }
 

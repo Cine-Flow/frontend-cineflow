@@ -1,5 +1,7 @@
 package com.android.cineflow.ui.auth;
 
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ProgressBar;
@@ -12,6 +14,7 @@ import com.android.cineflow.data.network.ApiClient;
 import com.android.cineflow.data.network.FilmApiService;
 import com.android.cineflow.data.network.dto.ApiResponseDto;
 import com.android.cineflow.data.network.dto.ForgotPasswordRequestDto;
+import com.android.cineflow.data.settings.SettingsManager;
 import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputEditText;
@@ -20,13 +23,14 @@ import com.android.cineflow.data.network.Call;
 import com.android.cineflow.data.network.Callback;
 import com.android.cineflow.data.network.Response;
 
-public class ForgotPasswordActivity extends AppCompatActivity {
+public class ForgotPasswordActivity extends com.android.cineflow.ui.base.BaseActivity {
 
     private TextInputEditText etEmail;
     private MaterialButton btnSend;
     private TextView tvError;
     private TextView tvSuccess;
     private ProgressBar progressBar;
+    private TextView tvHaveToken;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,8 +49,13 @@ public class ForgotPasswordActivity extends AppCompatActivity {
         tvError = findViewById(R.id.tv_error);
         tvSuccess = findViewById(R.id.tv_success);
         progressBar = findViewById(R.id.progress_bar);
+        tvHaveToken = findViewById(R.id.tv_have_token);
 
         btnSend.setOnClickListener(v -> attemptSend());
+
+        tvHaveToken.setOnClickListener(v -> {
+            startActivity(new Intent(this, ResetPasswordActivity.class));
+        });
     }
 
     private void attemptSend() {
@@ -55,7 +64,7 @@ public class ForgotPasswordActivity extends AppCompatActivity {
         tvSuccess.setVisibility(View.GONE);
 
         if (email.isEmpty()) {
-            etEmail.setError("Email is required");
+            etEmail.setError(getString(R.string.forgot_password_email_required));
             return;
         }
 
@@ -68,10 +77,12 @@ public class ForgotPasswordActivity extends AppCompatActivity {
                                            Response<ApiResponseDto<Void>> response) {
                         setLoading(false);
                         if (response.isSuccessful()) {
-                            tvSuccess.setText("Reset link sent to your email");
+                            tvSuccess.setText(R.string.forgot_password_success);
                             tvSuccess.setVisibility(View.VISIBLE);
+                            // Show the "have token" link more prominently after success
+                            tvHaveToken.setVisibility(View.VISIBLE);
                         } else {
-                            String msg = "Failed to send reset email";
+                            String msg = getString(R.string.forgot_password_error);
                             if (response.body() != null && response.body().getMessage() != null) {
                                 msg = response.body().getMessage();
                             }
@@ -83,7 +94,7 @@ public class ForgotPasswordActivity extends AppCompatActivity {
                     @Override
                     public void onFailure(Call<ApiResponseDto<Void>> call, Throwable t) {
                         setLoading(false);
-                        tvError.setText("Network error: " + t.getMessage());
+                        tvError.setText(getString(R.string.reset_password_network_error, t.getMessage()));
                         tvError.setVisibility(View.VISIBLE);
                     }
                 });

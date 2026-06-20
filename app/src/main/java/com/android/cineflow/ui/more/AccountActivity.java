@@ -1,5 +1,7 @@
 package com.android.cineflow.ui.more;
 
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
@@ -27,7 +29,7 @@ import com.android.cineflow.data.network.Call;
 import com.android.cineflow.data.network.Callback;
 import com.android.cineflow.data.network.Response;
 
-public class AccountActivity extends AppCompatActivity {
+public class AccountActivity extends com.android.cineflow.ui.base.BaseActivity {
 
     private TextView tvName;
     private TextView tvEmail;
@@ -37,6 +39,7 @@ public class AccountActivity extends AppCompatActivity {
     private UserProfileDto currentProfile;
     
     private TextView tvSelectedQuality;
+    private TextView tvSelectedLanguage;
     private SwitchCompat switchAutoplay;
     private SwitchCompat switchNotifications;
     private TextView tvCacheSize;
@@ -85,6 +88,7 @@ public class AccountActivity extends AppCompatActivity {
         tvSubscription = findViewById(R.id.tv_subscription);
 
         tvSelectedQuality = findViewById(R.id.tv_selected_quality);
+        tvSelectedLanguage = findViewById(R.id.tv_selected_language);
         switchAutoplay = findViewById(R.id.switch_autoplay);
         switchNotifications = findViewById(R.id.switch_notifications);
         tvCacheSize = findViewById(R.id.tv_cache_size);
@@ -104,6 +108,9 @@ public class AccountActivity extends AppCompatActivity {
         // Video Quality row action
         findViewById(R.id.row_video_quality).setOnClickListener(v -> showQualityDialog());
 
+        // Language row action
+        findViewById(R.id.row_language).setOnClickListener(v -> showLanguageDialog());
+
         // Clear Cache row action
         findViewById(R.id.row_clear_cache).setOnClickListener(v -> performClearCache());
 
@@ -118,9 +125,22 @@ public class AccountActivity extends AppCompatActivity {
         SettingsManager settings = SettingsManager.getInstance();
         if (settings == null) return;
 
-        tvSelectedQuality.setText(settings.getVideoQuality());
+        String quality = settings.getVideoQuality();
+        if (SettingsManager.QUALITY_AUTO.equals(quality)) {
+            tvSelectedQuality.setText(R.string.quality_auto);
+        } else {
+            tvSelectedQuality.setText(quality);
+        }
         switchAutoplay.setChecked(settings.isAutoplayEnabled());
         switchNotifications.setChecked(settings.isNotificationsEnabled());
+
+        // Display current language
+        String currentLang = settings.getLanguage();
+        if (SettingsManager.LANG_ENGLISH.equals(currentLang)) {
+            tvSelectedLanguage.setText(R.string.language_english);
+        } else {
+            tvSelectedLanguage.setText(R.string.language_vietnamese);
+        }
 
         // Switch change listeners
         switchAutoplay.setOnCheckedChangeListener((buttonView, isChecked) -> 
@@ -161,19 +181,19 @@ public class AccountActivity extends AppCompatActivity {
         tvEmail.setText(profile.getEmail());
         if (tvPhone != null) {
             tvPhone.setText(profile.getPhoneNumber() != null && !profile.getPhoneNumber().isEmpty()
-                    ? "SĐT: " + profile.getPhoneNumber()
-                    : "SĐT: Chưa cập nhật");
+                    ? getString(R.string.account_phone_prefix, profile.getPhoneNumber())
+                    : getString(R.string.account_phone_not_set));
         }
-        tvStats.setText("Yêu thích: " + profile.getFavoriteCount() + "   Lịch sử xem: " + profile.getWatchHistoryCount());
+        tvStats.setText(getString(R.string.account_stats_format, profile.getFavoriteCount(), profile.getWatchHistoryCount()));
         
         SubscriptionDto subscription = profile.getCurrentSubscription();
         tvSubscription.setText(subscription != null
-                ? "Gói dịch vụ hiện tại: " + subscription.getPackageName()
-                : "Chưa đăng ký gói dịch vụ");
+                ? getString(R.string.account_subscription_format, subscription.getPackageName())
+                : getString(R.string.account_no_subscription));
     }
 
     private void showError() {
-        Toast.makeText(this, "Không thể tải thông tin tài khoản", Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, R.string.toast_load_account_error, Toast.LENGTH_SHORT).show();
     }
 
     // --- Quality Selection Dialog ---
@@ -183,6 +203,13 @@ public class AccountActivity extends AppCompatActivity {
 
         final String[] qualities = {
                 SettingsManager.QUALITY_AUTO,
+                SettingsManager.QUALITY_FHD,
+                SettingsManager.QUALITY_HD,
+                SettingsManager.QUALITY_SD
+        };
+
+        final String[] qualityLabels = {
+                getString(R.string.quality_auto),
                 SettingsManager.QUALITY_FHD,
                 SettingsManager.QUALITY_HD,
                 SettingsManager.QUALITY_SD
@@ -198,14 +225,61 @@ public class AccountActivity extends AppCompatActivity {
         }
 
         new AlertDialog.Builder(this)
-                .setTitle("Chọn chất lượng phát mặc định")
-                .setSingleChoiceItems(qualities, checkedItem, (dialog, which) -> {
-                    settings.setVideoQuality(qualities[which]);
-                    tvSelectedQuality.setText(qualities[which]);
+                .setTitle(R.string.dialog_quality_title)
+                .setSingleChoiceItems(qualityLabels, checkedItem, (dialog, which) -> {
+                    String selectedQuality = qualities[which];
+                    settings.setVideoQuality(selectedQuality);
+                    
+                    String displayQuality = selectedQuality.equals(SettingsManager.QUALITY_AUTO) 
+                            ? getString(R.string.quality_auto) 
+                            : selectedQuality;
+                    tvSelectedQuality.setText(displayQuality);
                     dialog.dismiss();
-                    Toast.makeText(this, "Đã cập nhật chất lượng mặc định: " + qualities[which], Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, getString(R.string.dialog_quality_updated, displayQuality), Toast.LENGTH_SHORT).show();
                 })
-                .setNegativeButton("Hủy", null)
+                .setNegativeButton(R.string.cancel, null)
+                .show();
+    }
+
+    // --- Language Selection Dialog ---
+    private void showLanguageDialog() {
+        SettingsManager settings = SettingsManager.getInstance();
+        if (settings == null) return;
+
+        final String[] langLabels = {
+                getString(R.string.language_vietnamese),
+                getString(R.string.language_english)
+        };
+        final String[] langCodes = {
+                SettingsManager.LANG_VIETNAMESE,
+                SettingsManager.LANG_ENGLISH
+        };
+
+        String currentLang = settings.getLanguage();
+        int checkedItem = 0;
+        for (int i = 0; i < langCodes.length; i++) {
+            if (langCodes[i].equals(currentLang)) {
+                checkedItem = i;
+                break;
+            }
+        }
+
+        new AlertDialog.Builder(this)
+                .setTitle(R.string.dialog_language_title)
+                .setSingleChoiceItems(langLabels, checkedItem, (dialog, which) -> {
+                    String selectedCode = langCodes[which];
+                    if (!selectedCode.equals(settings.getLanguage())) {
+                        settings.setLanguage(selectedCode);
+                        tvSelectedLanguage.setText(langLabels[which]);
+                        dialog.dismiss();
+                        Toast.makeText(this, getString(R.string.toast_language_changed, langLabels[which]), Toast.LENGTH_SHORT).show();
+                        // Recreate the activity to apply new locale
+                        recreate();
+                    } else {
+                        dialog.dismiss();
+                    }
+                })
+                .setNegativeButton(R.string.cancel, null)
                 .show();
     }
 
@@ -242,12 +316,12 @@ public class AccountActivity extends AppCompatActivity {
             boolean success = deleteDir(getCacheDir());
             if (success) {
                 updateCacheSizeText();
-                Toast.makeText(this, "Dọn dẹp bộ nhớ đệm thành công!", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, R.string.toast_cache_cleared, Toast.LENGTH_SHORT).show();
             } else {
-                Toast.makeText(this, "Không thể dọn dẹp toàn bộ bộ nhớ đệm", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, R.string.toast_cache_error, Toast.LENGTH_SHORT).show();
             }
         } catch (Exception e) {
-            Toast.makeText(this, "Lỗi khi xóa bộ nhớ đệm", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, R.string.toast_cache_exception, Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -295,17 +369,17 @@ public class AccountActivity extends AppCompatActivity {
         scrollView.addView(textView);
 
         new AlertDialog.Builder(this)
-                .setTitle("Điều khoản & Chính sách bảo mật")
+                .setTitle(R.string.dialog_terms_title)
                 .setView(scrollView)
-                .setPositiveButton("Đồng ý", null)
+                .setPositiveButton(R.string.agree, null)
                 .show();
     }
 
     private void showSupportDialog() {
-        final String[] options = {"Gửi Email hỗ trợ (support@cineflow.com)", "Gọi Hotline hỗ trợ (1900 1234)"};
+        final String[] options = {getString(R.string.support_email_option), getString(R.string.support_hotline_option)};
         
         new AlertDialog.Builder(this)
-                .setTitle("Liên hệ Hỗ trợ khách hàng")
+                .setTitle(R.string.dialog_support_title)
                 .setItems(options, (dialog, which) -> {
                     if (which == 0) {
                         sendSupportEmail();
@@ -313,7 +387,7 @@ public class AccountActivity extends AppCompatActivity {
                         callSupportHotline();
                     }
                 })
-                .setNegativeButton("Hủy", null)
+                .setNegativeButton(R.string.cancel, null)
                 .show();
     }
 
@@ -323,9 +397,9 @@ public class AccountActivity extends AppCompatActivity {
         emailIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, "[Cine-Flow Support Request] - " + tvName.getText().toString());
         emailIntent.putExtra(android.content.Intent.EXTRA_TEXT, "Chào đội ngũ hỗ trợ Cine-Flow,\n\nTôi đang gặp sự cố với tài khoản của mình. Dưới đây là thông tin chi tiết:\n...");
         try {
-            startActivity(android.content.Intent.createChooser(emailIntent, "Chọn ứng dụng gửi Email"));
+            startActivity(android.content.Intent.createChooser(emailIntent, getString(R.string.support_email_chooser)));
         } catch (android.content.ActivityNotFoundException e) {
-            Toast.makeText(this, "Không tìm thấy ứng dụng gửi email phù hợp", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, R.string.toast_no_email_app, Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -335,7 +409,7 @@ public class AccountActivity extends AppCompatActivity {
         try {
             startActivity(dialIntent);
         } catch (android.content.ActivityNotFoundException e) {
-            Toast.makeText(this, "Thiết bị không hỗ trợ cuộc gọi", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, R.string.toast_no_phone_support, Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -368,7 +442,7 @@ public class AccountActivity extends AppCompatActivity {
             String newName = etFullName.getText().toString().trim();
             String newPhone = etPhoneNumber.getText().toString().trim();
             if (newName.isEmpty()) {
-                Toast.makeText(this, "Họ và tên không được để trống", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, R.string.toast_name_required, Toast.LENGTH_SHORT).show();
                 return;
             }
             performUpdateProfileApi(newName, newPhone, dialog);
@@ -384,16 +458,16 @@ public class AccountActivity extends AppCompatActivity {
             public void onResponse(Call<ApiResponseDto<UserProfileDto>> call, Response<ApiResponseDto<UserProfileDto>> response) {
                 if (response.isSuccessful() && response.body() != null && response.body().getData() != null) {
                     dialog.dismiss();
-                    Toast.makeText(AccountActivity.this, "Cập nhật hồ sơ thành công!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(AccountActivity.this, R.string.toast_profile_updated, Toast.LENGTH_SHORT).show();
                     bindProfile(response.body().getData());
                 } else {
-                    Toast.makeText(AccountActivity.this, "Không thể cập nhật hồ sơ", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(AccountActivity.this, R.string.toast_profile_error, Toast.LENGTH_SHORT).show();
                 }
             }
 
             @Override
             public void onFailure(Call<ApiResponseDto<UserProfileDto>> call, Throwable t) {
-                Toast.makeText(AccountActivity.this, "Lỗi kết nối máy chủ", Toast.LENGTH_SHORT).show();
+                Toast.makeText(AccountActivity.this, R.string.toast_server_error, Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -420,15 +494,15 @@ public class AccountActivity extends AppCompatActivity {
             String confirmPass = etConfirmPassword.getText().toString();
 
             if (oldPass.isEmpty() || newPass.isEmpty() || confirmPass.isEmpty()) {
-                Toast.makeText(this, "Vui lòng nhập đầy đủ thông tin", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, R.string.toast_fill_all_fields, Toast.LENGTH_SHORT).show();
                 return;
             }
             if (newPass.length() < 6) {
-                Toast.makeText(this, "Mật khẩu mới phải có tối thiểu 6 ký tự", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, R.string.toast_password_min_length, Toast.LENGTH_SHORT).show();
                 return;
             }
             if (!newPass.equals(confirmPass)) {
-                Toast.makeText(this, "Xác nhận mật khẩu mới không khớp", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, R.string.toast_password_mismatch, Toast.LENGTH_SHORT).show();
                 return;
             }
 
@@ -445,14 +519,14 @@ public class AccountActivity extends AppCompatActivity {
             public void onResponse(Call<ApiResponseDto<Void>> call, Response<ApiResponseDto<Void>> response) {
                 if (response.isSuccessful()) {
                     dialog.dismiss();
-                    Toast.makeText(AccountActivity.this, "Đổi mật khẩu thành công!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(AccountActivity.this, R.string.toast_password_changed, Toast.LENGTH_SHORT).show();
                 } else {
-                    String errorMsg = "Mật khẩu cũ không chính xác hoặc lỗi hệ thống";
+                    String errorMsg = getString(R.string.toast_password_error);
                     try {
                         if (response.errorBody() != null) {
                             String errStr = response.errorBody().string();
                             if (errStr.contains("Mật khẩu cũ không chính xác")) {
-                                errorMsg = "Mật khẩu cũ không chính xác";
+                                errorMsg = getString(R.string.toast_password_old_wrong);
                             }
                         }
                     } catch (Exception ignored) {}
@@ -462,7 +536,7 @@ public class AccountActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<ApiResponseDto<Void>> call, Throwable t) {
-                Toast.makeText(AccountActivity.this, "Lỗi kết nối máy chủ", Toast.LENGTH_SHORT).show();
+                Toast.makeText(AccountActivity.this, R.string.toast_server_error, Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -470,7 +544,6 @@ public class AccountActivity extends AppCompatActivity {
     private void triggerLocalWelcomeNotification() {
         android.content.Context context = this;
         String channelId = "cineflow_notifications";
-        String channelName = "Cine-Flow Recommendations";
         
         android.app.NotificationManager notificationManager = (android.app.NotificationManager) getSystemService(android.content.Context.NOTIFICATION_SERVICE);
         if (notificationManager == null) return;
@@ -478,17 +551,17 @@ public class AccountActivity extends AppCompatActivity {
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
             android.app.NotificationChannel channel = new android.app.NotificationChannel(
                     channelId,
-                    channelName,
+                    getString(R.string.notification_channel_name),
                     android.app.NotificationManager.IMPORTANCE_DEFAULT
             );
-            channel.setDescription("Thông báo giới thiệu phim từ Cine-Flow");
+            channel.setDescription(getString(R.string.notification_channel_desc));
             notificationManager.createNotificationChannel(channel);
         }
 
         androidx.core.app.NotificationCompat.Builder builder = new androidx.core.app.NotificationCompat.Builder(context, channelId)
                 .setSmallIcon(R.drawable.ic_movies)
-                .setContentTitle("Chào mừng trở lại Cine-Flow! 🎬")
-                .setContentText("Bạn đã bật thông báo thành công. Khám phá ngay các bộ phim bom tấn mới nhất hôm nay!")
+                .setContentTitle(getString(R.string.notification_welcome_title))
+                .setContentText(getString(R.string.notification_welcome_text))
                 .setPriority(androidx.core.app.NotificationCompat.PRIORITY_DEFAULT)
                 .setAutoCancel(true);
 

@@ -160,7 +160,7 @@ public class MoreAdapter extends BaseAdapter {
         if (section.getTitle() != null) {
             String nameToDisplay = (userDisplayName != null && !userDisplayName.isEmpty()) ? userDisplayName : section.getTitle();
             tvLoginText.setText(nameToDisplay);
-            tvSubtitle.setText("Tap to manage your account");
+            tvSubtitle.setText(context.getString(R.string.more_manage_account));
             if (quickStats != null) {
                 quickStats.setVisibility(View.VISIBLE);
             }
@@ -169,8 +169,8 @@ public class MoreAdapter extends BaseAdapter {
             int downloadCount = com.android.cineflow.data.download.OfflineDownloadManager.getInstance().getDownloadedCount();
             tvDownloadCount.setText(String.valueOf(downloadCount));
         } else {
-            tvLoginText.setText("Đăng nhập");
-            tvSubtitle.setText("Tap to sign in to your account");
+            tvLoginText.setText(context.getString(R.string.more_sign_in));
+            tvSubtitle.setText(context.getString(R.string.more_tap_to_sign_in));
             if (quickStats != null) {
                 quickStats.setVisibility(View.GONE);
             }
@@ -181,8 +181,9 @@ public class MoreAdapter extends BaseAdapter {
         TextView btnLogout = v.findViewById(R.id.btn_logout);
         if (btnLogout == null) return;
 
-        boolean isSignOut = "Sign Out".equals(section.getTitle());
-        btnLogout.setText(section.getTitle() != null ? section.getTitle() : "Sign In");
+        boolean isSignOut = com.android.cineflow.data.auth.AuthManager.getInstance() != null 
+                && com.android.cineflow.data.auth.AuthManager.getInstance().isLoggedIn();
+        btnLogout.setText(section.getTitle() != null ? section.getTitle() : context.getString(R.string.more_sign_in));
 
         if (isSignOut) {
             btnLogout.setTextColor(context.getColor(R.color.status_error));

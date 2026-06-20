@@ -24,7 +24,7 @@ import com.google.android.material.button.MaterialButton;
 
 import java.util.List;
 
-public class AdminFilmListActivity extends AppCompatActivity implements AdminFilmAdapter.OnFilmActionListener {
+public class AdminFilmListActivity extends com.android.cineflow.ui.base.BaseActivity implements AdminFilmAdapter.OnFilmActionListener {
 
     private AdminFilmRepository repository;
     private AdminFilmAdapter adapter;

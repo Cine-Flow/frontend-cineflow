@@ -20,7 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-public class AdminCategoryListActivity extends AppCompatActivity
+public class AdminCategoryListActivity extends com.android.cineflow.ui.base.BaseActivity
         implements AdminCategoryAdapter.OnCategoryActionListener {
 
     private AdminCategoryAdapter adapter;

@@ -59,8 +59,8 @@ public abstract class FilmCatalogFragment extends BaseFragment {
     /** Backend film type, e.g. "SERIES" or "SINGLE". */
     protected abstract String getFilmType();
 
-    /** Title shown at the top of the catalog. */
-    protected abstract String getCatalogTitle();
+    /** Title resource ID shown at the top of the catalog. */
+    protected abstract int getCatalogTitleResId();
 
     @Override
     protected int getLayoutId() {
@@ -81,7 +81,7 @@ public abstract class FilmCatalogFragment extends BaseFragment {
         swipeRefresh.setColorSchemeResources(R.color.brand_primary);
         swipeRefresh.setProgressBackgroundColorSchemeResource(R.color.surface_secondary);
 
-        tvTitle.setText(getCatalogTitle());
+        tvTitle.setText(getCatalogTitleResId());
 
         // 2-column grid with even spacing
         GridLayoutManager glm = new GridLayoutManager(requireContext(), 2);
@@ -122,10 +122,10 @@ public abstract class FilmCatalogFragment extends BaseFragment {
 
     private void buildFilters() {
         llFilters.removeAllViews();
-        addFilterChip("Tất cả", FILTER_ALL);
-        addFilterChip("Mới nhất", FILTER_NEW);
-        addFilterChip("Premium", FILTER_PREMIUM);
-        addFilterChip("Miễn phí", FILTER_FREE);
+        addFilterChip(getString(R.string.filter_all), FILTER_ALL);
+        addFilterChip(getString(R.string.filter_new), FILTER_NEW);
+        addFilterChip(getString(R.string.filter_premium), FILTER_PREMIUM);
+        addFilterChip(getString(R.string.filter_free), FILTER_FREE);
     }
 
     private void addFilterChip(String label, String filterKey) {
@@ -170,7 +170,7 @@ public abstract class FilmCatalogFragment extends BaseFragment {
                             allFilms.addAll(response.body().getData());
                             applyFilter();
                         } else {
-                            showError("Lỗi tải dữ liệu");
+                            showError(getString(R.string.catalog_err_load_data));
                         }
                     }
 
@@ -180,10 +180,10 @@ public abstract class FilmCatalogFragment extends BaseFragment {
                         progress.setVisibility(View.GONE);
                         swipeRefresh.setRefreshing(false);
                         if (adapter.getItemCount() == 0) {
-                            showError("Không thể kết nối đến máy chủ");
+                            showError(getString(R.string.toast_server_error));
                         } else {
                             Toast.makeText(requireContext(),
-                                    "Lỗi: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+                                    getString(R.string.reset_password_network_error, t.getMessage()), Toast.LENGTH_SHORT).show();
                         }
                     }
                 });
@@ -209,10 +209,10 @@ public abstract class FilmCatalogFragment extends BaseFragment {
             }
         }
         adapter.submit(filtered);
-        tvSubtitle.setText(filtered.size() + " tựa phim");
+        tvSubtitle.setText(getString(R.string.catalog_subtitle_format, filtered.size()));
 
         if (filtered.isEmpty() && !allFilms.isEmpty()) {
-            tvError.setText("Không có phim phù hợp với bộ lọc");
+            tvError.setText(getString(R.string.catalog_err_no_matching_films));
             tvError.setVisibility(View.VISIBLE);
         } else {
             tvError.setVisibility(View.GONE);

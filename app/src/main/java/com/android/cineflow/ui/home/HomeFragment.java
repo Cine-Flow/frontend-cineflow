@@ -55,7 +55,7 @@ public class HomeFragment extends BaseFragment {
                     startActivity(intent);
                 } else {
                     Toast.makeText(requireContext(), 
-                        "Sự kiện chưa bắt đầu phát sóng", Toast.LENGTH_SHORT).show();
+                        R.string.home_toast_event_not_started, Toast.LENGTH_SHORT).show();
                 }
             } else {
                 Intent intent = new Intent(requireContext(), com.android.cineflow.ui.detail.FilmDetailActivity.class);
@@ -69,7 +69,7 @@ public class HomeFragment extends BaseFragment {
             String categoryKey = mapSectionToCategoryKey(section);
             if (categoryKey != null) {
                 Intent intent = new Intent(requireContext(), CategoryActivity.class);
-                intent.putExtra(CategoryActivity.EXTRA_CATEGORY_TITLE, section.getTitle());
+                intent.putExtra(CategoryActivity.EXTRA_CATEGORY_TITLE, getString(section.getTitleResId()));
                 intent.putExtra(CategoryActivity.EXTRA_CATEGORY_TYPE, categoryKey);
                 startActivity(intent);
             }
@@ -129,16 +129,14 @@ public class HomeFragment extends BaseFragment {
      * (GET /films?type=SERIES or type=SINGLE).
      */
     private String mapSectionToCategoryKey(HomeSection section) {
-        if (section.getTitle() == null) return null;
-        switch (section.getTitle()) {
-            case "Phim bộ hot":
-                return "SERIES";
-            case "Cày phim hay mỗi ngày":
-                return "SINGLE";
-            case "Sự kiện Thể thao":
-                return "LIVE";
-            default:
-                return null;
+        int titleResId = section.getTitleResId();
+        if (titleResId == R.string.home_hot_series) {
+            return "SERIES";
+        } else if (titleResId == R.string.home_daily_movies) {
+            return "SINGLE";
+        } else if (titleResId == R.string.home_sports_events) {
+            return "LIVE";
         }
+        return null;
     }
 }

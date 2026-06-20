@@ -17,7 +17,7 @@ import com.android.cineflow.data.network.Call;
 import com.android.cineflow.data.network.Callback;
 import com.android.cineflow.data.network.Response;
 
-public class UserAnalyticsActivity extends AppCompatActivity {
+public class UserAnalyticsActivity extends com.android.cineflow.ui.base.BaseActivity {
 
     private ImageView btnBack;
     private TextView tvTotalTime;

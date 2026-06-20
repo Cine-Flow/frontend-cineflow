@@ -28,7 +28,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="@null"
-            android:hint="Tìm kiếm trận đấu (ví dụ: CHE, MUN...)"
+            android:hint="@string/premier_league_search_hint"
             android:textColorHint="@color/text_tertiary"
             android:textColor="@color/text_primary"
             android:textSize="14sp"

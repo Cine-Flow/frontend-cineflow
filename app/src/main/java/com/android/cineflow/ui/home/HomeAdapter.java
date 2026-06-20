@@ -143,16 +143,20 @@ public class HomeAdapter extends BaseAdapter {
             }
         });
     }
-
     private void bindSectionRow(View view, HomeSection section) {
         TextView tvTitle = view.findViewById(R.id.tv_section_title);
         TextView tvAction = view.findViewById(R.id.tv_section_action);
         LinearLayout container = view.findViewById(R.id.rv_section_row_container);
 
-        tvTitle.setText(section.getTitle());
-        if (section.getActionLabel() != null) {
+        if (section.getTitleResId() != 0) {
+            tvTitle.setText(context.getString(section.getTitleResId()));
+        } else {
+            tvTitle.setText("");
+        }
+
+        if (section.getActionLabelResId() != 0) {
             tvAction.setVisibility(View.VISIBLE);
-            tvAction.setText(section.getActionLabel());
+            tvAction.setText(context.getString(section.getActionLabelResId()));
             // Handle "Xem thêm" click
             tvAction.setOnClickListener(v -> {
                 if (seeMoreListener != null) {

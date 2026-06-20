@@ -24,7 +24,7 @@ import com.android.cineflow.data.network.Call;
 import com.android.cineflow.data.network.Callback;
 import com.android.cineflow.data.network.Response;
 
-public class LoginActivity extends AppCompatActivity {
+public class LoginActivity extends com.android.cineflow.ui.base.BaseActivity {
 
     private TextInputEditText etIdentifier;
     private TextInputEditText etPassword;
@@ -79,11 +79,11 @@ public class LoginActivity extends AppCompatActivity {
         tvError.setVisibility(View.GONE);
 
         if (identifier.isEmpty()) {
-            etIdentifier.setError("Email, username or phone is required");
+            etIdentifier.setError(getString(R.string.login_err_identifier_required));
             return;
         }
         if (password.isEmpty()) {
-            etPassword.setError("Password is required");
+            etPassword.setError(getString(R.string.login_err_password_required));
             return;
         }
 
@@ -108,11 +108,11 @@ public class LoginActivity extends AppCompatActivity {
                     setResult(RESULT_OK);
                     finish();
                 } else {
-                    String msg = "Login failed";
+                    String msg = getString(R.string.login_err_failed);
                     if (response.body() != null && response.body().getMessage() != null) {
                         msg = response.body().getMessage();
                     } else if (response.code() == 401) {
-                        msg = "Invalid credentials";
+                        msg = getString(R.string.login_err_invalid_credentials);
                     }
                     showError(msg);
                 }
@@ -121,7 +121,7 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onFailure(Call<ApiResponseDto<LoginResponseDto>> call, Throwable t) {
                 setLoading(false);
-                showError("Network error: " + t.getMessage());
+                showError(getString(R.string.reset_password_network_error, t.getMessage()));
             }
         });
     }

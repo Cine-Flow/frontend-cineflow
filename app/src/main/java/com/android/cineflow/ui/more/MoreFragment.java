@@ -141,22 +141,22 @@ public class MoreFragment extends BaseFragment {
 
         // 3. Action Grid
         data.add(new MoreSection(MoreSection.TYPE_ACTION_GRID, null, Arrays.asList(
-                new MoreSection.MoreItem("Thư viện", R.drawable.ic_library, null, MoreSection.ACTION_LIBRARY),
-                new MoreSection.MoreItem("Thống kê cá nhân", R.drawable.ic_admin_stats, null, MoreSection.ACTION_ANALYTICS),
-                new MoreSection.MoreItem("Sản phẩm yêu thích", R.drawable.ic_heart, null, MoreSection.ACTION_FAVORITES)
+                new MoreSection.MoreItem(getString(R.string.more_library), R.drawable.ic_library, null, MoreSection.ACTION_LIBRARY),
+                new MoreSection.MoreItem(getString(R.string.more_analytics), R.drawable.ic_admin_stats, null, MoreSection.ACTION_ANALYTICS),
+                new MoreSection.MoreItem(getString(R.string.more_favorites), R.drawable.ic_heart, null, MoreSection.ACTION_FAVORITES)
         )));
 
         // 4. App Settings & Support
-        data.add(new MoreSection(MoreSection.TYPE_ACTION_GRID, "Cài đặt & Hỗ trợ", Arrays.asList(
-                new MoreSection.MoreItem("Cài đặt", R.drawable.ic_settings, null, MoreSection.ACTION_SETTINGS),
-                new MoreSection.MoreItem("Giao diện", R.drawable.ic_launcher_foreground, null, MoreSection.ACTION_THEME),
-                new MoreSection.MoreItem("Liên hệ hỗ trợ", R.drawable.ic_help, null, MoreSection.ACTION_SUPPORT),
-                new MoreSection.MoreItem("Điều khoản & Chính sách", R.drawable.ic_shield, null, MoreSection.ACTION_TERMS)
+        data.add(new MoreSection(MoreSection.TYPE_ACTION_GRID, getString(R.string.more_settings_support), Arrays.asList(
+                new MoreSection.MoreItem(getString(R.string.more_settings), R.drawable.ic_settings, null, MoreSection.ACTION_SETTINGS),
+                new MoreSection.MoreItem(getString(R.string.more_theme), R.drawable.ic_launcher_foreground, null, MoreSection.ACTION_THEME),
+                new MoreSection.MoreItem(getString(R.string.more_help), R.drawable.ic_help, null, MoreSection.ACTION_SUPPORT),
+                new MoreSection.MoreItem(getString(R.string.more_terms), R.drawable.ic_shield, null, MoreSection.ACTION_TERMS)
         )));
 
         // 5. Sign In / Sign Out button (always visible)
         boolean isLogged = authManager != null && authManager.isLoggedIn();
-        data.add(new MoreSection(MoreSection.TYPE_LOGOUT, isLogged ? "Sign Out" : "Sign In", null));
+        data.add(new MoreSection(MoreSection.TYPE_LOGOUT, isLogged ? getString(R.string.more_sign_out) : getString(R.string.more_sign_in), null));
 
         moreAdapter.setData(data);
     }
@@ -192,13 +192,17 @@ public class MoreFragment extends BaseFragment {
         } else {
             String label = item.getLabel();
             if (label != null) {
-                android.widget.Toast.makeText(requireContext(), "Chức năng liên kết với " + label + " đang được phát triển!", android.widget.Toast.LENGTH_SHORT).show();
+                android.widget.Toast.makeText(requireContext(), getString(R.string.toast_feature_under_development, label), android.widget.Toast.LENGTH_SHORT).show();
             }
         }
     }
 
     private void showThemeSelectionDialog() {
-        String[] options = {"Theo hệ thống", "Sáng", "Tối"};
+        String[] options = {
+                getString(R.string.theme_system),
+                getString(R.string.theme_light),
+                getString(R.string.theme_dark)
+        };
         int currentMode = SettingsManager.getInstance().getThemeMode();
         int checkedItem = 0;
         if (currentMode == androidx.appcompat.app.AppCompatDelegate.MODE_NIGHT_NO) {
@@ -208,7 +212,7 @@ public class MoreFragment extends BaseFragment {
         }
 
         new androidx.appcompat.app.AlertDialog.Builder(requireContext())
-                .setTitle("Chọn giao diện")
+                .setTitle(R.string.dialog_theme_title)
                 .setSingleChoiceItems(options, checkedItem, (dialog, which) -> {
                     int selectedMode;
                     if (which == 1) {

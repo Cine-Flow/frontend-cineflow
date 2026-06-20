@@ -36,7 +36,7 @@ import com.android.cineflow.data.network.Call;
 import com.android.cineflow.data.network.Callback;
 import com.android.cineflow.data.network.Response;
 
-public class FilmDetailActivity extends AppCompatActivity {
+public class FilmDetailActivity extends com.android.cineflow.ui.base.BaseActivity {
 
     public static final String EXTRA_FILM_ID = "extra_film_id";
 

@@ -35,7 +35,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Sign in to continue"
+            android:text="@string/login_subtitle"
             android:textColor="@color/text_secondary"
             android:textSize="14sp"
             android:layout_marginBottom="32dp" />
@@ -57,7 +57,7 @@
                 android:id="@+id/et_identifier"
                 android:layout_width="match_parent"
                 android:layout_height="48dp"
-                android:hint="Email, username or phone"
+                android:hint="@string/login_hint_identifier"
                 android:textColor="@color/text_primary"
                 android:textColorHint="@color/text_tertiary"
                 android:textSize="14sp"
@@ -85,7 +85,7 @@
                 android:id="@+id/et_password"
                 android:layout_width="match_parent"
                 android:layout_height="48dp"
-                android:hint="Password"
+                android:hint="@string/login_hint_password"
                 android:textColor="@color/text_primary"
                 android:textColorHint="@color/text_tertiary"
                 android:textSize="14sp"
@@ -100,7 +100,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="end"
-            android:text="Forgot password?"
+            android:text="@string/login_forgot_password"
             android:textColor="@color/brand_primary"
             android:textSize="13sp"
             android:layout_marginBottom="24dp"
@@ -114,7 +114,7 @@
             style="@style/Widget.Cineflow.Button.Primary"
             android:layout_width="match_parent"
             android:layout_height="48dp"
-            android:text="Sign In"
+            android:text="@string/login_btn_signin"
             android:textAllCaps="false"
             android:textSize="16sp"
             android:layout_marginBottom="16dp" />
@@ -148,7 +148,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Don't have an account? "
+                android:text="@string/login_no_account"
                 android:textColor="@color/text_secondary"
                 android:textSize="14sp" />
 
@@ -156,7 +156,7 @@
                 android:id="@+id/tv_register"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Sign Up"
+                android:text="@string/login_signup"
                 android:textColor="@color/brand_primary"
                 android:textSize="14sp"
                 android:textStyle="bold"

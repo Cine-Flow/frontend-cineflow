@@ -4,31 +4,31 @@
     <item
         android:id="@+id/homeFragment"
         android:icon="@drawable/ic_home"
-        android:title="Trang chủ" />
+        android:title="@string/nav_home" />
 
     <item
         android:id="@+id/shortsFragment"
         android:icon="@drawable/ic_shorts"
-        android:title="Shorts" />
+        android:title="@string/nav_shorts" />
 
     <item
         android:id="@+id/seriesFragment"
         android:icon="@drawable/ic_series"
-        android:title="Phim bộ" />
+        android:title="@string/nav_series" />
 
     <item
         android:id="@+id/moviesFragment"
         android:icon="@drawable/ic_movies"
-        android:title="Phim lẻ" />
+        android:title="@string/nav_movies" />
 
     <item
         android:id="@+id/premierLeagueFragment"
         android:icon="@drawable/ic_football"
-        android:title="Ngoại hạng" />
+        android:title="@string/nav_premier_league" />
 
     <item
         android:id="@+id/moreFragment"
         android:icon="@drawable/ic_more"
-        android:title="Mở rộng" />
+        android:title="@string/nav_more" />
 
 </menu>

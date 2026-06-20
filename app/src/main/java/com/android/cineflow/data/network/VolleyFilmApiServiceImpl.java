@@ -22,6 +22,7 @@ import com.android.cineflow.data.network.dto.LoginResponseDto;
 import com.android.cineflow.data.network.dto.PagedResponseDto;
 import com.android.cineflow.data.network.dto.PremierLeagueHomeDto;
 import com.android.cineflow.data.network.dto.RegisterRequestDto;
+import com.android.cineflow.data.network.dto.ResetPasswordRequestDto;
 import com.android.cineflow.data.network.dto.ShortsResponseDto;
 import com.android.cineflow.data.network.dto.TokenRefreshRequestDto;
 import com.android.cineflow.data.network.dto.UpdateFilmRequestDto;
@@ -223,6 +224,12 @@ public class VolleyFilmApiServiceImpl implements FilmApiService {
     @Override
     public Call<ApiResponseDto<Void>> forgotPassword(ForgotPasswordRequestDto request) {
         return createCall("auth/forgot-password", Request.Method.POST, request,
+                new TypeToken<ApiResponseDto<Void>>(){}.getType());
+    }
+
+    @Override
+    public Call<ApiResponseDto<Void>> resetPassword(ResetPasswordRequestDto request) {
+        return createCall("auth/reset-password", Request.Method.POST, request,
                 new TypeToken<ApiResponseDto<Void>>(){}.getType());
     }
 

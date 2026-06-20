@@ -15,7 +15,7 @@ import com.google.android.material.appbar.MaterialToolbar;
 import java.util.ArrayList;
 import java.util.List;
 
-public class AdminDashboardActivity extends AppCompatActivity {
+public class AdminDashboardActivity extends com.android.cineflow.ui.base.BaseActivity {
 
     public static final String EXTRA_MODULE_ID = "module_id";
     public static final String MODULE_FILMS = "films";

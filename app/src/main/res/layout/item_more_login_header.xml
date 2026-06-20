@@ -46,7 +46,7 @@
                 android:id="@+id/tv_login_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Đăng nhập"
+                android:text="@string/more_sign_in"
                 android:textColor="@color/text_primary"
                 android:textSize="22sp"
                 android:fontFamily="sans-serif-medium" />
@@ -56,7 +56,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="4dp"
-                android:text="Tap to sign in to your account"
+                android:text="@string/more_tap_to_sign_in"
                 android:textColor="@color/text_tertiary"
                 android:textSize="13sp" />
         </LinearLayout>
@@ -96,7 +96,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Yêu thích"
+                android:text="@string/more_favorites_label"
                 android:textColor="@color/text_tertiary"
                 android:textSize="11sp"
                 android:layout_marginTop="2dp" />
@@ -126,7 +126,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Lịch sử"
+                android:text="@string/more_history_label"
                 android:textColor="@color/text_tertiary"
                 android:textSize="11sp"
                 android:layout_marginTop="2dp" />
@@ -156,7 +156,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Tải xuống"
+                android:text="@string/more_download_label"
                 android:textColor="@color/text_tertiary"
                 android:textSize="11sp"
                 android:layout_marginTop="2dp" />

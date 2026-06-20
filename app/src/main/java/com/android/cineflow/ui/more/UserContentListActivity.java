@@ -30,7 +30,7 @@ import com.android.cineflow.data.network.Call;
 import com.android.cineflow.data.network.Callback;
 import com.android.cineflow.data.network.Response;
 
-public class UserContentListActivity extends AppCompatActivity {
+public class UserContentListActivity extends com.android.cineflow.ui.base.BaseActivity {
     public static final String EXTRA_MODE = "extra_mode";
     public static final String MODE_FAVORITES = "favorites";
     public static final String MODE_LIBRARY = "library";

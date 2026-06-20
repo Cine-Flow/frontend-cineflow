@@ -24,7 +24,7 @@ import com.android.cineflow.data.network.Call;
 import com.android.cineflow.data.network.Callback;
 import com.android.cineflow.data.network.Response;
 
-public class RegisterActivity extends AppCompatActivity {
+public class RegisterActivity extends com.android.cineflow.ui.base.BaseActivity {
 
     private TextInputEditText etUsername;
     private TextInputEditText etEmail;
@@ -42,7 +42,7 @@ public class RegisterActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-            getSupportActionBar().setTitle("Sign Up");
+            getSupportActionBar().setTitle(R.string.login_signup);
         }
         toolbar.setNavigationOnClickListener(v -> onBackPressed());
 
@@ -63,9 +63,9 @@ public class RegisterActivity extends AppCompatActivity {
 
         tvError.setVisibility(View.GONE);
 
-        if (username.isEmpty()) { etUsername.setError("Username is required"); return; }
-        if (email.isEmpty()) { etEmail.setError("Email is required"); return; }
-        if (password.isEmpty()) { etPassword.setError("Password is required"); return; }
+        if (username.isEmpty()) { etUsername.setError(getString(R.string.register_err_username_required)); return; }
+        if (email.isEmpty()) { etEmail.setError(getString(R.string.forgot_password_email_required)); return; }
+        if (password.isEmpty()) { etPassword.setError(getString(R.string.login_err_password_required)); return; }
 
         setLoading(true);
 
@@ -89,7 +89,7 @@ public class RegisterActivity extends AppCompatActivity {
                     @Override
                     public void onFailure(Call<ApiResponseDto<Void>> call, Throwable t) {
                         setLoading(false);
-                        showError("Network error: " + t.getMessage());
+                        showError(getString(R.string.reset_password_network_error, t.getMessage()));
                     }
                 });
     }
@@ -121,7 +121,7 @@ public class RegisterActivity extends AppCompatActivity {
             }
         }
 
-        if (response.code() == 409) return "Email already exists";
-        return "Registration failed";
+        if (response.code() == 409) return getString(R.string.register_err_email_exists);
+        return getString(R.string.register_err_failed);
     }
 }

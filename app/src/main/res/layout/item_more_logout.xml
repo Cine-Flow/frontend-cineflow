@@ -12,7 +12,7 @@
         android:layout_width="match_parent"
         android:layout_height="48dp"
         android:background="@drawable/bg_more_logout_button"
-        android:text="Sign Out"
+        android:text="@string/more_sign_out"
         android:textColor="@color/status_error"
         android:textSize="15sp"
         android:fontFamily="sans-serif-medium"
@@ -22,7 +22,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
-        android:text="CineFlow v1.0"
+        android:text="@string/app_version_short"
         android:textColor="@color/text_disabled"
         android:textSize="12sp"
         android:gravity="center" />

@@ -24,7 +24,7 @@ import com.bumptech.glide.Glide;
 import java.util.ArrayList;
 import java.util.List;
 
-public class DownloadManagerActivity extends AppCompatActivity {
+public class DownloadManagerActivity extends com.android.cineflow.ui.base.BaseActivity {
 
     private RecyclerView rvDownloads;
     private View layoutEmptyState;

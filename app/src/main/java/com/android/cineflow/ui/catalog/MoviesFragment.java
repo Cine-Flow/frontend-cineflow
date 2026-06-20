@@ -7,7 +7,7 @@ public class MoviesFragment extends FilmCatalogFragment {
     }
 
     @Override
-    protected String getCatalogTitle() {
-        return "Phim lẻ";
+    protected int getCatalogTitleResId() {
+        return com.android.cineflow.R.string.nav_movies;
     }
 }

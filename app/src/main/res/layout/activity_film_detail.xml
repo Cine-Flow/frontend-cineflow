@@ -90,7 +90,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
                 android:backgroundTint="#E50914"
-                android:text="Phát"
+                android:text="@string/detail_btn_play"
                 android:textColor="@color/white"
                 android:textStyle="bold"
                 app:icon="@android:drawable/ic_media_play"
@@ -102,7 +102,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
-                android:text="Thêm vào yêu thích" />
+                android:text="@string/player_btn_favorite" />
 
             <TextView
                 android:id="@+id/tv_film_description"
@@ -119,7 +119,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="24dp"
                 android:layout_marginBottom="8dp"
-                android:text="Danh sách tập"
+                android:text="@string/detail_episode_list"
                 android:textColor="@color/text_primary"
                 android:textSize="18sp"
                 android:textStyle="bold" />
@@ -149,7 +149,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="Bình luận"
+                    android:text="@string/detail_comments"
                     android:textColor="@color/text_primary"
                     android:textSize="18sp"
                     android:textStyle="bold" />
@@ -183,7 +183,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:background="@android:color/transparent"
-                    android:hint="Viết bình luận..."
+                    android:hint="@string/detail_hint_write_comment"
                     android:inputType="textCapSentences|textMultiLine"
                     android:maxLines="4"
                     android:maxLength="1000"
@@ -203,7 +203,7 @@
                     android:paddingTop="6dp"
                     android:paddingBottom="6dp"
                     android:backgroundTint="@color/brand_primary"
-                    android:text="Gửi"
+                    android:text="@string/detail_btn_send"
                     android:textColor="@color/text_primary"
                     android:textSize="13sp"
                     android:textStyle="bold"
@@ -216,7 +216,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="12dp"
                 android:gravity="center"
-                android:text="Đăng nhập để bình luận"
+                android:text="@string/detail_login_to_comment"
                 android:textColor="@color/text_tertiary"
                 android:textSize="13sp"
                 android:visibility="gone" />
@@ -236,7 +236,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
                 android:gravity="center"
-                android:text="Hãy là người đầu tiên bình luận"
+                android:text="@string/detail_empty_comments"
                 android:textColor="@color/text_tertiary"
                 android:textSize="13sp"
                 android:visibility="gone" />

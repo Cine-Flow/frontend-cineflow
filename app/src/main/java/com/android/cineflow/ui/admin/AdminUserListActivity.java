@@ -21,7 +21,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-public class AdminUserListActivity extends AppCompatActivity
+public class AdminUserListActivity extends com.android.cineflow.ui.base.BaseActivity
         implements AdminUserAdapter.OnUserActionListener {
 
     private AdminUserAdapter adapter;
