@@ -10,24 +10,27 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 
 import com.android.cineflow.R;
+import com.android.cineflow.data.network.dto.AdminCategoryDto;
+import com.android.cineflow.data.network.dto.AdminCategoryRequestDto;
 
 public class CategoryFormDialogFragment extends DialogFragment {
 
     public interface OnCategorySavedListener {
-        void onCategorySaved(AdminCategoryAdapter.MockCategory category, boolean isNew);
+        void onCategorySaved(AdminCategoryRequestDto request, @Nullable AdminCategoryDto editing);
     }
 
-    private AdminCategoryAdapter.MockCategory editing;
+    private AdminCategoryDto editing;
     private OnCategorySavedListener listener;
 
-    public static CategoryFormDialogFragment newInstance(
-            @Nullable AdminCategoryAdapter.MockCategory category) {
+    public static CategoryFormDialogFragment newInstance(@Nullable AdminCategoryDto category) {
         CategoryFormDialogFragment f = new CategoryFormDialogFragment();
         f.editing = category;
         return f;
     }
 
-    public void setOnCategorySavedListener(OnCategorySavedListener l) { this.listener = l; }
+    public void setOnCategorySavedListener(OnCategorySavedListener l) {
+        this.listener = l;
+    }
 
     @NonNull
     @Override
@@ -36,7 +39,6 @@ public class CategoryFormDialogFragment extends DialogFragment {
         dialog.setContentView(R.layout.dialog_category_form);
 
         boolean isEdit = editing != null;
-
         TextView tvTitle = dialog.findViewById(R.id.tv_dialog_title);
         TextView tvMeta = dialog.findViewById(R.id.tv_meta);
         EditText etName = dialog.findViewById(R.id.et_name);
@@ -44,17 +46,16 @@ public class CategoryFormDialogFragment extends DialogFragment {
 
         tvTitle.setText(isEdit ? "Edit Category" : "Create Category");
         if (isEdit) {
-            etName.setText(editing.name);
-            etDescription.setText(editing.description);
-            String filmText = editing.filmCount + " film"
-                    + (editing.filmCount == 1 ? "" : "s") + " tagged";
-            tvMeta.setText("ID #" + editing.id + " · " + filmText);
+            etName.setText(editing.getName());
+            etDescription.setText(editing.getDescription());
+            long filmCount = editing.getFilmCount();
+            tvMeta.setText("ID #" + editing.getId() + " - " + filmCount + " film"
+                    + (filmCount == 1 ? "" : "s") + " tagged");
         } else {
-            tvMeta.setText("New category — ID auto-assigned on save");
+            tvMeta.setText("New category - ID auto-assigned on save");
         }
 
         dialog.findViewById(R.id.btn_cancel).setOnClickListener(v -> dismiss());
-
         dialog.findViewById(R.id.btn_save).setOnClickListener(v -> {
             String name = etName.getText().toString().trim();
             String description = etDescription.getText().toString().trim();
@@ -68,17 +69,10 @@ public class CategoryFormDialogFragment extends DialogFragment {
                 return;
             }
 
-            boolean isNew = !isEdit;
-            AdminCategoryAdapter.MockCategory result;
-            if (isEdit) {
-                editing.name = name;
-                editing.description = description.isEmpty() ? null : description;
-                result = editing;
-            } else {
-                result = new AdminCategoryAdapter.MockCategory(
-                        null, name, description.isEmpty() ? null : description, 0);
+            if (listener != null) {
+                listener.onCategorySaved(new AdminCategoryRequestDto(
+                        name, description.isEmpty() ? null : description), editing);
             }
-            if (listener != null) listener.onCategorySaved(result, isNew);
             dismiss();
         });
 

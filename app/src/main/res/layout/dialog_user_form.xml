@@ -183,6 +183,38 @@
             android:inputType="textUri"
             android:layout_marginBottom="12dp" />
 
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Role"
+            android:textColor="@color/text_secondary"
+            android:textSize="12sp" />
+
+        <RadioGroup
+            android:id="@+id/rg_role"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginBottom="12dp">
+
+            <RadioButton
+                android:id="@+id/rb_role_user"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="User"
+                android:textColor="@color/text_secondary"
+                android:buttonTint="@color/brand_primary" />
+
+            <RadioButton
+                android:id="@+id/rb_role_admin"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Admin"
+                android:textColor="@color/text_secondary"
+                android:buttonTint="@color/brand_primary"
+                android:layout_marginStart="20dp" />
+        </RadioGroup>
+
         <LinearLayout
             android:id="@+id/layout_password"
             android:layout_width="match_parent"

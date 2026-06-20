@@ -11,6 +11,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.android.cineflow.R;
+import com.android.cineflow.data.network.dto.AdminCategoryDto;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,37 +19,19 @@ import java.util.List;
 public class AdminCategoryAdapter
         extends RecyclerView.Adapter<AdminCategoryAdapter.CategoryViewHolder> {
 
-    /**
-     * Mirrors the backend {@code categories} row. {@code filmCount} is derived from the
-     * {@code film_categories} junction on the server, not stored on the row.
-     */
-    public static class MockCategory {
-        public Integer id;            // SERIAL — null for unsaved
-        public String name;
-        public String description;    // nullable
-        public int filmCount;         // derived; read-only
-
-        public MockCategory(Integer id, String name, String description, int filmCount) {
-            this.id = id;
-            this.name = name;
-            this.description = description;
-            this.filmCount = filmCount;
-        }
-    }
-
     public interface OnCategoryActionListener {
-        void onEditCategory(MockCategory category);
-        void onDeleteCategory(MockCategory category);
+        void onEditCategory(AdminCategoryDto category);
+        void onDeleteCategory(AdminCategoryDto category);
     }
 
-    private List<MockCategory> categories = new ArrayList<>();
+    private List<AdminCategoryDto> categories = new ArrayList<>();
     private final OnCategoryActionListener listener;
 
     public AdminCategoryAdapter(OnCategoryActionListener listener) {
         this.listener = listener;
     }
 
-    public void setCategories(List<MockCategory> list) {
+    public void setCategories(List<AdminCategoryDto> list) {
         this.categories = list != null ? list : new ArrayList<>();
         notifyDataSetChanged();
     }
@@ -67,7 +50,9 @@ public class AdminCategoryAdapter
     }
 
     @Override
-    public int getItemCount() { return categories.size(); }
+    public int getItemCount() {
+        return categories.size();
+    }
 
     class CategoryViewHolder extends RecyclerView.ViewHolder {
         private final TextView tvId;
@@ -87,21 +72,16 @@ public class AdminCategoryAdapter
             btnDelete = v.findViewById(R.id.btn_delete);
         }
 
-        void bind(MockCategory c) {
-            tvId.setText("#" + (c.id == null ? "—" : c.id));
-            tvName.setText(c.name);
+        void bind(AdminCategoryDto category) {
+            Long filmCount = category.getFilmCount();
+            tvId.setText("#" + (category.getId() == null ? "-" : category.getId()));
+            tvName.setText(category.getName());
+            tvDescription.setText(category.getDescription() != null && !category.getDescription().isEmpty()
+                    ? category.getDescription()
+                    : "No description");
 
-            if (c.description != null && !c.description.isEmpty()) {
-                tvDescription.setText(c.description);
-                tvDescription.setVisibility(View.VISIBLE);
-            } else {
-                tvDescription.setText("No description");
-                tvDescription.setVisibility(View.VISIBLE);
-            }
-
-            tvFilmCount.setText(c.filmCount + " " + (c.filmCount == 1 ? "film" : "films"));
-            int countColor = c.filmCount == 0
-                    ? R.color.text_tertiary : R.color.brand_primary;
+            tvFilmCount.setText(filmCount + " " + (filmCount == 1 ? "film" : "films"));
+            int countColor = filmCount == 0 ? R.color.text_tertiary : R.color.brand_primary;
             GradientDrawable countBg = new GradientDrawable();
             countBg.setCornerRadius(24f);
             countBg.setStroke(1, itemView.getContext().getColor(countColor));
@@ -110,10 +90,10 @@ public class AdminCategoryAdapter
             tvFilmCount.setTextColor(itemView.getContext().getColor(countColor));
 
             btnEdit.setOnClickListener(v -> {
-                if (listener != null) listener.onEditCategory(c);
+                if (listener != null) listener.onEditCategory(category);
             });
             btnDelete.setOnClickListener(v -> {
-                if (listener != null) listener.onDeleteCategory(c);
+                if (listener != null) listener.onDeleteCategory(category);
             });
         }
     }

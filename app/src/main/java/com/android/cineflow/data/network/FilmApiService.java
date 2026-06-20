@@ -1,6 +1,11 @@
 package com.android.cineflow.data.network;
 
 import com.android.cineflow.data.network.dto.ApiResponseDto;
+import com.android.cineflow.data.network.dto.AdminAnalyticsDto;
+import com.android.cineflow.data.network.dto.AdminCategoryDto;
+import com.android.cineflow.data.network.dto.AdminCategoryRequestDto;
+import com.android.cineflow.data.network.dto.AdminUserDto;
+import com.android.cineflow.data.network.dto.AdminUserRequestDto;
 import com.android.cineflow.data.network.dto.ChangePasswordRequestDto;
 import com.android.cineflow.data.network.dto.CommentDto;
 import com.android.cineflow.data.network.dto.CreateCommentRequestDto;
@@ -90,11 +95,33 @@ public interface FilmApiService {
 
     Call<ApiResponseDto<Void>> resetPassword(ResetPasswordRequestDto request);
 
+    Call<ApiResponseDto<Boolean>> validateResetToken(String token);
+
     Call<ApiResponseDto<LoginResponseDto>> refreshToken(TokenRefreshRequestDto request);
 
     Call<ApiResponseDto<Void>> logout(TokenRefreshRequestDto request);
 
     Call<ApiResponseDto<PagedResponseDto<FilmDetailDto>>> getAllFilms(int page, int size, String search);
+
+    Call<ApiResponseDto<List<AdminCategoryDto>>> getAdminCategories();
+
+    Call<ApiResponseDto<AdminCategoryDto>> createCategory(AdminCategoryRequestDto request);
+
+    Call<ApiResponseDto<AdminCategoryDto>> updateCategory(Integer id, AdminCategoryRequestDto request);
+
+    Call<ApiResponseDto<Void>> deleteCategory(Integer id);
+
+    Call<ApiResponseDto<List<AdminUserDto>>> getAdminUsers(String search, String role, String subscription);
+
+    Call<ApiResponseDto<AdminUserDto>> createUser(AdminUserRequestDto request);
+
+    Call<ApiResponseDto<AdminUserDto>> updateUser(String id, AdminUserRequestDto request);
+
+    Call<ApiResponseDto<Void>> deleteUser(String id);
+
+    Call<ApiResponseDto<Void>> resetUserPassword(String id);
+
+    Call<ApiResponseDto<AdminAnalyticsDto>> getAdminAnalytics(int period);
 
     Call<ApiResponseDto<FilmDetailDto>> getAdminFilmById(Integer id);
 

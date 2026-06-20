@@ -3,6 +3,11 @@ package com.android.cineflow.data.network;
 import android.net.Uri;
 
 import com.android.cineflow.data.network.dto.ApiResponseDto;
+import com.android.cineflow.data.network.dto.AdminAnalyticsDto;
+import com.android.cineflow.data.network.dto.AdminCategoryDto;
+import com.android.cineflow.data.network.dto.AdminCategoryRequestDto;
+import com.android.cineflow.data.network.dto.AdminUserDto;
+import com.android.cineflow.data.network.dto.AdminUserRequestDto;
 import com.android.cineflow.data.network.dto.ChangePasswordRequestDto;
 import com.android.cineflow.data.network.dto.CommentDto;
 import com.android.cineflow.data.network.dto.CreateCommentRequestDto;
@@ -234,6 +239,12 @@ public class VolleyFilmApiServiceImpl implements FilmApiService {
     }
 
     @Override
+    public Call<ApiResponseDto<Boolean>> validateResetToken(String token) {
+        return createCall("auth/validate-reset-token?token=" + Uri.encode(token), Request.Method.GET, null,
+                new TypeToken<ApiResponseDto<Boolean>>(){}.getType());
+    }
+
+    @Override
     public Call<ApiResponseDto<LoginResponseDto>> refreshToken(TokenRefreshRequestDto request) {
         return createCall("auth/refresh-token", Request.Method.POST, request,
                 new TypeToken<ApiResponseDto<LoginResponseDto>>(){}.getType());
@@ -253,6 +264,78 @@ public class VolleyFilmApiServiceImpl implements FilmApiService {
         }
         return createCall("admin/films?" + query, Request.Method.GET, null,
                 new TypeToken<ApiResponseDto<PagedResponseDto<FilmDetailDto>>>(){}.getType());
+    }
+
+    @Override
+    public Call<ApiResponseDto<List<AdminCategoryDto>>> getAdminCategories() {
+        return createCall("admin/categories", Request.Method.GET, null,
+                new TypeToken<ApiResponseDto<List<AdminCategoryDto>>>(){}.getType());
+    }
+
+    @Override
+    public Call<ApiResponseDto<AdminCategoryDto>> createCategory(AdminCategoryRequestDto request) {
+        return createCall("admin/categories", Request.Method.POST, request,
+                new TypeToken<ApiResponseDto<AdminCategoryDto>>(){}.getType());
+    }
+
+    @Override
+    public Call<ApiResponseDto<AdminCategoryDto>> updateCategory(Integer id, AdminCategoryRequestDto request) {
+        return createCall("admin/categories/" + id, Request.Method.PUT, request,
+                new TypeToken<ApiResponseDto<AdminCategoryDto>>(){}.getType());
+    }
+
+    @Override
+    public Call<ApiResponseDto<Void>> deleteCategory(Integer id) {
+        return createCall("admin/categories/" + id, Request.Method.DELETE, null,
+                new TypeToken<ApiResponseDto<Void>>(){}.getType());
+    }
+
+    @Override
+    public Call<ApiResponseDto<List<AdminUserDto>>> getAdminUsers(String search, String role, String subscription) {
+        String query = "";
+        if (search != null && !search.trim().isEmpty()) {
+            query += "search=" + Uri.encode(search.trim());
+        }
+        if (role != null && !role.trim().isEmpty()) {
+            if (!query.isEmpty()) query += "&";
+            query += "role=" + Uri.encode(role.trim());
+        }
+        if (subscription != null && !subscription.trim().isEmpty()) {
+            if (!query.isEmpty()) query += "&";
+            query += "subscription=" + Uri.encode(subscription.trim());
+        }
+        return createCall("admin/users" + (query.isEmpty() ? "" : "?" + query), Request.Method.GET, null,
+                new TypeToken<ApiResponseDto<List<AdminUserDto>>>(){}.getType());
+    }
+
+    @Override
+    public Call<ApiResponseDto<AdminUserDto>> createUser(AdminUserRequestDto request) {
+        return createCall("admin/users", Request.Method.POST, request,
+                new TypeToken<ApiResponseDto<AdminUserDto>>(){}.getType());
+    }
+
+    @Override
+    public Call<ApiResponseDto<AdminUserDto>> updateUser(String id, AdminUserRequestDto request) {
+        return createCall("admin/users/" + Uri.encode(id), Request.Method.PUT, request,
+                new TypeToken<ApiResponseDto<AdminUserDto>>(){}.getType());
+    }
+
+    @Override
+    public Call<ApiResponseDto<Void>> deleteUser(String id) {
+        return createCall("admin/users/" + Uri.encode(id), Request.Method.DELETE, null,
+                new TypeToken<ApiResponseDto<Void>>(){}.getType());
+    }
+
+    @Override
+    public Call<ApiResponseDto<Void>> resetUserPassword(String id) {
+        return createCall("admin/users/" + Uri.encode(id) + "/reset-password", Request.Method.POST, null,
+                new TypeToken<ApiResponseDto<Void>>(){}.getType());
+    }
+
+    @Override
+    public Call<ApiResponseDto<AdminAnalyticsDto>> getAdminAnalytics(int period) {
+        return createCall("admin/analytics?period=" + period, Request.Method.GET, null,
+                new TypeToken<ApiResponseDto<AdminAnalyticsDto>>(){}.getType());
     }
 
     @Override

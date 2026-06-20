@@ -11,6 +11,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.android.cineflow.R;
+import com.android.cineflow.data.network.dto.AdminUserDto;
 import com.bumptech.glide.Glide;
 
 import java.util.ArrayList;
@@ -18,52 +19,20 @@ import java.util.List;
 
 public class AdminUserAdapter extends RecyclerView.Adapter<AdminUserAdapter.UserViewHolder> {
 
-    /**
-     * Mirrors the backend {@code users} row plus the user's current subscription state
-     * (derived from {@code user_subscriptions} on the server).
-     */
-    public static class MockUser {
-        public String id;             // UUID
-        public String username;
-        public String email;
-        public String fullName;       // nullable
-        public String phoneNumber;    // nullable
-        public String avatarUrl;      // nullable
-        public String role;           // ROLE_USER | ROLE_ADMIN
-        public String createdAt;      // display string
-        public String subscriptionPlan;   // null = free; else package name
-        public String subscriptionExpiry; // display string, null when no sub
-
-        public MockUser(String id, String username, String email, String fullName,
-                        String phoneNumber, String avatarUrl, String role,
-                        String createdAt, String subscriptionPlan, String subscriptionExpiry) {
-            this.id = id;
-            this.username = username;
-            this.email = email;
-            this.fullName = fullName;
-            this.phoneNumber = phoneNumber;
-            this.avatarUrl = avatarUrl;
-            this.role = role;
-            this.createdAt = createdAt;
-            this.subscriptionPlan = subscriptionPlan;
-            this.subscriptionExpiry = subscriptionExpiry;
-        }
-    }
-
     public interface OnUserActionListener {
-        void onEditUser(MockUser user);
-        void onResetPassword(MockUser user);
-        void onDeleteUser(MockUser user);
+        void onEditUser(AdminUserDto user);
+        void onResetPassword(AdminUserDto user);
+        void onDeleteUser(AdminUserDto user);
     }
 
-    private List<MockUser> users = new ArrayList<>();
+    private List<AdminUserDto> users = new ArrayList<>();
     private final OnUserActionListener listener;
 
     public AdminUserAdapter(OnUserActionListener listener) {
         this.listener = listener;
     }
 
-    public void setUsers(List<MockUser> users) {
+    public void setUsers(List<AdminUserDto> users) {
         this.users = users != null ? users : new ArrayList<>();
         notifyDataSetChanged();
     }
@@ -82,7 +51,9 @@ public class AdminUserAdapter extends RecyclerView.Adapter<AdminUserAdapter.User
     }
 
     @Override
-    public int getItemCount() { return users.size(); }
+    public int getItemCount() {
+        return users.size();
+    }
 
     class UserViewHolder extends RecyclerView.ViewHolder {
         private final ImageView ivAvatar;
@@ -112,25 +83,23 @@ public class AdminUserAdapter extends RecyclerView.Adapter<AdminUserAdapter.User
             btnDelete = v.findViewById(R.id.btn_delete);
         }
 
-        void bind(MockUser user) {
-            String display = (user.fullName != null && !user.fullName.isEmpty())
-                    ? user.fullName : user.username;
+        void bind(AdminUserDto user) {
+            String display = user.getFullName() != null && !user.getFullName().isEmpty()
+                    ? user.getFullName() : user.getUsername();
             tvName.setText(display);
-            tvUsername.setText("@" + user.username);
-            tvEmail.setText(user.email);
-            tvJoined.setText("Joined " + user.createdAt);
+            tvUsername.setText("@" + user.getUsername());
+            tvEmail.setText(user.getEmail());
+            tvJoined.setText(user.getCreatedAt().isEmpty() ? "Joined -" : "Joined " + user.getCreatedAt());
 
-            // Avatar — load URL if present, else fall back to a neutral circle with initials
-            int placeholderColor = itemView.getContext().getColor(R.color.surface_tertiary);
             GradientDrawable circle = new GradientDrawable();
             circle.setShape(GradientDrawable.OVAL);
-            circle.setColor(placeholderColor);
+            circle.setColor(itemView.getContext().getColor(R.color.surface_tertiary));
             ivAvatar.setBackground(circle);
 
-            if (user.avatarUrl != null && !user.avatarUrl.isEmpty()) {
+            if (user.getAvatarUrl() != null && !user.getAvatarUrl().isEmpty()) {
                 tvAvatarInitial.setText("");
                 Glide.with(itemView.getContext())
-                        .load(user.avatarUrl)
+                        .load(user.getAvatarUrl())
                         .circleCrop()
                         .placeholder(R.color.surface_tertiary)
                         .into(ivAvatar);
@@ -139,8 +108,7 @@ public class AdminUserAdapter extends RecyclerView.Adapter<AdminUserAdapter.User
                 tvAvatarInitial.setText(initial(display));
             }
 
-            // Role chip — read-only
-            boolean admin = "ROLE_ADMIN".equals(user.role);
+            boolean admin = "ROLE_ADMIN".equals(user.getRole());
             tvRole.setText(admin ? "ADMIN" : "USER");
             int roleColor = itemView.getContext().getColor(
                     admin ? R.color.brand_primary : R.color.surface_tertiary);
@@ -151,15 +119,13 @@ public class AdminUserAdapter extends RecyclerView.Adapter<AdminUserAdapter.User
             tvRole.setTextColor(itemView.getContext().getColor(
                     admin ? R.color.text_primary : R.color.text_secondary));
 
-            // Subscription
-            if (user.subscriptionPlan != null) {
-                tvSubscription.setText(user.subscriptionPlan + " · until " + user.subscriptionExpiry);
-                tvSubscription.setTextColor(
-                        itemView.getContext().getColor(R.color.badge_premium));
+            if (user.getSubscriptionPlan() != null && !user.getSubscriptionPlan().isEmpty()) {
+                String until = user.getSubscriptionEndDate() != null ? " - until " + user.getSubscriptionEndDate() : "";
+                tvSubscription.setText(user.getSubscriptionPlan() + until);
+                tvSubscription.setTextColor(itemView.getContext().getColor(R.color.badge_premium));
             } else {
                 tvSubscription.setText("Free tier");
-                tvSubscription.setTextColor(
-                        itemView.getContext().getColor(R.color.text_tertiary));
+                tvSubscription.setTextColor(itemView.getContext().getColor(R.color.text_tertiary));
             }
 
             btnEdit.setOnClickListener(v -> {
@@ -177,8 +143,7 @@ public class AdminUserAdapter extends RecyclerView.Adapter<AdminUserAdapter.User
             if (name == null || name.isEmpty()) return "?";
             String[] parts = name.trim().split("\\s+");
             if (parts.length >= 2) {
-                return ("" + parts[0].charAt(0) + parts[parts.length - 1].charAt(0))
-                        .toUpperCase();
+                return ("" + parts[0].charAt(0) + parts[parts.length - 1].charAt(0)).toUpperCase();
             }
             return String.valueOf(parts[0].charAt(0)).toUpperCase();
         }

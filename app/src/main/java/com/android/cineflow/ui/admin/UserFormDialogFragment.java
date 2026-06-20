@@ -4,10 +4,13 @@ import android.app.Dialog;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Patterns;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -15,24 +18,28 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 
 import com.android.cineflow.R;
+import com.android.cineflow.data.network.dto.AdminUserDto;
+import com.android.cineflow.data.network.dto.AdminUserRequestDto;
 import com.bumptech.glide.Glide;
 
 public class UserFormDialogFragment extends DialogFragment {
 
     public interface OnUserSavedListener {
-        void onUserSaved(AdminUserAdapter.MockUser user, boolean isNew);
+        void onUserSaved(AdminUserRequestDto request, @Nullable AdminUserDto editing);
     }
 
-    private AdminUserAdapter.MockUser editing;
+    private AdminUserDto editing;
     private OnUserSavedListener listener;
 
-    public static UserFormDialogFragment newInstance(@Nullable AdminUserAdapter.MockUser user) {
+    public static UserFormDialogFragment newInstance(@Nullable AdminUserDto user) {
         UserFormDialogFragment f = new UserFormDialogFragment();
         f.editing = user;
         return f;
     }
 
-    public void setOnUserSavedListener(OnUserSavedListener l) { this.listener = l; }
+    public void setOnUserSavedListener(OnUserSavedListener l) {
+        this.listener = l;
+    }
 
     @NonNull
     @Override
@@ -41,7 +48,6 @@ public class UserFormDialogFragment extends DialogFragment {
         dialog.setContentView(R.layout.dialog_user_form);
 
         boolean isEdit = editing != null;
-
         TextView tvTitle = dialog.findViewById(R.id.tv_dialog_title);
         TextView tvRoleReadonly = dialog.findViewById(R.id.tv_role_readonly);
         EditText etUsername = dialog.findViewById(R.id.et_username);
@@ -51,6 +57,9 @@ public class UserFormDialogFragment extends DialogFragment {
         EditText etAvatarUrl = dialog.findViewById(R.id.et_avatar_url);
         EditText etPassword = dialog.findViewById(R.id.et_password);
         LinearLayout layoutPassword = dialog.findViewById(R.id.layout_password);
+        RadioGroup rgRole = dialog.findViewById(R.id.rg_role);
+        RadioButton rbRoleUser = dialog.findViewById(R.id.rb_role_user);
+        RadioButton rbRoleAdmin = dialog.findViewById(R.id.rb_role_admin);
         ImageView ivPreview = dialog.findViewById(R.id.iv_avatar_preview);
         TextView tvInitial = dialog.findViewById(R.id.tv_avatar_preview_initial);
 
@@ -58,16 +67,22 @@ public class UserFormDialogFragment extends DialogFragment {
         layoutPassword.setVisibility(isEdit ? View.GONE : View.VISIBLE);
 
         if (isEdit) {
-            etUsername.setText(editing.username);
-            etEmail.setText(editing.email);
-            etFullName.setText(editing.fullName);
-            etPhone.setText(editing.phoneNumber);
-            etAvatarUrl.setText(editing.avatarUrl);
+            etUsername.setText(editing.getUsername());
+            etEmail.setText(editing.getEmail());
+            etFullName.setText(editing.getFullName());
+            etPhone.setText(editing.getPhoneNumber());
+            etAvatarUrl.setText(editing.getAvatarUrl());
             tvRoleReadonly.setText("Role: "
-                    + ("ROLE_ADMIN".equals(editing.role) ? "Admin" : "User")
-                    + " · ID " + editing.id);
+                    + ("ROLE_ADMIN".equals(editing.getRole()) ? "Admin" : "User")
+                    + " - ID " + editing.getId());
+            if ("ROLE_ADMIN".equals(editing.getRole())) {
+                rbRoleAdmin.setChecked(true);
+            } else {
+                rbRoleUser.setChecked(true);
+            }
         } else {
-            tvRoleReadonly.setText("New users are created with the User role.");
+            tvRoleReadonly.setText("Choose role for the new user.");
+            rbRoleUser.setChecked(true);
         }
 
         Runnable refreshPreview = () -> {
@@ -97,46 +112,41 @@ public class UserFormDialogFragment extends DialogFragment {
         etAvatarUrl.addTextChangedListener(tw);
         etFullName.addTextChangedListener(tw);
         etUsername.addTextChangedListener(tw);
-
         refreshPreview.run();
 
         dialog.findViewById(R.id.btn_cancel).setOnClickListener(v -> dismiss());
-
         dialog.findViewById(R.id.btn_save).setOnClickListener(v -> {
             String username = etUsername.getText().toString().trim();
             String email = etEmail.getText().toString().trim();
+            String password = etPassword.getText().toString();
             String fullName = nullIfEmpty(etFullName.getText().toString().trim());
             String phone = nullIfEmpty(etPhone.getText().toString().trim());
             String avatar = nullIfEmpty(etAvatarUrl.getText().toString().trim());
 
-            if (username.isEmpty()) { etUsername.setError("Username required"); return; }
+            if (username.isEmpty()) {
+                etUsername.setError("Username required");
+                return;
+            }
             if (!username.matches("[A-Za-z0-9._-]{3,}")) {
-                etUsername.setError("3+ chars, letters/digits/._- only"); return;
+                etUsername.setError("3+ chars, letters/digits/._- only");
+                return;
             }
-            if (email.isEmpty() || !email.matches("[^@\\s]+@[^@\\s]+\\.[^@\\s]+")) {
-                etEmail.setError("Valid email required"); return;
+            if (email.isEmpty() || !Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+                etEmail.setError("Valid email required");
+                return;
             }
-            if (!isEdit && etPassword.getText().toString().length() < 8) {
-                etPassword.setError("Min 8 characters"); return;
+            if (!isEdit && password.length() < 6) {
+                etPassword.setError("Min 6 characters");
+                return;
             }
 
-            AdminUserAdapter.MockUser result;
-            boolean isNew = !isEdit;
-            if (isEdit) {
-                editing.username = username;
-                editing.email = email;
-                editing.fullName = fullName;
-                editing.phoneNumber = phone;
-                editing.avatarUrl = avatar;
-                result = editing;
-            } else {
-                result = new AdminUserAdapter.MockUser(
-                        "new-" + System.currentTimeMillis(),
-                        username, email, fullName, phone, avatar,
-                        "ROLE_USER", "Just now",
-                        null, null);
+            String role = rgRole.getCheckedRadioButtonId() == R.id.rb_role_admin
+                    ? "ROLE_ADMIN" : "ROLE_USER";
+            String passwordValue = isEdit ? null : password;
+            if (listener != null) {
+                listener.onUserSaved(new AdminUserRequestDto(
+                        username, email, passwordValue, fullName, phone, avatar, role), editing);
             }
-            if (listener != null) listener.onUserSaved(result, isNew);
             dismiss();
         });
 
