@@ -27,6 +27,7 @@ import com.android.cineflow.R;
 import com.android.cineflow.data.network.ApiClient;
 import com.android.cineflow.data.network.Call;
 import com.android.cineflow.data.network.Callback;
+import com.android.cineflow.data.network.ContentUriRequestBody;
 import com.android.cineflow.data.network.Response;
 import com.android.cineflow.data.network.dto.ApiResponseDto;
 import com.android.cineflow.data.network.dto.CreateFilmRequestDto;
@@ -67,6 +68,7 @@ public class FilmFormDialogFragment extends DialogFragment {
     private com.google.android.material.button.MaterialButton btnManageEpisodes;
     private LinearLayout layoutUploadProgress;
     private TextView tvUploadStatus;
+    private TextView tvTrailerLabel;
 
     // File pickers
     private ActivityResultLauncher<Intent> filePickerLauncher;
@@ -102,7 +104,7 @@ public class FilmFormDialogFragment extends DialogFragment {
                     if (result.getResultCode() == Activity.RESULT_OK && result.getData() != null) {
                         Uri fileUri = result.getData().getData();
                         if (fileUri != null && currentUploadTarget != null) {
-                            uploadFile(fileUri, currentUploadFolder, currentUploadTarget);
+                            uploadFileStreaming(fileUri, currentUploadFolder, currentUploadTarget);
                         }
                     }
                 }
@@ -136,6 +138,7 @@ public class FilmFormDialogFragment extends DialogFragment {
         btnManageEpisodes = dialog.findViewById(R.id.btn_manage_episodes);
         layoutUploadProgress = dialog.findViewById(R.id.layout_upload_progress);
         tvUploadStatus = dialog.findViewById(R.id.tv_upload_status);
+        tvTrailerLabel = dialog.findViewById(R.id.tv_trailer_label);
 
         tvDialogTitle.setText(isEdit ? "Edit Film" : "Create Film");
 
@@ -264,6 +267,9 @@ public class FilmFormDialogFragment extends DialogFragment {
     }
 
     private void updateTypeVisibility() {
+        if (tvTrailerLabel != null) {
+            tvTrailerLabel.setText("LIVE".equals(selectedType) ? "Live stream URL" : "Trailer URL");
+        }
         if ("SINGLE".equals(selectedType)) {
             layoutVideoUrl.setVisibility(View.VISIBLE);
             btnManageEpisodes.setVisibility(View.GONE);
@@ -281,6 +287,63 @@ public class FilmFormDialogFragment extends DialogFragment {
         intent.setType(mimeType);
         intent.addCategory(Intent.CATEGORY_OPENABLE);
         filePickerLauncher.launch(intent);
+    }
+
+    private void uploadFileStreaming(Uri fileUri, String folder, EditText targetEditText) {
+        layoutUploadProgress.setVisibility(View.VISIBLE);
+        tvUploadStatus.setText("Dang tai len...");
+
+        try {
+            ContentResolver resolver = requireContext().getContentResolver();
+            String mimeType = resolver.getType(fileUri);
+            if (mimeType == null) mimeType = "application/octet-stream";
+
+            String fileName = "upload_file";
+            long fileSize = -1L;
+            Cursor cursor = resolver.query(fileUri, null, null, null, null);
+            if (cursor != null) {
+                int nameIndex = cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME);
+                int sizeIndex = cursor.getColumnIndex(OpenableColumns.SIZE);
+                if (cursor.moveToFirst()) {
+                    if (nameIndex >= 0) {
+                        fileName = cursor.getString(nameIndex);
+                    }
+                    if (sizeIndex >= 0) {
+                        fileSize = cursor.getLong(sizeIndex);
+                    }
+                }
+                cursor.close();
+            }
+
+            if (fileSize == 0L) {
+                showUploadError("Khong the doc tep tin");
+                return;
+            }
+
+            RequestBody requestBody = new ContentUriRequestBody(resolver, fileUri, mimeType, fileSize);
+            MultipartBody.Part body = MultipartBody.Part.createFormData("file", fileName, requestBody);
+
+            ApiClient.getFilmApiService().uploadFile(body, folder).enqueue(new Callback<ApiResponseDto<String>>() {
+                @Override
+                public void onResponse(Call<ApiResponseDto<String>> call, Response<ApiResponseDto<String>> response) {
+                    layoutUploadProgress.setVisibility(View.GONE);
+                    if (response.isSuccessful() && response.body() != null && response.body().getData() != null) {
+                        targetEditText.setText(response.body().getData());
+                        Toast.makeText(requireContext(), "Tai len thanh cong!", Toast.LENGTH_SHORT).show();
+                    } else {
+                        showUploadError("Upload that bai: HTTP " + response.code());
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<ApiResponseDto<String>> call, Throwable t) {
+                    layoutUploadProgress.setVisibility(View.GONE);
+                    showUploadError("Loi ket noi: " + t.getMessage());
+                }
+            });
+        } catch (Exception e) {
+            showUploadError("Loi: " + e.getMessage());
+        }
     }
 
     private void uploadFile(Uri fileUri, String folder, EditText targetEditText) {

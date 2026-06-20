@@ -29,6 +29,7 @@ import com.android.cineflow.R;
 import com.android.cineflow.data.network.ApiClient;
 import com.android.cineflow.data.network.Call;
 import com.android.cineflow.data.network.Callback;
+import com.android.cineflow.data.network.ContentUriRequestBody;
 import com.android.cineflow.data.network.Response;
 import com.android.cineflow.data.network.dto.ApiResponseDto;
 import com.android.cineflow.data.network.dto.CreateEpisodeRequestDto;
@@ -82,7 +83,7 @@ public class AdminEpisodesDialogFragment extends DialogFragment {
                     if (result.getResultCode() == Activity.RESULT_OK && result.getData() != null) {
                         Uri fileUri = result.getData().getData();
                         if (fileUri != null && pendingVideoUrlField != null) {
-                            uploadEpisodeVideo(fileUri, pendingVideoUrlField);
+                            uploadEpisodeVideoStreaming(fileUri, pendingVideoUrlField);
                         }
                     }
                 }
@@ -263,6 +264,59 @@ public class AdminEpisodesDialogFragment extends DialogFragment {
                 })
                 .setNegativeButton("Hủy", null)
                 .show();
+    }
+
+    private void uploadEpisodeVideoStreaming(Uri fileUri, EditText targetField) {
+        try {
+            ContentResolver resolver = requireContext().getContentResolver();
+            String mimeType = resolver.getType(fileUri);
+            if (mimeType == null) mimeType = "video/mp4";
+
+            String fileName = "episode_video.mp4";
+            long fileSize = -1L;
+            Cursor cursor = resolver.query(fileUri, null, null, null, null);
+            if (cursor != null) {
+                int nameIndex = cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME);
+                int sizeIndex = cursor.getColumnIndex(OpenableColumns.SIZE);
+                if (cursor.moveToFirst()) {
+                    if (nameIndex >= 0) {
+                        fileName = cursor.getString(nameIndex);
+                    }
+                    if (sizeIndex >= 0) {
+                        fileSize = cursor.getLong(sizeIndex);
+                    }
+                }
+                cursor.close();
+            }
+
+            if (fileSize == 0L) {
+                Toast.makeText(requireContext(), "Khong the doc tep tin", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            RequestBody requestBody = new ContentUriRequestBody(resolver, fileUri, mimeType, fileSize);
+            MultipartBody.Part body = MultipartBody.Part.createFormData("file", fileName, requestBody);
+
+            Toast.makeText(requireContext(), "Dang tai len...", Toast.LENGTH_SHORT).show();
+            ApiClient.getFilmApiService().uploadFile(body, "films").enqueue(new Callback<ApiResponseDto<String>>() {
+                @Override
+                public void onResponse(Call<ApiResponseDto<String>> call, Response<ApiResponseDto<String>> response) {
+                    if (response.isSuccessful() && response.body() != null && response.body().getData() != null) {
+                        targetField.setText(response.body().getData());
+                        Toast.makeText(requireContext(), "Upload thanh cong!", Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(requireContext(), "Upload that bai: HTTP " + response.code(), Toast.LENGTH_SHORT).show();
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<ApiResponseDto<String>> call, Throwable t) {
+                    Toast.makeText(requireContext(), "Loi ket noi upload: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+                }
+            });
+        } catch (Exception e) {
+            Toast.makeText(requireContext(), "Loi: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+        }
     }
 
     private void uploadEpisodeVideo(Uri fileUri, EditText targetField) {

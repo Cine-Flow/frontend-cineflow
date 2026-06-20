@@ -8,6 +8,8 @@ import com.android.volley.toolbox.Volley;
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
 
+import java.util.concurrent.TimeUnit;
+
 public class ApiClient {
 
     public static final String BASE_URL = "http://10.0.2.2:8080/api/v1/";
@@ -34,6 +36,10 @@ public class ApiClient {
             AuthInterceptor authInterceptor = new AuthInterceptor();
 
             OkHttpClient client = new OkHttpClient.Builder()
+                    .connectTimeout(30, TimeUnit.SECONDS)
+                    .readTimeout(5, TimeUnit.MINUTES)
+                    .writeTimeout(5, TimeUnit.MINUTES)
+                    .callTimeout(10, TimeUnit.MINUTES)
                     .addInterceptor(authInterceptor)
                     .addInterceptor(logging)
                     .authenticator(new TokenAuthenticator())
@@ -55,6 +61,10 @@ public class ApiClient {
             logging.setLevel(HttpLoggingInterceptor.Level.BASIC);
 
             OkHttpClient client = new OkHttpClient.Builder()
+                    .connectTimeout(30, TimeUnit.SECONDS)
+                    .readTimeout(5, TimeUnit.MINUTES)
+                    .writeTimeout(5, TimeUnit.MINUTES)
+                    .callTimeout(10, TimeUnit.MINUTES)
                     .addInterceptor(logging)
                     .build();
 

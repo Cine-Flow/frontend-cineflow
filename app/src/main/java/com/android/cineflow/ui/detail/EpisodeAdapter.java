@@ -112,6 +112,7 @@ public class EpisodeAdapter extends RecyclerView.Adapter<EpisodeAdapter.EpisodeV
                         filmId, filmTitle, filmCoverUrl, episode.getEpisodeNumber(),
                         episode.getTitle() != null ? episode.getTitle() : "Tập " + episode.getEpisodeNumber(),
                         (duration / 60) + " phút",
+                        episode.getVideoUrl(),
                         new OfflineDownloadManager.OnDownloadProgressListener() {
                             @Override
                             public void onProgress(int progress) {

@@ -130,6 +130,7 @@
     <string name="reset_password_confirm_required">Xác nhận mật khẩu là bắt buộc</string>
     <string name="reset_password_password_min">Mật khẩu phải có ít nhất 6 ký tự</string>
     <string name="reset_password_mismatch">Mật khẩu xác nhận không khớp</string>
+    <string name="reset_password_invalid_token">Mã token không hợp lệ hoặc đã hết hạn</string>
     <string name="reset_password_success">Đặt lại mật khẩu thành công! Đang chuyển về đăng nhập…</string>
     <string name="reset_password_error">Đặt lại mật khẩu thất bại</string>
     <string name="reset_password_network_error">Lỗi kết nối: %s</string>
@@ -199,8 +200,12 @@
     <string name="dialog_edit_profile_title">Chỉnh sửa thông tin</string>
     <string name="dialog_edit_profile_name">Họ và tên</string>
     <string name="dialog_edit_profile_name_hint">Nhập họ và tên của bạn</string>
+    <string name="dialog_edit_profile_email">Email</string>
+    <string name="dialog_edit_profile_email_hint">Nhập email của bạn</string>
     <string name="dialog_edit_profile_phone">Số điện thoại</string>
     <string name="dialog_edit_profile_phone_hint">Nhập số điện thoại của bạn</string>
+    <string name="toast_email_required">Email là bắt buộc</string>
+    <string name="toast_email_invalid">Email không hợp lệ</string>
 
     <!-- Dialog Change Password -->
     <string name="dialog_change_password_old">Mật khẩu cũ</string>

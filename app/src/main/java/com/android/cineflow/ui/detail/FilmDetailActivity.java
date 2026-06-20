@@ -290,8 +290,24 @@ public class FilmDetailActivity extends com.android.cineflow.ui.base.BaseActivit
 
         boolean hasEpisodes = film.getEpisodes() != null && !film.getEpisodes().isEmpty();
         boolean hasVideoUrl = film.getTrailerUrl() != null && !film.getTrailerUrl().isEmpty();
+        boolean isLive = "LIVE".equals(film.getType());
 
-        if (hasEpisodes) {
+        if (isLive && hasVideoUrl) {
+            btnPlayMain.setVisibility(android.view.View.VISIBLE);
+            btnAddFavorite.setVisibility(android.view.View.VISIBLE);
+            tvEpisodesTitle.setVisibility(android.view.View.GONE);
+            rvEpisodes.setVisibility(android.view.View.GONE);
+
+            btnPlayMain.setText("▶  Xem trực tiếp");
+            btnPlayMain.setEnabled(true);
+            btnPlayMain.setOnClickListener(v -> {
+                Intent intent = new Intent(this, PlayerActivity.class);
+                intent.putExtra(PlayerActivity.EXTRA_VIDEO_URL, film.getTrailerUrl());
+                intent.putExtra(PlayerActivity.EXTRA_TITLE, film.getTitle());
+                intent.putExtra(PlayerActivity.EXTRA_BADGE, film.getType());
+                startActivity(intent);
+            });
+        } else if (hasEpisodes) {
             btnPlayMain.setVisibility(android.view.View.VISIBLE);
             btnAddFavorite.setVisibility(android.view.View.VISIBLE);
             tvEpisodesTitle.setVisibility(android.view.View.VISIBLE);

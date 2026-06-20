@@ -127,7 +127,9 @@ public class PlayerActivity extends com.android.cineflow.ui.base.BaseActivity {
             
             String urlToPlay = resolveLocalhostUrl(videoUrl);
             if (urlToPlay == null || urlToPlay.isEmpty()) {
-                urlToPlay = "https://storage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4";
+                Toast.makeText(this, "Video URL is missing", Toast.LENGTH_SHORT).show();
+                finish();
+                return;
             }
             
             MediaItem mediaItem = MediaItem.fromUri(urlToPlay);
@@ -288,7 +290,11 @@ public class PlayerActivity extends com.android.cineflow.ui.base.BaseActivity {
             tvDetailTitle.setText(nextTitle);
             
             if (player != null) {
-                String urlToPlay = resolveLocalhostUrl(videoUrl != null && !videoUrl.isEmpty() ? videoUrl : "https://storage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4");
+                String urlToPlay = resolveLocalhostUrl(videoUrl);
+                if (urlToPlay == null || urlToPlay.isEmpty()) {
+                    Toast.makeText(this, "Next episode video URL is missing", Toast.LENGTH_SHORT).show();
+                    return;
+                }
                 MediaItem mediaItem = MediaItem.fromUri(urlToPlay);
                 player.setMediaItem(mediaItem);
                 player.seekTo(0, 0);
