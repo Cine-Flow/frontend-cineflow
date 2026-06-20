@@ -10,11 +10,12 @@ public class CreateFilmRequestDto {
     private Integer releaseYear;
     private Boolean isPremium;
     private String type;
+    private String videoUrl;
 
     public CreateFilmRequestDto() {}
 
     public CreateFilmRequestDto(String title, String description, String thumbnailUrl,
-                                String trailerUrl, Integer releaseYear, Boolean isPremium, String type) {
+                                String trailerUrl, Integer releaseYear, Boolean isPremium, String type, String videoUrl) {
         this.title = title;
         this.description = description;
         this.thumbnailUrl = thumbnailUrl;
@@ -22,6 +23,7 @@ public class CreateFilmRequestDto {
         this.releaseYear = releaseYear;
         this.isPremium = isPremium;
         this.type = type;
+        this.videoUrl = videoUrl;
     }
 
     public String getTitle() { return title; }
@@ -38,4 +40,6 @@ public class CreateFilmRequestDto {
     public void setIsPremium(Boolean isPremium) { this.isPremium = isPremium; }
     public String getType() { return type; }
     public void setType(String type) { this.type = type; }
+    public String getVideoUrl() { return videoUrl; }
+    public void setVideoUrl(String videoUrl) { this.videoUrl = videoUrl; }
 }

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@drawable/bg_dialog_admin"
@@ -64,49 +65,177 @@
             android:inputType="textMultiLine"
             android:layout_marginBottom="12dp" />
 
+        <!-- Thumbnail URL with Upload button -->
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Thumbnail URL"
+            android:text="Thumbnail (Ảnh bìa)"
             android:textColor="@color/text_secondary"
             android:textSize="12sp" />
 
-        <EditText
-            android:id="@+id/et_thumbnail_url"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="40dp"
-            android:background="@drawable/bg_input_field"
-            android:textColor="@color/text_primary"
-            android:textColorHint="@color/text_tertiary"
-            android:textSize="14sp"
-            android:paddingStart="12dp"
-            android:paddingEnd="12dp"
-            android:hint="https://..."
-            android:singleLine="true"
-            android:inputType="textUri"
-            android:layout_marginBottom="12dp" />
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:layout_marginBottom="12dp">
 
+            <EditText
+                android:id="@+id/et_thumbnail_url"
+                android:layout_width="0dp"
+                android:layout_height="40dp"
+                android:layout_weight="1"
+                android:background="@drawable/bg_input_field"
+                android:textColor="@color/text_primary"
+                android:textColorHint="@color/text_tertiary"
+                android:textSize="12sp"
+                android:paddingStart="12dp"
+                android:paddingEnd="12dp"
+                android:hint="URL or upload..."
+                android:singleLine="true"
+                android:inputType="textUri" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btn_upload_thumbnail"
+                style="@style/Widget.Cineflow.Button.Primary"
+                android:layout_width="wrap_content"
+                android:layout_height="40dp"
+                android:layout_marginStart="8dp"
+                android:text="📁"
+                android:textSize="16sp"
+                android:minWidth="48dp"
+                android:paddingStart="8dp"
+                android:paddingEnd="8dp" />
+        </LinearLayout>
+
+        <!-- Trailer URL with Upload button -->
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Trailer URL"
+            android:text="Trailer (Video giới thiệu)"
             android:textColor="@color/text_secondary"
             android:textSize="12sp" />
 
-        <EditText
-            android:id="@+id/et_trailer_url"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="40dp"
-            android:background="@drawable/bg_input_field"
-            android:textColor="@color/text_primary"
-            android:textColorHint="@color/text_tertiary"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:layout_marginBottom="12dp">
+
+            <EditText
+                android:id="@+id/et_trailer_url"
+                android:layout_width="0dp"
+                android:layout_height="40dp"
+                android:layout_weight="1"
+                android:background="@drawable/bg_input_field"
+                android:textColor="@color/text_primary"
+                android:textColorHint="@color/text_tertiary"
+                android:textSize="12sp"
+                android:paddingStart="12dp"
+                android:paddingEnd="12dp"
+                android:hint="URL or upload..."
+                android:singleLine="true"
+                android:inputType="textUri" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btn_upload_trailer"
+                style="@style/Widget.Cineflow.Button.Primary"
+                android:layout_width="wrap_content"
+                android:layout_height="40dp"
+                android:layout_marginStart="8dp"
+                android:text="📁"
+                android:textSize="16sp"
+                android:minWidth="48dp"
+                android:paddingStart="8dp"
+                android:paddingEnd="8dp" />
+        </LinearLayout>
+
+        <!-- Video URL (only for SINGLE type) -->
+        <LinearLayout
+            android:id="@+id/layout_video_url"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:visibility="gone">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Video phim (File phim chính)"
+                android:textColor="@color/text_secondary"
+                android:textSize="12sp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:layout_marginBottom="12dp">
+
+                <EditText
+                    android:id="@+id/et_video_url"
+                    android:layout_width="0dp"
+                    android:layout_height="40dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/bg_input_field"
+                    android:textColor="@color/text_primary"
+                    android:textColorHint="@color/text_tertiary"
+                    android:textSize="12sp"
+                    android:paddingStart="12dp"
+                    android:paddingEnd="12dp"
+                    android:hint="Upload video phim..."
+                    android:singleLine="true"
+                    android:inputType="textUri" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btn_upload_video"
+                    style="@style/Widget.Cineflow.Button.Primary"
+                    android:layout_width="wrap_content"
+                    android:layout_height="40dp"
+                    android:layout_marginStart="8dp"
+                    android:text="📁"
+                    android:textSize="16sp"
+                    android:minWidth="48dp"
+                    android:paddingStart="8dp"
+                    android:paddingEnd="8dp" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <!-- Manage Episodes button (only for SERIES type) -->
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn_manage_episodes"
+            style="@style/Widget.Cineflow.Button.Secondary"
+            android:layout_width="match_parent"
+            android:layout_height="44dp"
+            android:text="📋 Quản lý tập phim"
             android:textSize="14sp"
-            android:paddingStart="12dp"
-            android:paddingEnd="12dp"
-            android:hint="https://..."
-            android:singleLine="true"
-            android:inputType="textUri"
-            android:layout_marginBottom="12dp" />
+            android:layout_marginBottom="12dp"
+            android:visibility="gone" />
+
+        <!-- Upload progress -->
+        <LinearLayout
+            android:id="@+id/layout_upload_progress"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:layout_marginBottom="12dp"
+            android:visibility="gone">
+
+            <ProgressBar
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_marginEnd="8dp" />
+
+            <TextView
+                android:id="@+id/tv_upload_status"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Đang tải lên..."
+                android:textColor="@color/text_secondary"
+                android:textSize="13sp" />
+        </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -186,8 +315,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:thumbTint="@color/text_primary"
-                app:trackTint="@color/brand_primary"
-                xmlns:app="http://schemas.android.com/apk/res-auto" />
+                app:trackTint="@color/brand_primary" />
         </LinearLayout>
 
         <LinearLayout

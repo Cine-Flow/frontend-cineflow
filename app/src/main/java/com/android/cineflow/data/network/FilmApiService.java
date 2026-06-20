@@ -4,7 +4,9 @@ import com.android.cineflow.data.network.dto.ApiResponseDto;
 import com.android.cineflow.data.network.dto.ChangePasswordRequestDto;
 import com.android.cineflow.data.network.dto.CommentDto;
 import com.android.cineflow.data.network.dto.CreateCommentRequestDto;
+import com.android.cineflow.data.network.dto.CreateEpisodeRequestDto;
 import com.android.cineflow.data.network.dto.CreateFilmRequestDto;
+import com.android.cineflow.data.network.dto.EpisodeDto;
 import com.android.cineflow.data.network.dto.FavoriteDto;
 import com.android.cineflow.data.network.dto.FilmCommentDto;
 import com.android.cineflow.data.network.dto.FilmDetailDto;
@@ -28,6 +30,8 @@ import com.android.cineflow.data.network.dto.UserProfileDto;
 import com.android.cineflow.data.network.dto.WatchHistoryDto;
 
 import java.util.List;
+
+import okhttp3.MultipartBody;
 
 public interface FilmApiService {
 
@@ -58,7 +62,7 @@ public interface FilmApiService {
     Call<ApiResponseDto<UserProfileDto>> updateProfile(UpdateProfileRequestDto request);
 
     Call<ApiResponseDto<Void>> changePassword(ChangePasswordRequestDto request);
-    
+
     Call<ApiResponseDto<List<FilmDto>>> getFilmsByType(String type);
 
     Call<ApiResponseDto<ShortsResponseDto>> getShorts();
@@ -72,7 +76,6 @@ public interface FilmApiService {
     Call<ApiResponseDto<CommentDto>> postShortComment(String id, CreateCommentRequestDto request);
 
     Call<ApiResponseDto<List<FilmCommentDto>>> getFilmComments(Integer filmId);
-
 
     Call<ApiResponseDto<FilmCommentDto>> postFilmComment(Integer filmId, CreateCommentRequestDto request);
 
@@ -97,4 +100,12 @@ public interface FilmApiService {
     Call<ApiResponseDto<FilmDetailDto>> updateFilm(Integer id, UpdateFilmRequestDto request);
 
     Call<ApiResponseDto<Void>> deleteFilm(Integer id);
+
+    Call<ApiResponseDto<EpisodeDto>> createEpisode(int filmId, CreateEpisodeRequestDto request);
+
+    Call<ApiResponseDto<EpisodeDto>> updateEpisode(int episodeId, CreateEpisodeRequestDto request);
+
+    Call<ApiResponseDto<Void>> deleteEpisode(int episodeId);
+
+    Call<ApiResponseDto<String>> uploadFile(MultipartBody.Part file, String folder);
 }

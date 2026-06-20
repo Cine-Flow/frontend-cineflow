@@ -40,7 +40,7 @@ public class ApiClient {
                     .build();
 
             requestQueue = Volley.newRequestQueue(appContext, new OkHttp3Stack(client));
-            filmApiService = new VolleyFilmApiServiceImpl(requestQueue, BASE_URL);
+            filmApiService = new VolleyFilmApiServiceImpl(requestQueue, BASE_URL, client);
         }
         return filmApiService;
     }
@@ -59,7 +59,7 @@ public class ApiClient {
                     .build();
 
             publicRequestQueue = Volley.newRequestQueue(appContext, new OkHttp3Stack(client));
-            publicFilmApiService = new VolleyFilmApiServiceImpl(publicRequestQueue, BASE_URL);
+            publicFilmApiService = new VolleyFilmApiServiceImpl(publicRequestQueue, BASE_URL, client);
         }
         return publicFilmApiService;
     }

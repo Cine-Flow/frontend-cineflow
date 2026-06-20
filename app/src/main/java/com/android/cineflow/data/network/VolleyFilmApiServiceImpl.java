@@ -6,7 +6,9 @@ import com.android.cineflow.data.network.dto.ApiResponseDto;
 import com.android.cineflow.data.network.dto.ChangePasswordRequestDto;
 import com.android.cineflow.data.network.dto.CommentDto;
 import com.android.cineflow.data.network.dto.CreateCommentRequestDto;
+import com.android.cineflow.data.network.dto.CreateEpisodeRequestDto;
 import com.android.cineflow.data.network.dto.CreateFilmRequestDto;
+import com.android.cineflow.data.network.dto.EpisodeDto;
 import com.android.cineflow.data.network.dto.FavoriteDto;
 import com.android.cineflow.data.network.dto.FilmCommentDto;
 import com.android.cineflow.data.network.dto.FilmDetailDto;
@@ -36,14 +38,19 @@ import com.google.gson.reflect.TypeToken;
 import java.lang.reflect.Type;
 import java.util.List;
 
+import okhttp3.MultipartBody;
+import okhttp3.OkHttpClient;
+
 public class VolleyFilmApiServiceImpl implements FilmApiService {
     private final RequestQueue requestQueue;
     private final String baseUrl;
+    private final OkHttpClient okHttpClient;
     private final Gson gson = new Gson();
 
-    public VolleyFilmApiServiceImpl(RequestQueue requestQueue, String baseUrl) {
+    public VolleyFilmApiServiceImpl(RequestQueue requestQueue, String baseUrl, OkHttpClient okHttpClient) {
         this.requestQueue = requestQueue;
         this.baseUrl = baseUrl;
+        this.okHttpClient = okHttpClient;
     }
 
     private <T> Call<T> createCall(String path, int method, Object body, Type responseType) {
@@ -263,5 +270,33 @@ public class VolleyFilmApiServiceImpl implements FilmApiService {
     public Call<ApiResponseDto<Void>> deleteFilm(Integer id) {
         return createCall("admin/films/" + id, Request.Method.DELETE, null,
                 new TypeToken<ApiResponseDto<Void>>(){}.getType());
+    }
+
+    @Override
+    public Call<ApiResponseDto<EpisodeDto>> createEpisode(int filmId, CreateEpisodeRequestDto request) {
+        return createCall("admin/films/" + filmId + "/episodes", Request.Method.POST, request,
+                new TypeToken<ApiResponseDto<EpisodeDto>>(){}.getType());
+    }
+
+    @Override
+    public Call<ApiResponseDto<EpisodeDto>> updateEpisode(int episodeId, CreateEpisodeRequestDto request) {
+        return createCall("admin/episodes/" + episodeId, Request.Method.PUT, request,
+                new TypeToken<ApiResponseDto<EpisodeDto>>(){}.getType());
+    }
+
+    @Override
+    public Call<ApiResponseDto<Void>> deleteEpisode(int episodeId) {
+        return createCall("admin/episodes/" + episodeId, Request.Method.DELETE, null,
+                new TypeToken<ApiResponseDto<Void>>(){}.getType());
+    }
+
+    @Override
+    public Call<ApiResponseDto<String>> uploadFile(MultipartBody.Part file, String folder) {
+        String path = "files/upload";
+        if (folder != null && !folder.isEmpty()) {
+            path += "?folder=" + Uri.encode(folder);
+        }
+        return new OkHttpUploadCall<>(okHttpClient, baseUrl + path, file,
+                new TypeToken<ApiResponseDto<String>>(){}.getType());
     }
 }
