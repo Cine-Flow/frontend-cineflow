@@ -268,9 +268,10 @@ public class PremierLeagueAdapter extends BaseAdapter {
             tvCenter.setTextColor(Color.parseColor("#FFFFFF"));
             if (PremierLeagueSection.MODE_FINISHED.equals(listMode)) {
                 // Results section: always show score
-                String score = (m.getHomeScore() != null && !m.getHomeScore().isEmpty())
+                String score = (m.getHomeScore() != null && !m.getHomeScore().isEmpty()
+                        && m.getAwayScore() != null && !m.getAwayScore().isEmpty())
                         ? m.getHomeScore() + " - " + m.getAwayScore()
-                        : "0 - 0";
+                        : "-";
                 tvCenter.setText(score);
                 tvCenter.setBackgroundColor(Color.parseColor("#2A2A2A")); // Premium Grey Box
             } else {
