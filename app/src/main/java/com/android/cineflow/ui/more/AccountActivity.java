@@ -3,6 +3,7 @@ package com.android.cineflow.ui.more;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Patterns;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -417,14 +418,17 @@ public class AccountActivity extends com.android.cineflow.ui.base.BaseActivity {
     private void showEditProfileDialog() {
         View dialogView = getLayoutInflater().inflate(R.layout.dialog_edit_profile, null);
         EditText etFullName = dialogView.findViewById(R.id.et_full_name);
+        EditText etEmail = dialogView.findViewById(R.id.et_email);
         EditText etPhoneNumber = dialogView.findViewById(R.id.et_phone_number);
 
         // Pre-fill the current display name and phone number
         if (currentProfile != null) {
             etFullName.setText(currentProfile.getFullName() != null ? currentProfile.getFullName() : "");
+            etEmail.setText(currentProfile.getEmail() != null ? currentProfile.getEmail() : "");
             etPhoneNumber.setText(currentProfile.getPhoneNumber() != null ? currentProfile.getPhoneNumber() : "");
         } else {
             etFullName.setText(tvName.getText().toString());
+            etEmail.setText(tvEmail.getText().toString());
         }
         etFullName.setSelection(etFullName.getText().length());
 
@@ -440,19 +444,28 @@ public class AccountActivity extends com.android.cineflow.ui.base.BaseActivity {
         dialogView.findViewById(R.id.btn_cancel).setOnClickListener(v -> dialog.dismiss());
         dialogView.findViewById(R.id.btn_save).setOnClickListener(v -> {
             String newName = etFullName.getText().toString().trim();
+            String newEmail = etEmail.getText().toString().trim();
             String newPhone = etPhoneNumber.getText().toString().trim();
             if (newName.isEmpty()) {
                 Toast.makeText(this, R.string.toast_name_required, Toast.LENGTH_SHORT).show();
                 return;
             }
-            performUpdateProfileApi(newName, newPhone, dialog);
+            if (newEmail.isEmpty()) {
+                Toast.makeText(this, R.string.toast_email_required, Toast.LENGTH_SHORT).show();
+                return;
+            }
+            if (!Patterns.EMAIL_ADDRESS.matcher(newEmail).matches()) {
+                Toast.makeText(this, R.string.toast_email_invalid, Toast.LENGTH_SHORT).show();
+                return;
+            }
+            performUpdateProfileApi(newName, newEmail, newPhone, dialog);
         });
 
         dialog.show();
     }
 
-    private void performUpdateProfileApi(String newName, String newPhone, AlertDialog dialog) {
-        UpdateProfileRequestDto request = new UpdateProfileRequestDto(newName, newPhone);
+    private void performUpdateProfileApi(String newName, String newEmail, String newPhone, AlertDialog dialog) {
+        UpdateProfileRequestDto request = new UpdateProfileRequestDto(newName, newEmail, newPhone);
         ApiClient.getFilmApiService().updateProfile(request).enqueue(new Callback<ApiResponseDto<UserProfileDto>>() {
             @Override
             public void onResponse(Call<ApiResponseDto<UserProfileDto>> call, Response<ApiResponseDto<UserProfileDto>> response) {
