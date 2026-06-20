@@ -1,18 +1,21 @@
 package com.android.cineflow.ui.shorts;
 
 import android.content.Intent;
-import android.graphics.Rect;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.AbsListView;
 import android.widget.ArrayAdapter;
+import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
+
 
 import androidx.lifecycle.ViewModelProvider;
 import androidx.media3.common.MediaItem;
 import androidx.media3.exoplayer.ExoPlayer;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.viewpager2.widget.ViewPager2;
 
 import com.android.cineflow.R;
 import com.android.cineflow.data.model.ShortVideo;
@@ -20,14 +23,13 @@ import com.android.cineflow.ui.base.BaseFragment;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public class ShortsFragment extends BaseFragment implements ShortsAdapter.OnShortInteractionListener {
 
     private static final String TAG = "ShortsFragment";
 
-    private ListView lvShorts;
+    private ViewPager2 viewPagerShorts;
     private ShortsAdapter adapter;
     private ShortsViewModel viewModel;
 
@@ -42,29 +44,25 @@ public class ShortsFragment extends BaseFragment implements ShortsAdapter.OnShor
 
     @Override
     protected void initViews(View view) {
-        lvShorts = view.findViewById(R.id.lv_shorts);
+        viewPagerShorts = view.findViewById(R.id.view_pager_shorts);
         adapter = new ShortsAdapter(requireContext(), new ArrayList<>());
         adapter.setListener(this);
-        lvShorts.setAdapter(adapter);
+        viewPagerShorts.setAdapter(adapter);
 
         player = new ExoPlayer.Builder(requireContext()).build();
         player.setRepeatMode(ExoPlayer.REPEAT_MODE_ONE);
 
-        lvShorts.setOnScrollListener(new AbsListView.OnScrollListener() {
+        viewPagerShorts.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
             @Override
-            public void onScrollStateChanged(AbsListView view, int scrollState) {
-                if (scrollState == SCROLL_STATE_IDLE) {
-                    playVisibleVideo();
-                }
-            }
+            public void onPageSelected(int position) {
+                super.onPageSelected(position);
+                currentPlayingPosition = position;
+                viewPagerShorts.post(() -> attachPlayerToItem(position));
 
-            @Override
-            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-                if (totalItemCount > 0
-                        && firstVisibleItem + visibleItemCount >= totalItemCount
-                        && !isLoadingMore) {
+                // Check if we need to load more items
+                if (adapter != null && position >= adapter.getItemCount() - 2 && !isLoadingMore) {
                     isLoadingMore = true;
-                    Log.d(TAG, "Load more triggered");
+                    Log.d(TAG, "Load more triggered at page: " + position);
                     viewModel.loadMore();
                 }
             }
@@ -78,7 +76,10 @@ public class ShortsFragment extends BaseFragment implements ShortsAdapter.OnShor
         viewModel.shortVideos.observe(getViewLifecycleOwner(), shortVideos -> {
             adapter.setItems(shortVideos);
             isLoadingMore = false;
-            lvShorts.post(() -> playVisibleVideo());
+            if (currentPlayingPosition == -1 && shortVideos != null && !shortVideos.isEmpty()) {
+                currentPlayingPosition = 0;
+                viewPagerShorts.post(() -> attachPlayerToItem(0));
+            }
         });
 
         viewModel.error.observe(getViewLifecycleOwner(), errorMsg -> {
@@ -88,44 +89,18 @@ public class ShortsFragment extends BaseFragment implements ShortsAdapter.OnShor
         });
     }
 
-    private void playVisibleVideo() {
-        int firstVisiblePosition = lvShorts.getFirstVisiblePosition();
-        int lastVisiblePosition = lvShorts.getLastVisiblePosition();
-
-        int targetPosition = -1;
-        float maxVisibility = 0f;
-
-        for (int i = firstVisiblePosition; i <= lastVisiblePosition; i++) {
-            View child = lvShorts.getChildAt(i - firstVisiblePosition);
-            if (child != null) {
-                float visibility = getVisibilityPercentage(child);
-                if (visibility > maxVisibility) {
-                    maxVisibility = visibility;
-                    targetPosition = i;
-                }
-            }
-        }
-
-        if (targetPosition != -1 && targetPosition != currentPlayingPosition) {
-            currentPlayingPosition = targetPosition;
-            attachPlayerToItem(targetPosition);
-        }
-    }
-
-    private float getVisibilityPercentage(View view) {
-        Rect rect = new Rect();
-        if (!view.getGlobalVisibleRect(rect)) {
-            return 0f;
-        }
-        int visibleHeight = rect.height();
-        return (float) visibleHeight / view.getHeight();
-    }
-
     private void attachPlayerToItem(int position) {
-        View child = lvShorts.getChildAt(position - lvShorts.getFirstVisiblePosition());
-        if (child != null && child.getTag() instanceof ShortsAdapter.ViewHolder) {
-            ShortsAdapter.ViewHolder holder = (ShortsAdapter.ViewHolder) child.getTag();
-            ShortVideo video = (ShortVideo) adapter.getItem(position);
+        if (viewPagerShorts == null || adapter == null || adapter.getItemCount() == 0 || position < 0 || position >= adapter.getItemCount()) {
+            return;
+        }
+
+        RecyclerView recyclerView = (RecyclerView) viewPagerShorts.getChildAt(0);
+        if (recyclerView == null) return;
+
+        RecyclerView.ViewHolder viewHolder = recyclerView.findViewHolderForAdapterPosition(position);
+        if (viewHolder instanceof ShortsAdapter.ViewHolder) {
+            ShortsAdapter.ViewHolder holder = (ShortsAdapter.ViewHolder) viewHolder;
+            ShortVideo video = adapter.getItem(position);
 
             player.stop();
             player.clearMediaItems();
@@ -137,6 +112,13 @@ public class ShortsFragment extends BaseFragment implements ShortsAdapter.OnShor
             player.setMediaItem(mediaItem);
             player.prepare();
             player.play();
+        } else {
+            // ViewHolder is not yet bound/created by RecyclerView, retry after short delay
+            viewPagerShorts.postDelayed(() -> {
+                if (currentPlayingPosition == position) {
+                    attachPlayerToItem(position);
+                }
+            }, 100);
         }
     }
 
@@ -153,25 +135,25 @@ public class ShortsFragment extends BaseFragment implements ShortsAdapter.OnShor
 
     @Override
     public void onLikeClick(int position) {
-        ShortVideo video = (ShortVideo) adapter.getItem(position);
+        ShortVideo video = adapter.getItem(position);
         boolean newState = !video.isLiked();
-        
+
         video.setLiked(newState);
         video.setLikeCount(video.getLikeCount() + (newState ? 1 : -1));
-        
-        adapter.notifyDataSetChanged();
+
+        adapter.notifyItemChanged(position);
         viewModel.toggleLike(video, newState);
     }
 
     @Override
     public void onCommentClick(int position) {
-        ShortVideo video = (ShortVideo) adapter.getItem(position);
+        ShortVideo video = adapter.getItem(position);
         showCommentsDialog(video);
     }
 
     @Override
     public void onShareClick(int position) {
-        ShortVideo video = (ShortVideo) adapter.getItem(position);
+        ShortVideo video = adapter.getItem(position);
         Intent shareIntent = new Intent(Intent.ACTION_SEND);
         shareIntent.setType("text/plain");
         shareIntent.putExtra(Intent.EXTRA_TEXT,
@@ -184,31 +166,79 @@ public class ShortsFragment extends BaseFragment implements ShortsAdapter.OnShor
                 .inflate(R.layout.dialog_comments, null);
 
         ListView lvComments = dialogView.findViewById(R.id.lv_comments);
-        
-        // Show dialog first with loading state or empty
+        View llCommentInput = dialogView.findViewById(R.id.ll_comment_input_shorts);
+        EditText etCommentInput = dialogView.findViewById(R.id.et_comment_input_shorts);
+        View btnSendComment = dialogView.findViewById(R.id.btn_send_comment_shorts);
+        TextView tvCommentLoginHint = dialogView.findViewById(R.id.tv_comment_login_hint_shorts);
+
         androidx.appcompat.app.AlertDialog dialog = new MaterialAlertDialogBuilder(requireContext())
                 .setView(dialogView)
                 .show();
 
-        viewModel.getComments(video.getId()).observe(getViewLifecycleOwner(), commentsDto -> {
-            List<String> commentStrings = new ArrayList<>();
-            if (commentsDto != null && !commentsDto.isEmpty()) {
-                for (com.android.cineflow.data.network.dto.CommentDto c : commentsDto) {
-                    commentStrings.add(c.getAuthorName() + ": " + c.getContent());
-                }
-            } else {
-                commentStrings.add("Chưa có bình luận nào.");
-            }
-            
-            ArrayAdapter<String> commentAdapter = new ArrayAdapter<>(
-                    requireContext(),
-                    R.layout.item_comment,
-                    R.id.tv_comment_content,
-                    commentStrings);
+        com.android.cineflow.data.auth.AuthManager auth = com.android.cineflow.data.auth.AuthManager.getInstance();
+        boolean loggedIn = auth != null && auth.isLoggedIn();
 
-            lvComments.setAdapter(commentAdapter);
+        if (loggedIn) {
+            llCommentInput.setVisibility(View.VISIBLE);
+            tvCommentLoginHint.setVisibility(View.GONE);
+        } else {
+            llCommentInput.setVisibility(View.GONE);
+            tvCommentLoginHint.setVisibility(View.VISIBLE);
+            tvCommentLoginHint.setOnClickListener(v -> {
+                dialog.dismiss();
+                startActivity(new Intent(requireContext(), com.android.cineflow.ui.auth.LoginActivity.class));
+            });
+        }
+
+        List<String> commentStrings = new ArrayList<>();
+        ArrayAdapter<String> commentAdapter = new ArrayAdapter<>(
+                requireContext(),
+                R.layout.item_comment,
+                R.id.tv_comment_content,
+                commentStrings);
+        lvComments.setAdapter(commentAdapter);
+
+        // Define runnable to load and refresh comments
+        Runnable loadComments = new Runnable() {
+            @Override
+            public void run() {
+                viewModel.getComments(video.getId()).observe(getViewLifecycleOwner(), commentsDto -> {
+                    commentStrings.clear();
+                    if (commentsDto != null && !commentsDto.isEmpty()) {
+                        for (com.android.cineflow.data.network.dto.CommentDto c : commentsDto) {
+                            String author = c.getAuthorName() != null ? c.getAuthorName() : "Người dùng";
+                            commentStrings.add(author + ": " + c.getContent());
+                        }
+                    } else {
+                        commentStrings.add("Chưa có bình luận nào.");
+                    }
+                    commentAdapter.notifyDataSetChanged();
+                });
+            }
+        };
+
+        // Load initially
+        loadComments.run();
+
+        btnSendComment.setOnClickListener(v -> {
+            String text = etCommentInput.getText().toString().trim();
+            if (text.isEmpty()) {
+                etCommentInput.setError("Nội dung không được để trống");
+                return;
+            }
+            btnSendComment.setEnabled(false);
+            viewModel.postComment(video.getId(), text).observe(getViewLifecycleOwner(), newComment -> {
+                btnSendComment.setEnabled(true);
+                if (newComment != null) {
+                    etCommentInput.setText("");
+                    loadComments.run();
+                } else {
+                    Toast.makeText(requireContext(), "Không thể gửi bình luận", Toast.LENGTH_SHORT).show();
+                }
+            });
         });
     }
+
 
     @Override
     public void onResume() {

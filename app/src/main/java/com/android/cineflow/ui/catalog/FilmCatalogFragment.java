@@ -27,9 +27,9 @@ import com.android.cineflow.ui.detail.FilmDetailActivity;
 import java.util.ArrayList;
 import java.util.List;
 
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
+import com.android.cineflow.data.network.Call;
+import com.android.cineflow.data.network.Callback;
+import com.android.cineflow.data.network.Response;
 
 /**
  * Generic catalog fragment used by Series and Movies tabs.
@@ -78,8 +78,8 @@ public abstract class FilmCatalogFragment extends BaseFragment {
         llFilters    = view.findViewById(R.id.ll_catalog_filters);
         headerView   = view.findViewById(R.id.header_catalog);
 
-        swipeRefresh.setColorSchemeColors(0xFFE50914);
-        swipeRefresh.setProgressBackgroundColorSchemeColor(0xFF1A1A1A);
+        swipeRefresh.setColorSchemeResources(R.color.brand_primary);
+        swipeRefresh.setProgressBackgroundColorSchemeResource(R.color.surface_secondary);
 
         tvTitle.setText(getCatalogTitle());
 

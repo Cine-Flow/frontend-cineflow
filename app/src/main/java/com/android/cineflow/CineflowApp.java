@@ -13,6 +13,7 @@ public class CineflowApp extends Application {
         AuthManager.init(this);
         SettingsManager.init(this);
         OfflineDownloadManager.init(this);
+        com.android.cineflow.data.network.ApiClient.init(this);
         androidx.appcompat.app.AppCompatDelegate.setDefaultNightMode(SettingsManager.getInstance().getThemeMode());
     }
 }

@@ -39,9 +39,9 @@ public class HomeFragment extends BaseFragment {
         progressLoading = view.findViewById(R.id.progress_loading);
         tvError        = view.findViewById(R.id.tv_error);
 
-        // Style the swipe-refresh spinner to match the dark theme
-        swipeRefresh.setColorSchemeColors(0xFFE50914); // FPT Play red
-        swipeRefresh.setProgressBackgroundColorSchemeColor(0xFF1A1A1A);
+        // Style the swipe-refresh spinner to match the theme dynamically
+        swipeRefresh.setColorSchemeResources(R.color.brand_primary);
+        swipeRefresh.setProgressBackgroundColorSchemeResource(R.color.surface_secondary);
 
         homeAdapter = new HomeAdapter(requireContext(), new ArrayList<>());
 

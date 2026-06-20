@@ -23,9 +23,9 @@ import com.android.cineflow.data.settings.SettingsManager;
 import java.io.File;
 import java.util.Locale;
 
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
+import com.android.cineflow.data.network.Call;
+import com.android.cineflow.data.network.Callback;
+import com.android.cineflow.data.network.Response;
 
 public class AccountActivity extends AppCompatActivity {
 

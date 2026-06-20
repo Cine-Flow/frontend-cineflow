@@ -4,12 +4,10 @@
     android:layout_height="match_parent"
     android:background="@color/surface_primary">
 
-    <ListView
-        android:id="@+id/lv_shorts"
+    <androidx.viewpager2.widget.ViewPager2
+        android:id="@+id/view_pager_shorts"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:divider="@null"
-        android:dividerHeight="0dp"
-        android:scrollbars="none" />
+        android:orientation="vertical" />
 
 </FrameLayout>

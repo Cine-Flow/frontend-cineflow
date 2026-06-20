@@ -14,9 +14,9 @@ import com.android.cineflow.data.network.dto.ShortsResponseDto;
 import java.util.ArrayList;
 import java.util.List;
 
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
+import com.android.cineflow.data.network.Call;
+import com.android.cineflow.data.network.Callback;
+import com.android.cineflow.data.network.Response;
 
 import com.android.cineflow.data.network.dto.CommentDto;
 
@@ -127,21 +127,30 @@ public class ShortsRepository {
         ApiClient.getFilmApiService().getShortComments(id).enqueue(callback);
     }
 
+    public void postShortComment(String id, String content, Callback<ApiResponseDto<CommentDto>> callback) {
+        ApiClient.getFilmApiService().postShortComment(id, new com.android.cineflow.data.network.dto.CreateCommentRequestDto(content))
+                .enqueue(callback);
+    }
+
     // ── Mapping helpers ──────────────────────────────────────────────────────
 
     private List<ShortVideo> toShortVideos(List<ShortsDto> dtoList) {
         List<ShortVideo> result = new ArrayList<>();
         if (dtoList == null) return result;
         for (ShortsDto dto : dtoList) {
-            result.add(new ShortVideo(
+            ShortVideo sv = new ShortVideo(
                     String.valueOf(dto.getId()),
                     dto.getVideoUrl(),
                     dto.getTitle(),
                     dto.getUploader(),
                     dto.getThumbnailUrl(),
                     dto.getDescription(),
-                    dto.getViewCount()));
+                    dto.getViewCount());
+            sv.setLikeCount(dto.getLikeCount());
+            sv.setLiked(dto.getLiked());
+            result.add(sv);
         }
         return result;
     }
 }
+

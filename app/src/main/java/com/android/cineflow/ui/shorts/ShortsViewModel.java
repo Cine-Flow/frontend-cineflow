@@ -11,9 +11,9 @@ import com.android.cineflow.data.repository.ShortsRepository;
 
 import java.util.List;
 
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
+import com.android.cineflow.data.network.Call;
+import com.android.cineflow.data.network.Callback;
+import com.android.cineflow.data.network.Response;
 
 public class ShortsViewModel extends ViewModel {
 
@@ -75,4 +75,25 @@ public class ShortsViewModel extends ViewModel {
         });
         return comments;
     }
+
+    public LiveData<CommentDto> postComment(String videoId, String content) {
+        MutableLiveData<CommentDto> newComment = new MutableLiveData<>();
+        repository.postShortComment(videoId, content, new Callback<ApiResponseDto<CommentDto>>() {
+            @Override
+            public void onResponse(Call<ApiResponseDto<CommentDto>> call, Response<ApiResponseDto<CommentDto>> response) {
+                if (response.isSuccessful() && response.body() != null && response.body().getData() != null) {
+                    newComment.postValue(response.body().getData());
+                } else {
+                    newComment.postValue(null);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ApiResponseDto<CommentDto>> call, Throwable t) {
+                newComment.postValue(null);
+            }
+        });
+        return newComment;
+    }
 }
+

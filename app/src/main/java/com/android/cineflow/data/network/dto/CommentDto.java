@@ -1,10 +1,17 @@
 package com.android.cineflow.data.network.dto;
 
+import com.google.gson.annotations.SerializedName;
+
 public class CommentDto {
     private String id;
     private String content;
+
+    @SerializedName("username")
     private String authorName;
+
+    @SerializedName("avatarUrl")
     private String authorAvatar;
+
 
     public String getId() { return id; }
     public void setId(String id) { this.id = id; }

@@ -58,17 +58,28 @@ public class BannerAdapter extends RecyclerView.Adapter<BannerAdapter.BannerView
         holder.itemView.setOnClickListener(v -> {
             if (listener != null) listener.onBannerClick(card);
         });
-        
-        // Adjust layout params for banner style
-        ViewGroup.LayoutParams params = holder.ivThumbnail.getLayoutParams();
-        params.width = (int) (context.getResources().getDisplayMetrics().widthPixels * 0.85); // 85% width
-        params.height = 200 * (context.getResources().getDisplayMetrics().densityDpi / 160); // approx 200dp
-        holder.ivThumbnail.setLayoutParams(params);
-        
-        // Add margins
-        ViewGroup.MarginLayoutParams marginParams = (ViewGroup.MarginLayoutParams) holder.itemView.getLayoutParams();
-        marginParams.setMargins(16, 0, 16, 0);
-        holder.itemView.setLayoutParams(marginParams);
+
+        // Restore root itemView dimensions to MATCH_PARENT to satisfy ViewPager2 strict checks
+        ViewGroup.LayoutParams rootParams = holder.itemView.getLayoutParams();
+        if (rootParams != null) {
+            rootParams.width = ViewGroup.LayoutParams.MATCH_PARENT;
+            rootParams.height = ViewGroup.LayoutParams.MATCH_PARENT;
+            if (rootParams instanceof ViewGroup.MarginLayoutParams) {
+                ((ViewGroup.MarginLayoutParams) rootParams).setMargins(16, 0, 16, 0);
+            }
+            holder.itemView.setLayoutParams(rootParams);
+        }
+
+        // Adjust layout params for the inner card container instead of root itemView or ImageView
+        View cardContainer = holder.itemView.findViewById(R.id.banner_card_container);
+        if (cardContainer != null) {
+            ViewGroup.LayoutParams cardParams = cardContainer.getLayoutParams();
+            if (cardParams != null) {
+                cardParams.width = (int) (context.getResources().getDisplayMetrics().widthPixels * 0.85); // 85% width
+                cardParams.height = (int) (200 * (context.getResources().getDisplayMetrics().densityDpi / 160f)); // approx 200dp height
+                cardContainer.setLayoutParams(cardParams);
+            }
+        }
     }
 
     @Override

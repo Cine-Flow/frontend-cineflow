@@ -13,9 +13,9 @@ import com.android.cineflow.data.network.ApiClient;
 import com.android.cineflow.data.network.dto.ApiResponseDto;
 import com.android.cineflow.data.network.dto.UserAnalyticsDto;
 
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
+import com.android.cineflow.data.network.Call;
+import com.android.cineflow.data.network.Callback;
+import com.android.cineflow.data.network.Response;
 
 public class UserAnalyticsActivity extends AppCompatActivity {
 

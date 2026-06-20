@@ -34,9 +34,9 @@ import com.android.cineflow.data.settings.SettingsManager;
 
 import java.util.List;
 
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
+import com.android.cineflow.data.network.Call;
+import com.android.cineflow.data.network.Callback;
+import com.android.cineflow.data.network.Response;
 
 @UnstableApi
 public class PlayerActivity extends AppCompatActivity {
@@ -158,10 +158,10 @@ public class PlayerActivity extends AppCompatActivity {
         if (episodeId < 0 || auth == null || !auth.isLoggedIn()) return;
         ApiClient.getFilmApiService().updateWatchHistory(
                 episodeId, new UpdateWatchHistoryRequestDto((int) (playbackPosition / 1000L)))
-                .enqueue(new retrofit2.Callback<>() {
-                    @Override public void onResponse(retrofit2.Call<com.android.cineflow.data.network.dto.ApiResponseDto<com.android.cineflow.data.network.dto.WatchHistoryDto>> call,
-                                                     retrofit2.Response<com.android.cineflow.data.network.dto.ApiResponseDto<com.android.cineflow.data.network.dto.WatchHistoryDto>> response) {}
-                    @Override public void onFailure(retrofit2.Call<com.android.cineflow.data.network.dto.ApiResponseDto<com.android.cineflow.data.network.dto.WatchHistoryDto>> call, Throwable t) {
+                .enqueue(new com.android.cineflow.data.network.Callback<>() {
+                    @Override public void onResponse(com.android.cineflow.data.network.Call<com.android.cineflow.data.network.dto.ApiResponseDto<com.android.cineflow.data.network.dto.WatchHistoryDto>> call,
+                                                     com.android.cineflow.data.network.Response<com.android.cineflow.data.network.dto.ApiResponseDto<com.android.cineflow.data.network.dto.WatchHistoryDto>> response) {}
+                    @Override public void onFailure(com.android.cineflow.data.network.Call<com.android.cineflow.data.network.dto.ApiResponseDto<com.android.cineflow.data.network.dto.WatchHistoryDto>> call, Throwable t) {
                         android.util.Log.w("PlayerActivity", "Không thể lưu tiến độ xem", t);
                     }
                 });

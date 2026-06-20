@@ -1,158 +1,100 @@
 package com.android.cineflow.data.network;
 
 import com.android.cineflow.data.network.dto.ApiResponseDto;
+import com.android.cineflow.data.network.dto.ChangePasswordRequestDto;
+import com.android.cineflow.data.network.dto.CommentDto;
+import com.android.cineflow.data.network.dto.CreateCommentRequestDto;
 import com.android.cineflow.data.network.dto.CreateFilmRequestDto;
-import com.android.cineflow.data.network.dto.FilmDetailDto;
-import com.android.cineflow.data.network.dto.ForgotPasswordRequestDto;
 import com.android.cineflow.data.network.dto.FavoriteDto;
+import com.android.cineflow.data.network.dto.FilmCommentDto;
+import com.android.cineflow.data.network.dto.FilmDetailDto;
+import com.android.cineflow.data.network.dto.FilmDto;
 import com.android.cineflow.data.network.dto.FootballMatchDto;
 import com.android.cineflow.data.network.dto.FootballStandingDto;
+import com.android.cineflow.data.network.dto.ForgotPasswordRequestDto;
 import com.android.cineflow.data.network.dto.HomeFilmsDto;
 import com.android.cineflow.data.network.dto.LoginRequestDto;
 import com.android.cineflow.data.network.dto.LoginResponseDto;
 import com.android.cineflow.data.network.dto.PagedResponseDto;
 import com.android.cineflow.data.network.dto.PremierLeagueHomeDto;
 import com.android.cineflow.data.network.dto.RegisterRequestDto;
+import com.android.cineflow.data.network.dto.ShortsResponseDto;
+import com.android.cineflow.data.network.dto.TokenRefreshRequestDto;
 import com.android.cineflow.data.network.dto.UpdateFilmRequestDto;
-import com.android.cineflow.data.network.dto.UpdateWatchHistoryRequestDto;
 import com.android.cineflow.data.network.dto.UpdateProfileRequestDto;
-import com.android.cineflow.data.network.dto.ChangePasswordRequestDto;
-import com.android.cineflow.data.network.dto.CreateCommentRequestDto;
-import com.android.cineflow.data.network.dto.FilmCommentDto;
+import com.android.cineflow.data.network.dto.UpdateWatchHistoryRequestDto;
 import com.android.cineflow.data.network.dto.UserAnalyticsDto;
 import com.android.cineflow.data.network.dto.UserProfileDto;
 import com.android.cineflow.data.network.dto.WatchHistoryDto;
-import com.android.cineflow.data.network.dto.FilmDto;
-import com.android.cineflow.data.network.dto.ShortsResponseDto;
-import com.android.cineflow.data.network.dto.CommentDto;
-
 
 import java.util.List;
 
-import retrofit2.Call;
-import retrofit2.http.Body;
-import retrofit2.http.DELETE;
-import retrofit2.http.GET;
-import retrofit2.http.POST;
-import retrofit2.http.PUT;
-import retrofit2.http.Path;
-import retrofit2.http.Query;
-
-
 public interface FilmApiService {
 
-    // ── Public ──────────────────────────────────────────────────────────────
-
-    @GET("films/home")
     Call<ApiResponseDto<HomeFilmsDto>> getHomeFilms();
 
-    @GET("films/{id}")
-    Call<ApiResponseDto<FilmDetailDto>> getFilmById(@Path("id") Integer id);
+    Call<ApiResponseDto<FilmDetailDto>> getFilmById(Integer id);
 
-    @GET("premier-league/home")
     Call<ApiResponseDto<PremierLeagueHomeDto>> getPremierLeagueHome();
 
-    @GET("premier-league/matches")
-    Call<ApiResponseDto<List<FootballMatchDto>>> getPremierLeagueMatches(
-            @Query("status") String status,
-            @Query("date") String date);
+    Call<ApiResponseDto<List<FootballMatchDto>>> getPremierLeagueMatches(String status, String date);
 
-    @GET("premier-league/standings")
     Call<ApiResponseDto<List<FootballStandingDto>>> getPremierLeagueStandings();
 
-    @GET("favorites")
     Call<ApiResponseDto<List<FavoriteDto>>> getFavorites();
 
-    @POST("favorites/{filmId}")
-    Call<ApiResponseDto<FavoriteDto>> addFavorite(@Path("filmId") Integer filmId);
+    Call<ApiResponseDto<FavoriteDto>> addFavorite(Integer filmId);
 
-    @DELETE("favorites/{filmId}")
-    Call<ApiResponseDto<Void>> deleteFavorite(@Path("filmId") Integer filmId);
+    Call<ApiResponseDto<Void>> deleteFavorite(Integer filmId);
 
-    @GET("watch-history")
     Call<ApiResponseDto<List<WatchHistoryDto>>> getWatchHistory();
 
-    @PUT("watch-history/{episodeId}")
-    Call<ApiResponseDto<WatchHistoryDto>> updateWatchHistory(
-            @Path("episodeId") Integer episodeId,
-            @Body UpdateWatchHistoryRequestDto request);
+    Call<ApiResponseDto<WatchHistoryDto>> updateWatchHistory(Integer episodeId, UpdateWatchHistoryRequestDto request);
 
-    @GET("user/me")
     Call<ApiResponseDto<UserProfileDto>> getProfile();
 
-    @GET("user/analytics")
     Call<ApiResponseDto<UserAnalyticsDto>> getUserAnalytics();
 
-    @PUT("user/profile")
-    Call<ApiResponseDto<UserProfileDto>> updateProfile(@Body UpdateProfileRequestDto request);
+    Call<ApiResponseDto<UserProfileDto>> updateProfile(UpdateProfileRequestDto request);
 
-    @POST("user/change-password")
-    Call<ApiResponseDto<Void>> changePassword(@Body ChangePasswordRequestDto request);
+    Call<ApiResponseDto<Void>> changePassword(ChangePasswordRequestDto request);
     
-    @GET("films")
-    Call<ApiResponseDto<List<FilmDto>>> getFilmsByType(@Query("type") String type);
+    Call<ApiResponseDto<List<FilmDto>>> getFilmsByType(String type);
 
-    @GET("films/shorts")
     Call<ApiResponseDto<ShortsResponseDto>> getShorts();
 
-    @POST("films/shorts/{id}/like")
-    Call<ApiResponseDto<Void>> likeShort(@Path("id") String id);
+    Call<ApiResponseDto<Void>> likeShort(String id);
 
-    @DELETE("films/shorts/{id}/like")
-    Call<ApiResponseDto<Void>> unlikeShort(@Path("id") String id);
+    Call<ApiResponseDto<Void>> unlikeShort(String id);
 
-    @GET("films/shorts/{id}/comments")
-    Call<ApiResponseDto<List<CommentDto>>> getShortComments(@Path("id") String id);
-    ////. ----
+    Call<ApiResponseDto<List<CommentDto>>> getShortComments(String id);
 
-    // ── Film comments ───────────────────────────────────────────────────────
+    Call<ApiResponseDto<CommentDto>> postShortComment(String id, CreateCommentRequestDto request);
 
-    @GET("films/{filmId}/comments")
-    Call<ApiResponseDto<List<FilmCommentDto>>> getFilmComments(@Path("filmId") Integer filmId);
+    Call<ApiResponseDto<List<FilmCommentDto>>> getFilmComments(Integer filmId);
 
-    @POST("films/{filmId}/comments")
-    Call<ApiResponseDto<FilmCommentDto>> postFilmComment(
-            @Path("filmId") Integer filmId,
-            @Body CreateCommentRequestDto request);
 
-    @DELETE("films/comments/{commentId}")
-    Call<ApiResponseDto<Void>> deleteFilmComment(@Path("commentId") Integer commentId);
+    Call<ApiResponseDto<FilmCommentDto>> postFilmComment(Integer filmId, CreateCommentRequestDto request);
 
-    // ── Auth ────────────────────────────────────────────────────────────────
+    Call<ApiResponseDto<Void>> deleteFilmComment(Integer commentId);
 
-    @POST("auth/login")
-    Call<ApiResponseDto<LoginResponseDto>> login(@Body LoginRequestDto request);
+    Call<ApiResponseDto<LoginResponseDto>> login(LoginRequestDto request);
 
-    @POST("auth/register")
-    Call<ApiResponseDto<Void>> register(@Body RegisterRequestDto request);
+    Call<ApiResponseDto<Void>> register(RegisterRequestDto request);
 
-    @POST("auth/forgot-password")
-    Call<ApiResponseDto<Void>> forgotPassword(@Body ForgotPasswordRequestDto request);
+    Call<ApiResponseDto<Void>> forgotPassword(ForgotPasswordRequestDto request);
 
-    @POST("auth/refresh-token")
-    Call<ApiResponseDto<LoginResponseDto>> refreshToken(@Body com.android.cineflow.data.network.dto.TokenRefreshRequestDto request);
+    Call<ApiResponseDto<LoginResponseDto>> refreshToken(TokenRefreshRequestDto request);
 
-    @POST("auth/logout")
-    Call<ApiResponseDto<Void>> logout(@Body com.android.cineflow.data.network.dto.TokenRefreshRequestDto request);
+    Call<ApiResponseDto<Void>> logout(TokenRefreshRequestDto request);
 
-    // ── Admin: Films ────────────────────────────────────────────────────────
+    Call<ApiResponseDto<PagedResponseDto<FilmDetailDto>>> getAllFilms(int page, int size, String search);
 
-    @GET("admin/films")
-    Call<ApiResponseDto<PagedResponseDto<FilmDetailDto>>> getAllFilms(
-            @Query("page") int page,
-            @Query("size") int size,
-            @Query("search") String search);
+    Call<ApiResponseDto<FilmDetailDto>> getAdminFilmById(Integer id);
 
-    @GET("admin/films/{id}")
-    Call<ApiResponseDto<FilmDetailDto>> getAdminFilmById(@Path("id") Integer id);
+    Call<ApiResponseDto<FilmDetailDto>> createFilm(CreateFilmRequestDto request);
 
-    @POST("admin/films")
-    Call<ApiResponseDto<FilmDetailDto>> createFilm(@Body CreateFilmRequestDto request);
+    Call<ApiResponseDto<FilmDetailDto>> updateFilm(Integer id, UpdateFilmRequestDto request);
 
-    @PUT("admin/films/{id}")
-    Call<ApiResponseDto<FilmDetailDto>> updateFilm(@Path("id") Integer id, @Body UpdateFilmRequestDto request);
-
-    @DELETE("admin/films/{id}")
-    Call<ApiResponseDto<Void>> deleteFilm(@Path("id") Integer id);
+    Call<ApiResponseDto<Void>> deleteFilm(Integer id);
 }
-

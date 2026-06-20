@@ -40,21 +40,11 @@ public class TokenAuthenticator implements Authenticator {
 
         Log.d(TAG, "Access token expired. Attempting to refresh using refresh token: " + refreshToken);
 
-        // Make a synchronous call to refresh the token.
-        // We use a new ApiClient or create the service to avoid cyclic dependency during OkHttpClient creation.
-        // But since we can use ApiClient.getFilmApiService(), let's make sure it doesn't cause loop.
-        // Wait, ApiClient has a static FilmApiService. It uses the client which has this Authenticator.
-        // If we call ApiClient.getFilmApiService().refreshToken(...) it will use the client. But refreshToken endpoint is public (permitAll)
-        // so it won't trigger 401 even if token is expired. But it's safer to make a separate Retrofit instance or just make the call.
-        // Let's create a temporary basic client specifically for token refresh to avoid any potential deadlock/interceptor issues.
-        retrofit2.Retrofit tempRetrofit = new retrofit2.Retrofit.Builder()
-                .baseUrl("http://10.0.2.2:8080/api/v1/")
-                .addConverterFactory(retrofit2.converter.gson.GsonConverterFactory.create())
-                .build();
-        FilmApiService tempService = tempRetrofit.create(FilmApiService.class);
+        // Make a synchronous call to refresh the token using public Volley API service.
+        FilmApiService tempService = ApiClient.getPublicFilmApiService();
 
         try {
-            retrofit2.Response<ApiResponseDto<LoginResponseDto>> tokenResponse = tempService
+            com.android.cineflow.data.network.Response<ApiResponseDto<LoginResponseDto>> tokenResponse = tempService
                     .refreshToken(new TokenRefreshRequestDto(refreshToken))
                     .execute();
 

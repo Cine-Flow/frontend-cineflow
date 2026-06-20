@@ -14,9 +14,9 @@ import com.android.cineflow.data.network.dto.UpdateFilmRequestDto;
 import java.util.ArrayList;
 import java.util.List;
 
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
+import com.android.cineflow.data.network.Call;
+import com.android.cineflow.data.network.Callback;
+import com.android.cineflow.data.network.Response;
 
 public class AdminFilmRepository {
 

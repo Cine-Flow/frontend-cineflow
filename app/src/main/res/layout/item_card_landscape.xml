@@ -27,7 +27,7 @@
             android:paddingEnd="4dp"
             android:paddingTop="2dp"
             android:paddingBottom="2dp"
-            android:textColor="@color/text_primary"
+            android:textColor="@color/white"
             android:textSize="10sp"
             android:visibility="gone" />
 

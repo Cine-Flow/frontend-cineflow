@@ -28,9 +28,9 @@ import com.android.cineflow.ui.detail.FilmDetailActivity;
 
 import java.util.ArrayList;
 
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
+import com.android.cineflow.data.network.Call;
+import com.android.cineflow.data.network.Callback;
+import com.android.cineflow.data.network.Response;
 
 public class PremierLeagueFragment extends BaseFragment {
 
