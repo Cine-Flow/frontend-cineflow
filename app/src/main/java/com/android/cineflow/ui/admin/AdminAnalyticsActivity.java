@@ -132,9 +132,9 @@ public class AdminAnalyticsActivity extends com.android.cineflow.ui.base.BaseAct
         bindKpi(findViewById(R.id.kpi_signups), "NEW SIGN-UPS", formatNumber(data.getNewSignups()),
                 "", true, "last " + data.getPeriod() + " days", R.color.status_info);
         bindKpi(findViewById(R.id.kpi_views), "EPISODE VIEWS", formatNumber(data.getEpisodeViews()),
-                "", true, "SUM(episodes.view_count)", R.color.badge_movie);
+                "", true, "", R.color.badge_movie);
         bindKpi(findViewById(R.id.kpi_watch_sessions), "WATCH SESSIONS", formatNumber(data.getWatchSessions()),
-                "", true, "watch_history count", R.color.badge_series);
+                "", true, "", R.color.badge_series);
         bindKpi(findViewById(R.id.kpi_premium), "PREMIUM USERS", formatNumber(data.getPremiumUsers()),
                 "", true, "active subscriptions", R.color.badge_premium);
         bindKpi(findViewById(R.id.kpi_revenue), "REVENUE", formatCurrency(data),
@@ -220,7 +220,9 @@ public class AdminAnalyticsActivity extends com.android.cineflow.ui.base.BaseAct
         tvDelta.setText(delta);
         tvDelta.setVisibility(delta == null || delta.isEmpty() ? View.GONE : View.VISIBLE);
         tvDelta.setTextColor(getColor(positive ? R.color.status_success : R.color.status_error));
-        ((TextView) root.findViewById(R.id.tv_kpi_sub)).setText(subtitle);
+        TextView tvSub = root.findViewById(R.id.tv_kpi_sub);
+        tvSub.setText(subtitle);
+        tvSub.setVisibility(subtitle == null || subtitle.isEmpty() ? View.GONE : View.VISIBLE);
         View accent = root.findViewById(R.id.v_kpi_accent);
         if (accent != null) accent.setBackgroundColor(getColor(accentColorRes));
     }

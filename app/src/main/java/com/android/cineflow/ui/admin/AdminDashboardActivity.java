@@ -31,12 +31,51 @@ public class AdminDashboardActivity extends com.android.cineflow.ui.base.BaseAct
         MaterialToolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         if (getSupportActionBar() != null) {
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            getSupportActionBar().setDisplayHomeAsUpEnabled(false);
             getSupportActionBar().setTitle("Admin Panel");
         }
-        toolbar.setNavigationOnClickListener(v -> onBackPressed());
 
         buildModuleGrid();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(android.view.Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_admin_dashboard, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(android.view.MenuItem item) {
+        if (item.getItemId() == R.id.action_admin_logout) {
+            confirmLogout();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onBackPressed() {
+        // Admins can't return to a user-facing screen — back from dashboard exits the app
+        finishAffinity();
+    }
+
+    private void confirmLogout() {
+        new com.google.android.material.dialog.MaterialAlertDialogBuilder(this)
+                .setTitle("Đăng xuất")
+                .setMessage("Bạn có chắc muốn đăng xuất khỏi tài khoản quản trị?")
+                .setNegativeButton("Hủy", null)
+                .setPositiveButton("Đăng xuất", (d, w) -> performLogout())
+                .show();
+    }
+
+    private void performLogout() {
+        com.android.cineflow.data.auth.AuthManager auth =
+                com.android.cineflow.data.auth.AuthManager.getInstance();
+        if (auth != null) auth.clearSession();
+        Intent intent = new Intent(this, com.android.cineflow.ui.auth.LoginActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(intent);
+        finish();
     }
 
     private void buildModuleGrid() {
