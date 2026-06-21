@@ -8,12 +8,30 @@
     android:clickable="true"
     android:focusable="true">
 
-    <ImageView
+    <FrameLayout
         android:layout_width="120dp"
         android:layout_height="68dp"
-        android:background="#333333"
-        android:scaleType="centerInside"
-        android:src="@android:drawable/ic_media_play" />
+        android:background="@drawable/placeholder_card">
+
+        <ImageView
+            android:id="@+id/iv_episode_thumbnail"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="centerCrop" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="#66000000" />
+
+        <ImageView
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:layout_gravity="center"
+            android:padding="4dp"
+            android:src="@android:drawable/ic_media_play"
+            android:tint="@color/text_primary" />
+    </FrameLayout>
 
     <LinearLayout
         android:layout_width="0dp"

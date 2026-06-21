@@ -15,7 +15,9 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.android.cineflow.R;
 import com.android.cineflow.data.download.OfflineDownloadManager;
+import com.android.cineflow.data.network.ApiClient;
 import com.android.cineflow.data.network.dto.EpisodeDto;
+import com.bumptech.glide.Glide;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -63,6 +65,18 @@ public class EpisodeAdapter extends RecyclerView.Adapter<EpisodeAdapter.EpisodeV
         holder.tvTitle.setText(episode.getTitle() != null ? episode.getTitle() : "Tập " + episode.getEpisodeNumber());
         int duration = episode.getDuration() != null ? episode.getDuration() : 0;
         holder.tvDuration.setText((duration / 60) + " phút");
+        String thumbnailUrl = ApiClient.resolveLocalhostUrl(filmCoverUrl);
+        if (thumbnailUrl != null && !thumbnailUrl.isEmpty()) {
+            Glide.with(holder.ivThumbnail)
+                    .load(thumbnailUrl)
+                    .centerCrop()
+                    .placeholder(R.drawable.placeholder_card)
+                    .error(R.drawable.placeholder_card)
+                    .into(holder.ivThumbnail);
+        } else {
+            Glide.with(holder.ivThumbnail).clear(holder.ivThumbnail);
+            holder.ivThumbnail.setImageResource(R.drawable.placeholder_card);
+        }
 
         holder.itemView.setOnClickListener(v -> listener.onEpisodeClick(episode));
 
@@ -153,6 +167,7 @@ public class EpisodeAdapter extends RecyclerView.Adapter<EpisodeAdapter.EpisodeV
     static class EpisodeViewHolder extends RecyclerView.ViewHolder {
         TextView tvTitle;
         TextView tvDuration;
+        ImageView ivThumbnail;
         ImageView btnDownload;
         ProgressBar progressDownload;
         TextView tvProgressText;
@@ -161,6 +176,7 @@ public class EpisodeAdapter extends RecyclerView.Adapter<EpisodeAdapter.EpisodeV
             super(itemView);
             tvTitle = itemView.findViewById(R.id.tv_episode_title);
             tvDuration = itemView.findViewById(R.id.tv_episode_duration);
+            ivThumbnail = itemView.findViewById(R.id.iv_episode_thumbnail);
             btnDownload = itemView.findViewById(R.id.btn_download_episode);
             progressDownload = itemView.findViewById(R.id.progress_download);
             tvProgressText = itemView.findViewById(R.id.tv_download_progress_text);
