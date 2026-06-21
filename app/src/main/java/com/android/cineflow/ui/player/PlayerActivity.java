@@ -1,17 +1,19 @@
 package com.android.cineflow.ui.player;
 
 import android.annotation.SuppressLint;
+import android.content.pm.ActivityInfo;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.annotation.OptIn;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.view.WindowCompat;
 import androidx.core.view.WindowInsetsCompat;
 import androidx.core.view.WindowInsetsControllerCompat;
@@ -53,8 +55,11 @@ public class PlayerActivity extends com.android.cineflow.ui.base.BaseActivity {
     private int episodeId = -1;
     private int filmId = -1;
     private ImageButton btnBack;
+    private ImageButton btnOrientation;
     private TextView tvDetailTitle;
     private TextView tvContentBadge;
+    private View playerContainer;
+    private View playerDetailScroll;
     
     // State management
     private boolean playWhenReady = true;
@@ -69,7 +74,10 @@ public class PlayerActivity extends com.android.cineflow.ui.base.BaseActivity {
         setContentView(R.layout.activity_player);
         
         playerView = findViewById(R.id.player_view);
+        playerContainer = findViewById(R.id.player_container);
+        playerDetailScroll = findViewById(R.id.player_detail_scroll);
         btnBack = findViewById(R.id.btn_back);
+        btnOrientation = findViewById(R.id.btn_orientation);
         tvDetailTitle = findViewById(R.id.tv_detail_title);
         tvContentBadge = findViewById(R.id.tv_content_badge);
         
@@ -80,18 +88,57 @@ public class PlayerActivity extends com.android.cineflow.ui.base.BaseActivity {
         bindMetadata();
 
         btnBack.setOnClickListener(v -> finish());
+        btnOrientation.setOnClickListener(v -> toggleOrientation());
+        applyPlayerLayoutForOrientation(getResources().getConfiguration().orientation);
 
         // Đồng bộ ẩn/hiện nút Back với Controller của Player bằng hiệu ứng fade mượt mà
         playerView.setControllerVisibilityListener((PlayerView.ControllerVisibilityListener) visibility -> {
             if (visibility == View.VISIBLE) {
                 btnBack.setVisibility(View.VISIBLE);
+                btnOrientation.setVisibility(View.VISIBLE);
                 btnBack.animate().alpha(1f).setDuration(100).start();
+                btnOrientation.animate().alpha(1f).setDuration(100).start();
             } else {
                 btnBack.animate().alpha(0f).setDuration(100).withEndAction(() -> {
                     btnBack.setVisibility(View.GONE);
                 }).start();
+                btnOrientation.animate().alpha(0f).setDuration(100).withEndAction(() -> {
+                    btnOrientation.setVisibility(View.GONE);
+                }).start();
             }
         });
+    }
+
+    private void toggleOrientation() {
+        int orientation = getResources().getConfiguration().orientation;
+        if (orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
+            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+        } else {
+            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE);
+        }
+    }
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        applyPlayerLayoutForOrientation(newConfig.orientation);
+        hideSystemUi();
+    }
+
+    private void applyPlayerLayoutForOrientation(int orientation) {
+        boolean isLandscape = orientation == Configuration.ORIENTATION_LANDSCAPE;
+
+        ViewGroup.LayoutParams playerParams = playerContainer.getLayoutParams();
+        playerParams.height = isLandscape
+                ? ViewGroup.LayoutParams.MATCH_PARENT
+                : (int) (240 * getResources().getDisplayMetrics().density);
+        playerContainer.setLayoutParams(playerParams);
+
+        playerDetailScroll.setVisibility(isLandscape ? View.GONE : View.VISIBLE);
+        btnOrientation.setImageResource(isLandscape ? R.drawable.ic_fullscreen_exit : R.drawable.ic_fullscreen);
+        btnOrientation.setContentDescription(getString(
+                isLandscape ? R.string.player_exit_fullscreen_desc : R.string.player_fullscreen_desc));
     }
 
     private void bindMetadata() {

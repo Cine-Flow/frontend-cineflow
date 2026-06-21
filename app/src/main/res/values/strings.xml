@@ -34,6 +34,8 @@
     <string name="player_btn_favorite">Thêm vào yêu thích</string>
     <string name="player_btn_share">Chia sẻ</string>
     <string name="player_back_desc">Quay lại</string>
+    <string name="player_fullscreen_desc">Xoay ngang/toàn màn hình</string>
+    <string name="player_exit_fullscreen_desc">Thoát toàn màn hình</string>
 
     <!-- Account & Settings Screen -->
     <string name="account_title">Tài khoản &amp; Cài đặt</string>
@@ -125,6 +127,8 @@
     <string name="reset_password_hint_new_password">Mật khẩu mới</string>
     <string name="reset_password_hint_confirm">Xác nhận mật khẩu mới</string>
     <string name="reset_password_btn">Đặt lại mật khẩu</string>
+    <string name="reset_password_processing">Đang đặt lại mật khẩu...</string>
+    <string name="reset_password_processing_button">Đang xử lý...</string>
     <string name="reset_password_token_required">Mã token là bắt buộc</string>
     <string name="reset_password_password_required">Mật khẩu mới là bắt buộc</string>
     <string name="reset_password_confirm_required">Xác nhận mật khẩu là bắt buộc</string>
@@ -132,6 +136,7 @@
     <string name="reset_password_mismatch">Mật khẩu xác nhận không khớp</string>
     <string name="reset_password_invalid_token">Mã token không hợp lệ hoặc đã hết hạn</string>
     <string name="reset_password_success">Đặt lại mật khẩu thành công! Đang chuyển về đăng nhập…</string>
+    <string name="reset_password_success_short">Đặt lại mật khẩu thành công</string>
     <string name="reset_password_error">Đặt lại mật khẩu thất bại</string>
     <string name="reset_password_network_error">Lỗi kết nối: %s</string>
 

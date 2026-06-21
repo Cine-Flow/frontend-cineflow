@@ -8,6 +8,7 @@
 
     <!-- Container for Player and Back Button -->
     <FrameLayout
+        android:id="@+id/player_container"
         android:layout_width="match_parent"
         android:layout_height="240dp">
 
@@ -30,9 +31,23 @@
             android:scaleType="centerInside"
             android:layout_gravity="top|start"
             android:elevation="2dp" />
+
+        <ImageButton
+            android:id="@+id/btn_orientation"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_margin="12dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:src="@drawable/ic_fullscreen"
+            android:contentDescription="@string/player_fullscreen_desc"
+            android:padding="10dp"
+            android:scaleType="centerInside"
+            android:layout_gravity="top|end"
+            android:elevation="2dp" />
     </FrameLayout>
 
     <ScrollView
+        android:id="@+id/player_detail_scroll"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"

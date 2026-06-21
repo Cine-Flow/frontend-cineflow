@@ -1,22 +1,19 @@
 package com.android.cineflow.ui.auth;
 
-import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Looper;
+import android.util.Log;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-
-import androidx.appcompat.app.AppCompatActivity;
+import android.widget.Toast;
 
 import com.android.cineflow.R;
 import com.android.cineflow.data.network.ApiClient;
 import com.android.cineflow.data.network.FilmApiService;
 import com.android.cineflow.data.network.dto.ApiResponseDto;
 import com.android.cineflow.data.network.dto.ResetPasswordRequestDto;
-import com.android.cineflow.data.settings.SettingsManager;
 import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputEditText;
@@ -24,8 +21,12 @@ import com.google.android.material.textfield.TextInputEditText;
 import com.android.cineflow.data.network.Call;
 import com.android.cineflow.data.network.Callback;
 import com.android.cineflow.data.network.Response;
+import com.google.gson.Gson;
+
+import java.io.IOException;
 
 public class ResetPasswordActivity extends com.android.cineflow.ui.base.BaseActivity {
+    private static final String TAG = "ResetPasswordActivity";
 
     private TextInputEditText etToken;
     private TextInputEditText etNewPassword;
@@ -34,6 +35,8 @@ public class ResetPasswordActivity extends com.android.cineflow.ui.base.BaseActi
     private TextView tvError;
     private TextView tvSuccess;
     private ProgressBar progressBar;
+    private final Gson gson = new Gson();
+    private boolean resetInProgress = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,6 +60,10 @@ public class ResetPasswordActivity extends com.android.cineflow.ui.base.BaseActi
 
         // Pre-fill token if passed via Intent (e.g., from deep link or ForgotPasswordActivity)
         String tokenExtra = getIntent().getStringExtra("reset_token");
+        Uri deepLink = getIntent().getData();
+        if ((tokenExtra == null || tokenExtra.isEmpty()) && deepLink != null) {
+            tokenExtra = deepLink.getQueryParameter("token");
+        }
         if (tokenExtra != null && !tokenExtra.isEmpty()) {
             etToken.setText(tokenExtra);
         }
@@ -64,8 +71,16 @@ public class ResetPasswordActivity extends com.android.cineflow.ui.base.BaseActi
         btnReset.setOnClickListener(v -> attemptReset());
     }
 
+    public void onResetPasswordClicked(View view) {
+        attemptReset();
+    }
+
     private void attemptReset() {
-        String token = etToken.getText() != null ? etToken.getText().toString().trim() : "";
+        if (resetInProgress) {
+            return;
+        }
+
+        String token = normalizeResetToken(etToken.getText() != null ? etToken.getText().toString().trim() : "");
         String newPassword = etNewPassword.getText() != null ? etNewPassword.getText().toString().trim() : "";
         String confirmPassword = etConfirmPassword.getText() != null ? etConfirmPassword.getText().toString().trim() : "";
 
@@ -75,51 +90,45 @@ public class ResetPasswordActivity extends com.android.cineflow.ui.base.BaseActi
         // Client-side validation
         if (token.isEmpty()) {
             etToken.setError(getString(R.string.reset_password_token_required));
+            Toast.makeText(this, R.string.reset_password_token_required, Toast.LENGTH_SHORT).show();
             return;
         }
         if (newPassword.isEmpty()) {
             etNewPassword.setError(getString(R.string.reset_password_password_required));
+            Toast.makeText(this, R.string.reset_password_password_required, Toast.LENGTH_SHORT).show();
             return;
         }
         if (newPassword.length() < 6) {
             etNewPassword.setError(getString(R.string.reset_password_password_min));
+            Toast.makeText(this, R.string.reset_password_password_min, Toast.LENGTH_SHORT).show();
             return;
         }
         if (confirmPassword.isEmpty()) {
             etConfirmPassword.setError(getString(R.string.reset_password_confirm_required));
+            Toast.makeText(this, R.string.reset_password_confirm_required, Toast.LENGTH_SHORT).show();
             return;
         }
         if (!newPassword.equals(confirmPassword)) {
             etConfirmPassword.setError(getString(R.string.reset_password_mismatch));
+            Toast.makeText(this, R.string.reset_password_mismatch, Toast.LENGTH_SHORT).show();
             return;
         }
 
         setLoading(true);
+        tvSuccess.setText(R.string.reset_password_processing);
+        tvSuccess.setVisibility(View.VISIBLE);
+        Toast.makeText(this, R.string.reset_password_processing, Toast.LENGTH_SHORT).show();
+        Log.d(TAG, "Submitting password reset request");
 
-        FilmApiService api = ApiClient.getFilmApiService();
-        api.validateResetToken(token).enqueue(new Callback<ApiResponseDto<Boolean>>() {
-            @Override
-            public void onResponse(Call<ApiResponseDto<Boolean>> call,
-                                   Response<ApiResponseDto<Boolean>> response) {
-                boolean valid = response.isSuccessful()
-                        && response.body() != null
-                        && Boolean.TRUE.equals(response.body().getData());
-                if (!valid) {
-                    setLoading(false);
-                    tvError.setText(R.string.reset_password_invalid_token);
-                    tvError.setVisibility(View.VISIBLE);
-                    return;
-                }
-                submitReset(api, token, newPassword, confirmPassword);
-            }
-
-            @Override
-            public void onFailure(Call<ApiResponseDto<Boolean>> call, Throwable t) {
-                setLoading(false);
-                tvError.setText(getString(R.string.reset_password_network_error, t.getMessage()));
-                tvError.setVisibility(View.VISIBLE);
-            }
-        });
+        try {
+            submitReset(ApiClient.getPublicFilmApiService(), token, newPassword, confirmPassword);
+        } catch (RuntimeException e) {
+            setLoading(false);
+            String errorMessage = getString(R.string.reset_password_network_error, e.getMessage());
+            tvError.setText(errorMessage);
+            tvError.setVisibility(View.VISIBLE);
+            Toast.makeText(this, errorMessage, Toast.LENGTH_LONG).show();
+        }
     }
 
     private void submitReset(FilmApiService api, String token, String newPassword, String confirmPassword) {
@@ -129,40 +138,78 @@ public class ResetPasswordActivity extends com.android.cineflow.ui.base.BaseActi
             public void onResponse(Call<ApiResponseDto<Void>> call,
                                    Response<ApiResponseDto<Void>> response) {
                 setLoading(false);
-                if (response.isSuccessful()) {
+                boolean success = response.isSuccessful()
+                        && (response.body() == null || response.body().isSuccess());
+                if (success) {
                     tvSuccess.setText(R.string.reset_password_success);
                     tvSuccess.setVisibility(View.VISIBLE);
                     btnReset.setEnabled(false);
+                    Toast.makeText(ResetPasswordActivity.this, R.string.reset_password_success_short, Toast.LENGTH_SHORT).show();
 
-                    // Navigate to LoginActivity after a short delay
-                    new Handler(Looper.getMainLooper()).postDelayed(() -> {
-                        Intent intent = new Intent(ResetPasswordActivity.this, LoginActivity.class);
-                        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
-                        startActivity(intent);
-                        finish();
-                    }, 2000);
+                    Intent intent = new Intent(ResetPasswordActivity.this, LoginActivity.class);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+                    startActivity(intent);
+                    finish();
                 } else {
-                    String msg = getString(R.string.reset_password_error);
-                    if (response.body() != null && response.body().getMessage() != null) {
-                        msg = response.body().getMessage();
-                    }
-                    tvError.setText(msg);
+                    String errorMessage = getErrorMessage(response);
+                    Log.w(TAG, "Password reset failed with HTTP " + response.code() + ": " + errorMessage);
+                    tvError.setText(errorMessage);
                     tvError.setVisibility(View.VISIBLE);
+                    Toast.makeText(ResetPasswordActivity.this, errorMessage, Toast.LENGTH_LONG).show();
                 }
             }
 
             @Override
             public void onFailure(Call<ApiResponseDto<Void>> call, Throwable t) {
                 setLoading(false);
-                tvError.setText(getString(R.string.reset_password_network_error, t.getMessage()));
+                String errorMessage = getString(R.string.reset_password_network_error, t.getMessage());
+                Log.e(TAG, "Password reset network failure", t);
+                tvError.setText(errorMessage);
                 tvError.setVisibility(View.VISIBLE);
+                Toast.makeText(ResetPasswordActivity.this, errorMessage, Toast.LENGTH_LONG).show();
             }
         });
     }
 
+    private String normalizeResetToken(String rawToken) {
+        if (rawToken == null) {
+            return "";
+        }
+
+        String token = rawToken.trim();
+        int tokenParamIndex = token.indexOf("token=");
+        if (tokenParamIndex >= 0) {
+            String tokenValue = token.substring(tokenParamIndex + "token=".length());
+            int ampersandIndex = tokenValue.indexOf('&');
+            token = ampersandIndex >= 0 ? tokenValue.substring(0, ampersandIndex) : tokenValue;
+        }
+        return token.trim();
+    }
+
     private void setLoading(boolean loading) {
+        resetInProgress = loading;
         progressBar.setVisibility(loading ? View.VISIBLE : View.GONE);
         btnReset.setEnabled(!loading);
         btnReset.setAlpha(loading ? 0.5f : 1f);
+        btnReset.setText(loading ? R.string.reset_password_processing_button : R.string.reset_password_btn);
+    }
+
+    private String getErrorMessage(Response<ApiResponseDto<Void>> response) {
+        if (response.body() != null && response.body().getMessage() != null) {
+            return response.body().getMessage();
+        }
+
+        if (response.errorBody() != null) {
+            try {
+                ApiResponseDto<?> errorResponse = gson.fromJson(response.errorBody().string(), ApiResponseDto.class);
+                if (errorResponse != null && errorResponse.getMessage() != null && !errorResponse.getMessage().isEmpty()) {
+                    return errorResponse.getMessage();
+                }
+            } catch (IOException | RuntimeException ignored) {
+                // Fall through to the localized generic message.
+            }
+        }
+
+        return getString(R.string.reset_password_error);
     }
 }

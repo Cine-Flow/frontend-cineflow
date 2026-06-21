@@ -22,6 +22,9 @@ import com.google.android.material.textfield.TextInputEditText;
 import com.android.cineflow.data.network.Call;
 import com.android.cineflow.data.network.Callback;
 import com.android.cineflow.data.network.Response;
+import com.google.gson.Gson;
+
+import java.io.IOException;
 
 public class ForgotPasswordActivity extends com.android.cineflow.ui.base.BaseActivity {
 
@@ -31,6 +34,7 @@ public class ForgotPasswordActivity extends com.android.cineflow.ui.base.BaseAct
     private TextView tvSuccess;
     private ProgressBar progressBar;
     private TextView tvHaveToken;
+    private final Gson gson = new Gson();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -82,11 +86,7 @@ public class ForgotPasswordActivity extends com.android.cineflow.ui.base.BaseAct
                             // Show the "have token" link more prominently after success
                             tvHaveToken.setVisibility(View.VISIBLE);
                         } else {
-                            String msg = getString(R.string.forgot_password_error);
-                            if (response.body() != null && response.body().getMessage() != null) {
-                                msg = response.body().getMessage();
-                            }
-                            tvError.setText(msg);
+                            tvError.setText(getErrorMessage(response));
                             tvError.setVisibility(View.VISIBLE);
                         }
                     }
@@ -104,5 +104,24 @@ public class ForgotPasswordActivity extends com.android.cineflow.ui.base.BaseAct
         progressBar.setVisibility(loading ? View.VISIBLE : View.GONE);
         btnSend.setEnabled(!loading);
         btnSend.setAlpha(loading ? 0.5f : 1f);
+    }
+
+    private String getErrorMessage(Response<ApiResponseDto<Void>> response) {
+        if (response.body() != null && response.body().getMessage() != null) {
+            return response.body().getMessage();
+        }
+
+        if (response.errorBody() != null) {
+            try {
+                ApiResponseDto<?> errorResponse = gson.fromJson(response.errorBody().string(), ApiResponseDto.class);
+                if (errorResponse != null && errorResponse.getMessage() != null && !errorResponse.getMessage().isEmpty()) {
+                    return errorResponse.getMessage();
+                }
+            } catch (IOException | RuntimeException ignored) {
+                // Fall through to the localized generic message.
+            }
+        }
+
+        return getString(R.string.forgot_password_error);
     }
 }

@@ -34,6 +34,8 @@
     <string name="player_btn_favorite">Add to Favorites</string>
     <string name="player_btn_share">Share</string>
     <string name="player_back_desc">Go Back</string>
+    <string name="player_fullscreen_desc">Rotate to fullscreen</string>
+    <string name="player_exit_fullscreen_desc">Exit fullscreen</string>
 
     <!-- Account & Settings Screen -->
     <string name="account_title">Account &amp; Settings</string>
@@ -125,12 +127,15 @@
     <string name="reset_password_hint_new_password">New Password</string>
     <string name="reset_password_hint_confirm">Confirm New Password</string>
     <string name="reset_password_btn">Reset Password</string>
+    <string name="reset_password_processing">Resetting password...</string>
+    <string name="reset_password_processing_button">Processing...</string>
     <string name="reset_password_token_required">Token is required</string>
     <string name="reset_password_password_required">New password is required</string>
     <string name="reset_password_confirm_required">Password confirmation is required</string>
     <string name="reset_password_password_min">Password must be at least 6 characters</string>
     <string name="reset_password_mismatch">Password confirmation does not match</string>
     <string name="reset_password_success">Password reset successful! Redirecting to login…</string>
+    <string name="reset_password_success_short">Password reset successful</string>
     <string name="reset_password_error">Password reset failed</string>
     <string name="reset_password_network_error">Connection error: %s</string>
 
