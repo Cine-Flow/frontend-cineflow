@@ -305,6 +305,7 @@ public class FilmDetailActivity extends com.android.cineflow.ui.base.BaseActivit
                 intent.putExtra(PlayerActivity.EXTRA_VIDEO_URL, film.getTrailerUrl());
                 intent.putExtra(PlayerActivity.EXTRA_TITLE, film.getTitle());
                 intent.putExtra(PlayerActivity.EXTRA_BADGE, film.getType());
+                intent.putExtra("extra_film_id", film.getId());
                 startActivity(intent);
             });
         } else if (hasEpisodes) {
@@ -333,6 +334,7 @@ public class FilmDetailActivity extends com.android.cineflow.ui.base.BaseActivit
                 intent.putExtra(PlayerActivity.EXTRA_VIDEO_URL, film.getTrailerUrl());
                 intent.putExtra(PlayerActivity.EXTRA_TITLE, film.getTitle());
                 intent.putExtra(PlayerActivity.EXTRA_BADGE, film.getType());
+                intent.putExtra("extra_film_id", film.getId());
                 startActivity(intent);
             });
         } else {

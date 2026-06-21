@@ -8,9 +8,12 @@ import android.os.Handler;
 import android.os.Looper;
 import android.view.View;
 import android.view.ViewGroup;
+import android.content.Intent;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
+import com.android.cineflow.data.network.dto.FavoriteDto;
 
 import androidx.annotation.Nullable;
 import androidx.annotation.OptIn;
@@ -60,6 +63,9 @@ public class PlayerActivity extends com.android.cineflow.ui.base.BaseActivity {
     private TextView tvContentBadge;
     private View playerContainer;
     private View playerDetailScroll;
+    private Button btnPlayerFavorite;
+    private Button btnPlayerShare;
+    private boolean isFavorited = false;
     
     // State management
     private boolean playWhenReady = true;
@@ -86,6 +92,18 @@ public class PlayerActivity extends com.android.cineflow.ui.base.BaseActivity {
         filmId = getIntent().getIntExtra("extra_film_id", -1);
         playbackPosition = getIntent().getIntExtra(EXTRA_RESUME_POSITION_SECONDS, 0) * 1000L;
         bindMetadata();
+
+        btnPlayerFavorite = findViewById(R.id.btn_player_favorite);
+        btnPlayerShare = findViewById(R.id.btn_player_share);
+
+        if (filmId < 0) {
+            btnPlayerFavorite.setVisibility(View.GONE);
+        } else {
+            btnPlayerFavorite.setVisibility(View.VISIBLE);
+        }
+
+        btnPlayerFavorite.setOnClickListener(v -> toggleFavorite());
+        btnPlayerShare.setOnClickListener(v -> shareVideo());
 
         btnBack.setOnClickListener(v -> finish());
         btnOrientation.setOnClickListener(v -> toggleOrientation());
@@ -223,6 +241,114 @@ public class PlayerActivity extends com.android.cineflow.ui.base.BaseActivity {
                 });
     }
 
+    private void checkFavoriteStatus() {
+        AuthManager auth = AuthManager.getInstance();
+        if (filmId < 0 || auth == null || !auth.isLoggedIn()) {
+            return;
+        }
+        ApiClient.getFilmApiService().getFavorites().enqueue(new Callback<ApiResponseDto<List<FavoriteDto>>>() {
+            @Override
+            public void onResponse(Call<ApiResponseDto<List<FavoriteDto>>> call, Response<ApiResponseDto<List<FavoriteDto>>> response) {
+                if (response.isSuccessful() && response.body() != null && response.body().getData() != null) {
+                    isFavorited = false;
+                    for (FavoriteDto fav : response.body().getData()) {
+                        if (fav.getFilm() != null && fav.getFilm().getId() == filmId) {
+                            isFavorited = true;
+                            break;
+                        }
+                    }
+                    updateFavoriteButtonState();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ApiResponseDto<List<FavoriteDto>>> call, Throwable t) {
+                // Ignore failure
+            }
+        });
+    }
+
+    private void updateFavoriteButtonState() {
+        if (isFavorited) {
+            btnPlayerFavorite.setText("Đã thích");
+            btnPlayerFavorite.setBackgroundTintList(android.content.res.ColorStateList.valueOf(android.graphics.Color.parseColor("#E91E63")));
+        } else {
+            btnPlayerFavorite.setText(R.string.player_btn_favorite);
+            btnPlayerFavorite.setBackgroundTintList(android.content.res.ColorStateList.valueOf(android.graphics.Color.parseColor("#2D2D2D")));
+        }
+    }
+
+    private void toggleFavorite() {
+        AuthManager auth = AuthManager.getInstance();
+        if (filmId < 0) {
+            Toast.makeText(this, "Không tìm thấy thông tin phim", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        if (auth == null || !auth.isLoggedIn()) {
+            Toast.makeText(this, "Vui lòng đăng nhập để thêm vào yêu thích", Toast.LENGTH_SHORT).show();
+            startActivity(new Intent(this, com.android.cineflow.ui.auth.LoginActivity.class));
+            return;
+        }
+
+        btnPlayerFavorite.setEnabled(false);
+        if (isFavorited) {
+            ApiClient.getFilmApiService().deleteFavorite(filmId).enqueue(new Callback<ApiResponseDto<Void>>() {
+                @Override
+                public void onResponse(Call<ApiResponseDto<Void>> call, Response<ApiResponseDto<Void>> response) {
+                    btnPlayerFavorite.setEnabled(true);
+                    if (response.isSuccessful()) {
+                        isFavorited = false;
+                        updateFavoriteButtonState();
+                        Toast.makeText(PlayerActivity.this, "Đã xóa khỏi yêu thích", Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(PlayerActivity.this, "Không thể xóa khỏi yêu thích", Toast.LENGTH_SHORT).show();
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<ApiResponseDto<Void>> call, Throwable t) {
+                    btnPlayerFavorite.setEnabled(true);
+                    Toast.makeText(PlayerActivity.this, "Lỗi mạng", Toast.LENGTH_SHORT).show();
+                }
+            });
+        } else {
+            ApiClient.getFilmApiService().addFavorite(filmId).enqueue(new Callback<ApiResponseDto<FavoriteDto>>() {
+                @Override
+                public void onResponse(Call<ApiResponseDto<FavoriteDto>> call, Response<ApiResponseDto<FavoriteDto>> response) {
+                    btnPlayerFavorite.setEnabled(true);
+                    if (response.isSuccessful()) {
+                        isFavorited = true;
+                        updateFavoriteButtonState();
+                        Toast.makeText(PlayerActivity.this, "Đã thêm vào yêu thích", Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(PlayerActivity.this, "Không thể thêm vào yêu thích", Toast.LENGTH_SHORT).show();
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<ApiResponseDto<FavoriteDto>> call, Throwable t) {
+                    btnPlayerFavorite.setEnabled(true);
+                    Toast.makeText(PlayerActivity.this, "Lỗi mạng", Toast.LENGTH_SHORT).show();
+                }
+            });
+        }
+    }
+
+    private void shareVideo() {
+        String title = getIntent().getStringExtra(EXTRA_TITLE);
+        if (title == null || title.isEmpty()) {
+            title = "Video";
+        }
+        String textToShare = "Xem \"" + title + "\" trên CineFlow!\n" + videoUrl;
+
+        Intent shareIntent = new Intent(Intent.ACTION_SEND);
+        shareIntent.setType("text/plain");
+        shareIntent.putExtra(Intent.EXTRA_SUBJECT, title);
+        shareIntent.putExtra(Intent.EXTRA_TEXT, textToShare);
+
+        startActivity(Intent.createChooser(shareIntent, "Chia sẻ qua"));
+    }
+
     @OptIn(markerClass = UnstableApi.class)
     @Override
     public void onStart() {
@@ -239,6 +365,9 @@ public class PlayerActivity extends com.android.cineflow.ui.base.BaseActivity {
         hideSystemUi();
         if (Util.SDK_INT <= 23 || player == null) {
             initializePlayer();
+        }
+        if (filmId >= 0) {
+            checkFavoriteStatus();
         }
     }
 

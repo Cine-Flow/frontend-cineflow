@@ -52,6 +52,15 @@ public class HomeFragment extends BaseFragment {
                 if (streamUrl != null && !streamUrl.isEmpty()) {
                     Intent intent = new Intent(requireContext(), com.android.cineflow.ui.player.PlayerActivity.class);
                     intent.putExtra(com.android.cineflow.ui.player.PlayerActivity.EXTRA_VIDEO_URL, streamUrl);
+                    intent.putExtra(com.android.cineflow.ui.player.PlayerActivity.EXTRA_TITLE, card.getTitle());
+                    intent.putExtra(com.android.cineflow.ui.player.PlayerActivity.EXTRA_BADGE, card.getBadgeLabel());
+                    if (card.getId() != null) {
+                        try {
+                            intent.putExtra("extra_film_id", Integer.parseInt(card.getId()));
+                        } catch (NumberFormatException e) {
+                            // ignore
+                        }
+                    }
                     startActivity(intent);
                 } else {
                     Toast.makeText(requireContext(), 
