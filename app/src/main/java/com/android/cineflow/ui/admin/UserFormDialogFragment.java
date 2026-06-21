@@ -63,7 +63,7 @@ public class UserFormDialogFragment extends DialogFragment {
         ImageView ivPreview = dialog.findViewById(R.id.iv_avatar_preview);
         TextView tvInitial = dialog.findViewById(R.id.tv_avatar_preview_initial);
 
-        tvTitle.setText(isEdit ? "Edit User" : "Create User");
+        tvTitle.setText(isEdit ? R.string.admin_dialog_edit_user : R.string.admin_dialog_create_user);
         layoutPassword.setVisibility(isEdit ? View.GONE : View.VISIBLE);
 
         if (isEdit) {
@@ -73,7 +73,7 @@ public class UserFormDialogFragment extends DialogFragment {
             etPhone.setText(editing.getPhoneNumber());
             etAvatarUrl.setText(editing.getAvatarUrl());
             tvRoleReadonly.setText(getString(R.string.admin_user_role_format,
-                    "ROLE_ADMIN".equals(editing.getRole()) ? "Admin" : "User", editing.getId()));
+                    getString("ROLE_ADMIN".equals(editing.getRole()) ? R.string.form_role_admin : R.string.form_role_user), editing.getId()));
             if ("ROLE_ADMIN".equals(editing.getRole())) {
                 rbRoleAdmin.setChecked(true);
             } else {
@@ -123,19 +123,19 @@ public class UserFormDialogFragment extends DialogFragment {
             String avatar = nullIfEmpty(etAvatarUrl.getText().toString().trim());
 
             if (username.isEmpty()) {
-                etUsername.setError("Username required");
+                etUsername.setError(getString(R.string.admin_err_username_required));
                 return;
             }
             if (!username.matches("[A-Za-z0-9._-]{3,}")) {
-                etUsername.setError("3+ chars, letters/digits/._- only");
+                etUsername.setError(getString(R.string.admin_err_username_required));
                 return;
             }
             if (email.isEmpty() || !Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
-                etEmail.setError("Valid email required");
+                etEmail.setError(getString(R.string.admin_err_valid_email_required));
                 return;
             }
             if (!isEdit && password.length() < 6) {
-                etPassword.setError("Min 6 characters");
+                etPassword.setError(getString(R.string.admin_err_min_6_chars));
                 return;
             }
 

@@ -47,7 +47,7 @@ public class AdminUserListActivity extends com.android.cineflow.ui.base.BaseActi
         setSupportActionBar(toolbar);
         if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-            getSupportActionBar().setTitle("User Management");
+            getSupportActionBar().setTitle(R.string.admin_title_user_management);
         }
         toolbar.setNavigationOnClickListener(v -> onBackPressed());
 
@@ -121,14 +121,14 @@ public class AdminUserListActivity extends com.android.cineflow.ui.base.BaseActi
                             tvUserCount.setText(allUsers.size() + " users");
                         } else {
                             Toast.makeText(AdminUserListActivity.this,
-                                    "Cannot load users", Toast.LENGTH_SHORT).show();
+                                    R.string.admin_toast_cannot_load_users, Toast.LENGTH_SHORT).show();
                         }
                     }
 
                     @Override
                     public void onFailure(Call<ApiResponseDto<List<AdminUserDto>>> call, Throwable t) {
                         Toast.makeText(AdminUserListActivity.this,
-                                "Server error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+                                getString(R.string.admin_toast_server_error_format, t.getMessage()), Toast.LENGTH_SHORT).show();
                     }
                 });
     }
@@ -141,22 +141,20 @@ public class AdminUserListActivity extends com.android.cineflow.ui.base.BaseActi
     @Override
     public void onResetPassword(AdminUserDto user) {
         new AlertDialog.Builder(this)
-                .setTitle("Send password reset?")
-                .setMessage("A reset link will be emailed to " + user.getEmail()
-                        + ". The user must set a new password before signing in again.")
-                .setPositiveButton("Send link", (d, w) -> resetPassword(user))
-                .setNegativeButton("Cancel", null)
+                .setTitle(R.string.admin_dialog_send_reset_title)
+                .setMessage(getString(R.string.admin_dialog_send_reset_msg, user.getEmail()))
+                .setPositiveButton(R.string.admin_button_send_link, (d, w) -> resetPassword(user))
+                .setNegativeButton(R.string.admin_button_cancel, null)
                 .show();
     }
 
     @Override
     public void onDeleteUser(AdminUserDto user) {
         new AlertDialog.Builder(this)
-                .setTitle("Delete user")
-                .setMessage("Permanently delete @" + user.getUsername() + "?\n\n"
-                        + "Their subscriptions, watch history, and favorites will be removed.")
-                .setPositiveButton("Delete", (d, w) -> deleteUser(user))
-                .setNegativeButton("Cancel", null)
+                .setTitle(R.string.admin_dialog_delete_user_title)
+                .setMessage(getString(R.string.admin_dialog_delete_user_msg, user.getUsername()))
+                .setPositiveButton(R.string.admin_button_delete, (d, w) -> deleteUser(user))
+                .setNegativeButton(R.string.admin_button_cancel, null)
                 .show();
     }
 
@@ -173,11 +171,11 @@ public class AdminUserListActivity extends com.android.cineflow.ui.base.BaseActi
     }
 
     private void createUser(AdminUserRequestDto request) {
-        ApiClient.getFilmApiService().createUser(request).enqueue(userMutationCallback("Created user"));
+        ApiClient.getFilmApiService().createUser(request).enqueue(userMutationCallback(getString(R.string.admin_toast_created_user)));
     }
 
     private void updateUser(String id, AdminUserRequestDto request) {
-        ApiClient.getFilmApiService().updateUser(id, request).enqueue(userMutationCallback("Updated user"));
+        ApiClient.getFilmApiService().updateUser(id, request).enqueue(userMutationCallback(getString(R.string.admin_toast_updated_user)));
     }
 
     private void resetPassword(AdminUserDto user) {
@@ -186,14 +184,14 @@ public class AdminUserListActivity extends com.android.cineflow.ui.base.BaseActi
                     @Override
                     public void onResponse(Call<ApiResponseDto<Void>> call, Response<ApiResponseDto<Void>> response) {
                         Toast.makeText(AdminUserListActivity.this,
-                                response.isSuccessful() ? "Reset email sent" : "Cannot send reset email",
+                                response.isSuccessful() ? R.string.admin_toast_reset_email_sent : R.string.admin_toast_cannot_send_reset_email,
                                 Toast.LENGTH_SHORT).show();
                     }
 
                     @Override
                     public void onFailure(Call<ApiResponseDto<Void>> call, Throwable t) {
                         Toast.makeText(AdminUserListActivity.this,
-                                "Server error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+                                getString(R.string.admin_toast_server_error_format, t.getMessage()), Toast.LENGTH_SHORT).show();
                     }
                 });
     }
@@ -204,17 +202,17 @@ public class AdminUserListActivity extends com.android.cineflow.ui.base.BaseActi
                     @Override
                     public void onResponse(Call<ApiResponseDto<Void>> call, Response<ApiResponseDto<Void>> response) {
                         if (response.isSuccessful()) {
-                            Toast.makeText(AdminUserListActivity.this, "Deleted user", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(AdminUserListActivity.this, R.string.admin_toast_deleted_user, Toast.LENGTH_SHORT).show();
                             loadUsers();
                         } else {
-                            Toast.makeText(AdminUserListActivity.this, "Cannot delete user", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(AdminUserListActivity.this, R.string.admin_toast_cannot_delete_user, Toast.LENGTH_SHORT).show();
                         }
                     }
 
                     @Override
                     public void onFailure(Call<ApiResponseDto<Void>> call, Throwable t) {
                         Toast.makeText(AdminUserListActivity.this,
-                                "Server error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+                                getString(R.string.admin_toast_server_error_format, t.getMessage()), Toast.LENGTH_SHORT).show();
                     }
                 });
     }
@@ -228,14 +226,14 @@ public class AdminUserListActivity extends com.android.cineflow.ui.base.BaseActi
                     Toast.makeText(AdminUserListActivity.this, successMessage, Toast.LENGTH_SHORT).show();
                     loadUsers();
                 } else {
-                    Toast.makeText(AdminUserListActivity.this, "Cannot save user", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(AdminUserListActivity.this, R.string.admin_toast_cannot_save_user, Toast.LENGTH_SHORT).show();
                 }
             }
 
             @Override
             public void onFailure(Call<ApiResponseDto<AdminUserDto>> call, Throwable t) {
                 Toast.makeText(AdminUserListActivity.this,
-                        "Server error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+                        getString(R.string.admin_toast_server_error_format, t.getMessage()), Toast.LENGTH_SHORT).show();
             }
         };
     }

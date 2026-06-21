@@ -44,7 +44,7 @@
             android:textSize="14sp"
             android:paddingStart="12dp"
             android:paddingEnd="12dp"
-            android:hint="Action"
+            android:hint="@string/admin_hint_category_name_example"
             android:singleLine="true"
             android:inputType="textCapWords"
             android:layout_marginBottom="4dp" />
@@ -74,7 +74,7 @@
             android:textSize="14sp"
             android:padding="12dp"
             android:gravity="top|start"
-            android:hint="High-octane films packed with chase scenes, fights, and stunts."
+            android:hint="@string/admin_hint_category_description_example"
             android:inputType="textMultiLine|textCapSentences"
             android:layout_marginBottom="20dp" />
 

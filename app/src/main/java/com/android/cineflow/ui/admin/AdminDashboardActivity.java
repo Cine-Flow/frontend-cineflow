@@ -32,7 +32,7 @@ public class AdminDashboardActivity extends com.android.cineflow.ui.base.BaseAct
         setSupportActionBar(toolbar);
         if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(false);
-            getSupportActionBar().setTitle("Admin Panel");
+            getSupportActionBar().setTitle(R.string.admin_panel);
         }
 
         buildModuleGrid();
@@ -61,10 +61,10 @@ public class AdminDashboardActivity extends com.android.cineflow.ui.base.BaseAct
 
     private void confirmLogout() {
         new com.google.android.material.dialog.MaterialAlertDialogBuilder(this)
-                .setTitle("Đăng xuất")
-                .setMessage("Bạn có chắc muốn đăng xuất khỏi tài khoản quản trị?")
-                .setNegativeButton("Hủy", null)
-                .setPositiveButton("Đăng xuất", (d, w) -> performLogout())
+                .setTitle(R.string.admin_logout)
+                .setMessage(R.string.admin_logout_confirm_msg)
+                .setNegativeButton(R.string.admin_button_cancel, null)
+                .setPositiveButton(R.string.admin_logout, (d, w) -> performLogout())
                 .show();
     }
 
@@ -83,10 +83,10 @@ public class AdminDashboardActivity extends com.android.cineflow.ui.base.BaseAct
         grid.removeAllViews();
 
         List<AdminModule> modules = new ArrayList<>();
-        modules.add(new AdminModule(MODULE_FILMS, "Films", "Manage movies & series", R.drawable.ic_admin_films, R.color.brand_primary));
-        modules.add(new AdminModule(MODULE_USERS, "Users", "Manage accounts & roles", R.drawable.ic_admin_users, R.color.badge_series));
-        modules.add(new AdminModule(MODULE_CATEGORIES, "Categories", "Manage genres & tags", R.drawable.ic_admin_categories, R.color.status_success));
-        modules.add(new AdminModule(MODULE_STATS, "Statistics", "View analytics & reports", R.drawable.ic_admin_stats, R.color.badge_movie));
+        modules.add(new AdminModule(MODULE_FILMS, getString(R.string.admin_module_films_label), getString(R.string.admin_module_films_desc), R.drawable.ic_admin_films, R.color.brand_primary));
+        modules.add(new AdminModule(MODULE_USERS, getString(R.string.admin_module_users_label), getString(R.string.admin_module_users_desc), R.drawable.ic_admin_users, R.color.badge_series));
+        modules.add(new AdminModule(MODULE_CATEGORIES, getString(R.string.admin_module_categories_label), getString(R.string.admin_module_categories_desc), R.drawable.ic_admin_categories, R.color.status_success));
+        modules.add(new AdminModule(MODULE_STATS, getString(R.string.admin_module_stats_label), getString(R.string.admin_module_stats_desc), R.drawable.ic_admin_stats, R.color.badge_movie));
 
         LayoutInflater inflater = LayoutInflater.from(this);
         for (AdminModule module : modules) {

@@ -14,7 +14,7 @@
         android:elevation="4dp"
         app:titleTextColor="@color/text_primary"
         app:navigationIconTint="@color/text_primary"
-        app:title="Analytics Dashboard">
+        app:title="@string/admin_title_analytics">
 
         <ImageView
             android:id="@+id/btn_export"
@@ -24,7 +24,7 @@
             android:layout_marginEnd="12dp"
             android:src="@drawable/ic_download"
             android:padding="4dp"
-            android:contentDescription="Export"
+            android:contentDescription="@string/admin_cd_export"
             android:clickable="true"
             android:focusable="true" />
     </com.google.android.material.appbar.MaterialToolbar>
@@ -215,7 +215,7 @@
                             android:layout_width="0dp"
                             android:layout_weight="1"
                             android:layout_height="wrap_content"
-                            android:text="Đăng ký mới theo ngày"
+                            android:text="@string/admin_chart_signups_title"
                             android:textColor="@color/text_primary"
                             android:textSize="15sp"
                             android:textStyle="bold" />
@@ -254,7 +254,7 @@
                             android:layout_width="0dp"
                             android:layout_weight="1"
                             android:layout_height="wrap_content"
-                            android:text="Phiên xem theo ngày"
+                            android:text="@string/admin_chart_watch_title"
                             android:textColor="@color/text_primary"
                             android:textSize="15sp"
                             android:textStyle="bold" />
@@ -313,7 +313,7 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Phim chưa có lượt xem"
+                            android:text="@string/admin_card_zero_view_title"
                             android:textColor="@color/text_primary"
                             android:textSize="14sp"
                             android:textStyle="bold" />
@@ -321,7 +321,7 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Nội dung chưa được tiếp cận"
+                            android:text="@string/admin_card_zero_view_desc"
                             android:textColor="@color/text_tertiary"
                             android:textSize="11sp"
                             android:layout_marginTop="2dp" />
@@ -387,7 +387,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Premium vs Miễn phí"
+                        android:text="@string/admin_card_premium_vs_free"
                         android:textColor="@color/text_primary"
                         android:textSize="15sp"
                         android:textStyle="bold" />
@@ -474,7 +474,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Phim được yêu thích nhất"
+                        android:text="@string/admin_card_top_favorited"
                         android:textColor="@color/text_primary"
                         android:textSize="15sp"
                         android:textStyle="bold"
@@ -498,7 +498,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Phim có nhiều bình luận nhất"
+                        android:text="@string/admin_card_top_commented"
                         android:textColor="@color/text_primary"
                         android:textSize="15sp"
                         android:textStyle="bold"
@@ -521,7 +521,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Tập phim được xem nhiều nhất"
+                        android:text="@string/admin_card_top_episodes"
                         android:textColor="@color/text_primary"
                         android:textSize="15sp"
                         android:textStyle="bold"
@@ -563,7 +563,7 @@
                 android:layout_width="22dp"
                 android:layout_height="22dp"
                 android:src="@drawable/ic_admin_stats"
-                android:contentDescription="Overview" />
+                android:contentDescription="@string/admin_section_overview" />
 
             <TextView
                 android:id="@+id/label_overview"
@@ -593,7 +593,7 @@
                 android:layout_width="22dp"
                 android:layout_height="22dp"
                 android:src="@drawable/ic_admin_films"
-                android:contentDescription="Catalog" />
+                android:contentDescription="@string/admin_section_catalog" />
 
             <TextView
                 android:id="@+id/label_catalog"

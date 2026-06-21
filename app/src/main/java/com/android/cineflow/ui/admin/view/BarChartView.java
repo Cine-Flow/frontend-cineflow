@@ -73,7 +73,7 @@ public class BarChartView extends View {
             empty.setColor(Color.parseColor("#666666"));
             empty.setTextSize(13 * density);
             empty.setTextAlign(Paint.Align.CENTER);
-            canvas.drawText("Chưa có dữ liệu",
+            canvas.drawText(getContext().getString(com.android.cineflow.R.string.admin_chart_empty),
                     getWidth() / 2f, getHeight() / 2f + empty.getTextSize() / 3f, empty);
             return;
         }

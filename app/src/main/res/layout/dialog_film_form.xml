@@ -37,7 +37,7 @@
             android:textSize="14sp"
             android:paddingStart="12dp"
             android:paddingEnd="12dp"
-            android:hint="Enter film title"
+            android:hint="@string/admin_hint_film_title"
             android:singleLine="true"
             android:inputType="text"
             android:layout_marginBottom="12dp" />
@@ -61,7 +61,7 @@
             android:paddingEnd="12dp"
             android:paddingTop="8dp"
             android:gravity="top"
-            android:hint="Enter description"
+            android:hint="@string/admin_hint_film_description"
             android:inputType="textMultiLine"
             android:layout_marginBottom="12dp" />
 
@@ -91,7 +91,7 @@
                 android:textSize="12sp"
                 android:paddingStart="12dp"
                 android:paddingEnd="12dp"
-                android:hint="URL or upload..."
+                android:hint="@string/admin_hint_url_or_upload"
                 android:singleLine="true"
                 android:inputType="textUri" />
 
@@ -135,7 +135,7 @@
                 android:textSize="12sp"
                 android:paddingStart="12dp"
                 android:paddingEnd="12dp"
-                android:hint="URL or upload..."
+                android:hint="@string/admin_hint_url_or_upload"
                 android:singleLine="true"
                 android:inputType="textUri" />
 
@@ -185,7 +185,7 @@
                     android:textSize="12sp"
                     android:paddingStart="12dp"
                     android:paddingEnd="12dp"
-                    android:hint="Upload video phim..."
+                    android:hint="@string/admin_hint_upload_video"
                     android:singleLine="true"
                     android:inputType="textUri" />
 

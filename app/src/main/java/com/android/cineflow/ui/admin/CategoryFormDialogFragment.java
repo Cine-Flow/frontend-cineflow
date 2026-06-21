@@ -44,7 +44,7 @@ public class CategoryFormDialogFragment extends DialogFragment {
         EditText etName = dialog.findViewById(R.id.et_name);
         EditText etDescription = dialog.findViewById(R.id.et_description);
 
-        tvTitle.setText(isEdit ? "Edit Category" : "Create Category");
+        tvTitle.setText(isEdit ? R.string.admin_dialog_edit_category : R.string.admin_dialog_create_category);
         if (isEdit) {
             etName.setText(editing.getName());
             etDescription.setText(editing.getDescription());
@@ -60,11 +60,11 @@ public class CategoryFormDialogFragment extends DialogFragment {
             String description = etDescription.getText().toString().trim();
 
             if (name.isEmpty()) {
-                etName.setError("Name is required");
+                etName.setError(getString(R.string.admin_err_name_required));
                 return;
             }
             if (name.length() > 255) {
-                etName.setError("Max 255 characters");
+                etName.setError(getString(R.string.admin_err_max_255));
                 return;
             }
 

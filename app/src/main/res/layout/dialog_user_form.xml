@@ -27,7 +27,7 @@
                     android:layout_height="56dp"
                     android:scaleType="centerCrop"
                     android:background="@color/surface_tertiary"
-                    android:contentDescription="Avatar preview" />
+                    android:contentDescription="@string/admin_cd_avatar_preview" />
 
                 <TextView
                     android:id="@+id/tv_avatar_preview_initial"
@@ -239,7 +239,7 @@
                 android:textSize="14sp"
                 android:paddingStart="12dp"
                 android:paddingEnd="12dp"
-                android:hint="At least 8 characters"
+                android:hint="@string/admin_hint_min_8_chars"
                 android:singleLine="true"
                 android:inputType="textPassword"
                 android:layout_marginBottom="4dp" />

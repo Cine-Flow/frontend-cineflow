@@ -44,7 +44,7 @@ public class AdminCategoryListActivity extends com.android.cineflow.ui.base.Base
         setSupportActionBar(toolbar);
         if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-            getSupportActionBar().setTitle("Category Management");
+            getSupportActionBar().setTitle(R.string.admin_title_category_management);
         }
         toolbar.setNavigationOnClickListener(v -> onBackPressed());
 
@@ -83,14 +83,14 @@ public class AdminCategoryListActivity extends com.android.cineflow.ui.base.Base
                             applyFilter();
                         } else {
                             Toast.makeText(AdminCategoryListActivity.this,
-                                    "Cannot load categories", Toast.LENGTH_SHORT).show();
+                                    R.string.admin_toast_cannot_load_categories, Toast.LENGTH_SHORT).show();
                         }
                     }
 
                     @Override
                     public void onFailure(Call<ApiResponseDto<List<AdminCategoryDto>>> call, Throwable t) {
                         Toast.makeText(AdminCategoryListActivity.this,
-                                "Server error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+                                getString(R.string.admin_toast_server_error_format, t.getMessage()), Toast.LENGTH_SHORT).show();
                     }
                 });
     }
@@ -129,16 +129,13 @@ public class AdminCategoryListActivity extends com.android.cineflow.ui.base.Base
     @Override
     public void onDeleteCategory(AdminCategoryDto category) {
         String msg = category.getFilmCount() == 0
-                ? "Delete \"" + category.getName() + "\"?"
-                : "Delete \"" + category.getName() + "\"?\n\n"
-                + category.getFilmCount() + " film tag"
-                + (category.getFilmCount() == 1 ? "" : "s")
-                + " will be removed.";
+                ? getString(R.string.admin_dialog_delete_category_simple, category.getName())
+                : getString(R.string.admin_dialog_delete_category_warning, category.getName(), category.getFilmCount());
         new AlertDialog.Builder(this)
-                .setTitle("Delete category")
+                .setTitle(R.string.admin_dialog_delete_category_title)
                 .setMessage(msg)
-                .setPositiveButton("Delete", (d, w) -> deleteCategory(category))
-                .setNegativeButton("Cancel", null)
+                .setPositiveButton(R.string.admin_button_delete, (d, w) -> deleteCategory(category))
+                .setNegativeButton(R.string.admin_button_cancel, null)
                 .show();
     }
 
@@ -155,11 +152,11 @@ public class AdminCategoryListActivity extends com.android.cineflow.ui.base.Base
     }
 
     private void createCategory(AdminCategoryRequestDto request) {
-        ApiClient.getFilmApiService().createCategory(request).enqueue(categoryMutationCallback("Created category"));
+        ApiClient.getFilmApiService().createCategory(request).enqueue(categoryMutationCallback(getString(R.string.admin_toast_created_category)));
     }
 
     private void updateCategory(Integer id, AdminCategoryRequestDto request) {
-        ApiClient.getFilmApiService().updateCategory(id, request).enqueue(categoryMutationCallback("Updated category"));
+        ApiClient.getFilmApiService().updateCategory(id, request).enqueue(categoryMutationCallback(getString(R.string.admin_toast_updated_category)));
     }
 
     private void deleteCategory(AdminCategoryDto category) {
@@ -169,18 +166,18 @@ public class AdminCategoryListActivity extends com.android.cineflow.ui.base.Base
                     public void onResponse(Call<ApiResponseDto<Void>> call, Response<ApiResponseDto<Void>> response) {
                         if (response.isSuccessful()) {
                             Toast.makeText(AdminCategoryListActivity.this,
-                                    "Deleted category", Toast.LENGTH_SHORT).show();
+                                    R.string.admin_toast_deleted_category, Toast.LENGTH_SHORT).show();
                             loadCategories();
                         } else {
                             Toast.makeText(AdminCategoryListActivity.this,
-                                    "Cannot delete category", Toast.LENGTH_SHORT).show();
+                                    R.string.admin_toast_cannot_delete_category, Toast.LENGTH_SHORT).show();
                         }
                     }
 
                     @Override
                     public void onFailure(Call<ApiResponseDto<Void>> call, Throwable t) {
                         Toast.makeText(AdminCategoryListActivity.this,
-                                "Server error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+                                getString(R.string.admin_toast_server_error_format, t.getMessage()), Toast.LENGTH_SHORT).show();
                     }
                 });
     }
@@ -195,14 +192,14 @@ public class AdminCategoryListActivity extends com.android.cineflow.ui.base.Base
                     loadCategories();
                 } else {
                     Toast.makeText(AdminCategoryListActivity.this,
-                            "Cannot save category", Toast.LENGTH_SHORT).show();
+                            R.string.admin_toast_cannot_save_category, Toast.LENGTH_SHORT).show();
                 }
             }
 
             @Override
             public void onFailure(Call<ApiResponseDto<AdminCategoryDto>> call, Throwable t) {
                 Toast.makeText(AdminCategoryListActivity.this,
-                        "Server error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+                        getString(R.string.admin_toast_server_error_format, t.getMessage()), Toast.LENGTH_SHORT).show();
             }
         };
     }

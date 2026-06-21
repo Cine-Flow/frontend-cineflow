@@ -140,7 +140,7 @@ public class FilmFormDialogFragment extends DialogFragment {
         tvUploadStatus = dialog.findViewById(R.id.tv_upload_status);
         tvTrailerLabel = dialog.findViewById(R.id.tv_trailer_label);
 
-        tvDialogTitle.setText(isEdit ? "Edit Film" : "Create Film");
+        tvDialogTitle.setText(isEdit ? R.string.admin_dialog_edit_film : R.string.admin_dialog_create_film);
 
         if (isEdit && args != null) {
             etTitle.setText(args.getString(ARG_FILM_TITLE, ""));
@@ -156,7 +156,11 @@ public class FilmFormDialogFragment extends DialogFragment {
         }
 
         String[] types = {"SINGLE", "SERIES", "LIVE"};
-        String[] typeLabels = {"Movie", "Series", "Live"};
+        String[] typeLabels = {
+                getString(R.string.admin_film_type_movie),
+                getString(R.string.admin_film_type_series),
+                getString(R.string.admin_film_type_live)
+        };
         ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<>(requireContext(),
                 R.layout.item_spinner_dark, typeLabels);
         spinnerAdapter.setDropDownViewResource(R.layout.item_spinner_dropdown_dark);
@@ -207,7 +211,7 @@ public class FilmFormDialogFragment extends DialogFragment {
                         AdminEpisodesDialogFragment.newInstance(editFilmId, args.getString(ARG_FILM_TITLE, ""));
                 episodesDialog.show(getParentFragmentManager(), "episodes_manager");
             } else {
-                Toast.makeText(requireContext(), "Vui lòng lưu phim trước khi quản lý tập", Toast.LENGTH_SHORT).show();
+                Toast.makeText(requireContext(), R.string.admin_save_film_first, Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -216,7 +220,7 @@ public class FilmFormDialogFragment extends DialogFragment {
         dialog.findViewById(R.id.btn_save).setOnClickListener(v -> {
             String title = etTitle.getText().toString().trim();
             if (title.isEmpty()) {
-                etTitle.setError("Title is required");
+                etTitle.setError(getString(R.string.admin_err_title_required));
                 return;
             }
 
@@ -316,7 +320,7 @@ public class FilmFormDialogFragment extends DialogFragment {
             }
 
             if (fileSize == 0L) {
-                showUploadError("Khong the doc tep tin");
+                showUploadError(getString(R.string.admin_upload_err_read));
                 return;
             }
 
@@ -329,20 +333,20 @@ public class FilmFormDialogFragment extends DialogFragment {
                     layoutUploadProgress.setVisibility(View.GONE);
                     if (response.isSuccessful() && response.body() != null && response.body().getData() != null) {
                         targetEditText.setText(response.body().getData());
-                        Toast.makeText(requireContext(), "Tai len thanh cong!", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(requireContext(), R.string.admin_upload_success, Toast.LENGTH_SHORT).show();
                     } else {
-                        showUploadError("Upload that bai: HTTP " + response.code());
+                        showUploadError(getString(R.string.admin_upload_failed_http_format, response.code()));
                     }
                 }
 
                 @Override
                 public void onFailure(Call<ApiResponseDto<String>> call, Throwable t) {
                     layoutUploadProgress.setVisibility(View.GONE);
-                    showUploadError("Loi ket noi: " + t.getMessage());
+                    showUploadError(getString(R.string.admin_upload_err_connection_format, t.getMessage()));
                 }
             });
         } catch (Exception e) {
-            showUploadError("Loi: " + e.getMessage());
+            showUploadError(getString(R.string.admin_upload_err_format, e.getMessage()));
         }
     }
 
@@ -369,7 +373,7 @@ public class FilmFormDialogFragment extends DialogFragment {
             // Copy URI content to temp file
             InputStream inputStream = resolver.openInputStream(fileUri);
             if (inputStream == null) {
-                showUploadError("Không thể đọc tệp tin");
+                showUploadError(getString(R.string.admin_upload_err_read));
                 return;
             }
 
@@ -395,9 +399,9 @@ public class FilmFormDialogFragment extends DialogFragment {
                     if (response.isSuccessful() && response.body() != null && response.body().getData() != null) {
                         String uploadedUrl = response.body().getData();
                         targetEditText.setText(uploadedUrl);
-                        Toast.makeText(requireContext(), "Tải lên thành công!", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(requireContext(), R.string.admin_upload_success, Toast.LENGTH_SHORT).show();
                     } else {
-                        showUploadError("Upload thất bại: HTTP " + response.code());
+                        showUploadError(getString(R.string.admin_upload_failed_http_format, response.code()));
                     }
                     // Cleanup temp file
                     tempFile.delete();
@@ -406,13 +410,13 @@ public class FilmFormDialogFragment extends DialogFragment {
                 @Override
                 public void onFailure(Call<ApiResponseDto<String>> call, Throwable t) {
                     layoutUploadProgress.setVisibility(View.GONE);
-                    showUploadError("Lỗi kết nối: " + t.getMessage());
+                    showUploadError(getString(R.string.admin_upload_err_connection_format, t.getMessage()));
                     tempFile.delete();
                 }
             });
 
         } catch (Exception e) {
-            showUploadError("Lỗi: " + e.getMessage());
+            showUploadError(getString(R.string.admin_upload_err_format, e.getMessage()));
         }
     }
 

@@ -415,4 +415,153 @@
     <string name="admin_analytics_status_active">ACTIVE</string>
     <string name="admin_analytics_status_expiring">EXPIRING ≤7D</string>
     <string name="admin_analytics_status_expired">EXPIRED</string>
+
+    <!-- ============================================================ -->
+    <!-- Admin module - localized strings (i18n)                       -->
+    <!-- ============================================================ -->
+
+    <string name="admin_title_film_management">Film Management</string>
+    <string name="admin_title_user_management">User Management</string>
+    <string name="admin_title_category_management">Category Management</string>
+    <string name="admin_title_analytics">Analytics Dashboard</string>
+
+    <string name="admin_hint_search_films">Search films...</string>
+    <string name="admin_hint_search_users">Search username, email, phone...</string>
+    <string name="admin_hint_search_by_name">Search by name...</string>
+    <string name="admin_hint_film_title">Enter film title</string>
+    <string name="admin_hint_film_description">Enter description</string>
+    <string name="admin_hint_url_or_upload">URL or upload...</string>
+    <string name="admin_hint_upload_video">Upload video file...</string>
+    <string name="admin_hint_upload_episode_video">Upload video...</string>
+    <string name="admin_hint_min_8_chars">At least 8 characters</string>
+    <string name="admin_hint_category_name_example">Action</string>
+    <string name="admin_hint_category_description_example">High-octane films packed with chase scenes, fights, and stunts.</string>
+    <string name="admin_hint_episode_title_example">Episode 1</string>
+
+    <string name="admin_cd_add_film">Add film</string>
+    <string name="admin_cd_add_user">Add user</string>
+    <string name="admin_cd_add_category">Add category</string>
+    <string name="admin_cd_thumbnail">Thumbnail</string>
+    <string name="admin_cd_edit">Edit</string>
+    <string name="admin_cd_delete">Delete</string>
+    <string name="admin_cd_edit_profile">Edit profile</string>
+    <string name="admin_cd_password_reset">Send password reset</string>
+    <string name="admin_cd_avatar">Avatar</string>
+    <string name="admin_cd_avatar_preview">Avatar preview</string>
+    <string name="admin_cd_edit_episode">Edit episode</string>
+    <string name="admin_cd_delete_episode">Delete episode</string>
+    <string name="admin_cd_close">Close</string>
+    <string name="admin_cd_export">Export</string>
+
+    <string name="admin_chart_signups_title">New sign-ups by day</string>
+    <string name="admin_chart_watch_title">Watch sessions by day</string>
+    <string name="admin_card_zero_view_title">Films with zero views</string>
+    <string name="admin_card_zero_view_desc">Content not yet reaching viewers</string>
+    <string name="admin_card_premium_vs_free">Premium vs Free</string>
+    <string name="admin_card_top_favorited">Most favorited films</string>
+    <string name="admin_card_top_commented">Most commented films</string>
+    <string name="admin_card_top_episodes">Most watched episodes</string>
+    <string name="admin_chart_empty">No data yet</string>
+
+    <string name="admin_kpi_total_users">TOTAL USERS</string>
+    <string name="admin_kpi_new_signups">NEW SIGN-UPS</string>
+    <string name="admin_kpi_active_users">ACTIVE USERS</string>
+    <string name="admin_kpi_episode_views">EPISODE VIEWS</string>
+    <string name="admin_kpi_watch_sessions">WATCH SESSIONS</string>
+    <string name="admin_kpi_favorites">FAVORITES</string>
+
+    <string name="admin_module_films_label">Films</string>
+    <string name="admin_module_films_desc">Manage movies &amp; series</string>
+    <string name="admin_module_users_label">Users</string>
+    <string name="admin_module_users_desc">Manage accounts &amp; roles</string>
+    <string name="admin_module_categories_label">Categories</string>
+    <string name="admin_module_categories_desc">Manage genres &amp; tags</string>
+    <string name="admin_module_stats_label">Statistics</string>
+    <string name="admin_module_stats_desc">View analytics &amp; reports</string>
+
+    <string name="admin_logout">Sign out</string>
+    <string name="admin_logout_confirm_msg">Are you sure you want to sign out of the admin account?</string>
+
+    <string name="admin_button_delete">Delete</string>
+    <string name="admin_button_cancel">Cancel</string>
+    <string name="admin_button_send_link">Send link</string>
+
+    <string name="admin_dialog_edit_film">Edit Film</string>
+    <string name="admin_dialog_create_film">Create Film</string>
+    <string name="admin_dialog_delete_film_title">Delete Film</string>
+    <string name="admin_dialog_delete_film_msg">Are you sure you want to delete \"%s\"?</string>
+    <string name="admin_save_film_first">Please save the film before managing episodes</string>
+    <string name="admin_err_title_required">Title is required</string>
+    <string name="admin_film_type_movie">Movie</string>
+    <string name="admin_film_type_series">Series</string>
+    <string name="admin_film_type_live">Live</string>
+
+    <string name="admin_dialog_edit_user">Edit User</string>
+    <string name="admin_dialog_create_user">Create User</string>
+    <string name="admin_dialog_delete_user_title">Delete user</string>
+    <string name="admin_dialog_delete_user_msg">Permanently delete @%s?\n\nTheir subscriptions, watch history, and favorites will be removed.</string>
+    <string name="admin_dialog_send_reset_title">Send password reset?</string>
+    <string name="admin_dialog_send_reset_msg">A reset link will be emailed to %s</string>
+    <string name="admin_role_admin_short">ADMIN</string>
+    <string name="admin_role_user_short">USER</string>
+    <string name="admin_joined_unknown">Joined -</string>
+    <string name="admin_joined_format">Joined %s</string>
+    <string name="admin_toast_cannot_load_users">Cannot load users</string>
+    <string name="admin_toast_created_user">Created user</string>
+    <string name="admin_toast_updated_user">Updated user</string>
+    <string name="admin_toast_cannot_save_user">Cannot save user</string>
+    <string name="admin_toast_deleted_user">Deleted user</string>
+    <string name="admin_toast_cannot_delete_user">Cannot delete user</string>
+    <string name="admin_toast_reset_email_sent">Reset email sent</string>
+    <string name="admin_toast_cannot_send_reset_email">Cannot send reset email</string>
+    <string name="admin_err_username_required">Username required</string>
+    <string name="admin_err_valid_email_required">Valid email required</string>
+    <string name="admin_err_min_6_chars">Min 6 characters</string>
+
+    <string name="admin_dialog_edit_category">Edit Category</string>
+    <string name="admin_dialog_create_category">Create Category</string>
+    <string name="admin_dialog_delete_category_title">Delete category</string>
+    <string name="admin_dialog_delete_category_simple">Delete \"%s\"?</string>
+    <string name="admin_dialog_delete_category_warning">Delete \"%1$s\"?\n\n%2$d film(s) currently tagged with this category will lose this tag.</string>
+    <string name="admin_toast_cannot_load_categories">Cannot load categories</string>
+    <string name="admin_toast_created_category">Created category</string>
+    <string name="admin_toast_updated_category">Updated category</string>
+    <string name="admin_toast_deleted_category">Deleted category</string>
+    <string name="admin_toast_cannot_delete_category">Cannot delete category</string>
+    <string name="admin_toast_cannot_save_category">Cannot save category</string>
+    <string name="admin_err_name_required">Name is required</string>
+    <string name="admin_err_max_255">Max 255 characters</string>
+    <string name="admin_no_description">No description</string>
+
+    <string name="admin_upload_err_read">Cannot read file</string>
+    <string name="admin_upload_success">Upload successful!</string>
+    <string name="admin_upload_failed_http_format">Upload failed: HTTP %d</string>
+    <string name="admin_upload_err_connection_format">Connection error: %s</string>
+    <string name="admin_upload_err_format">Error: %s</string>
+    <string name="admin_upload_failed">Upload failed</string>
+    <string name="admin_upload_connection_error">Upload connection error</string>
+
+    <string name="admin_toast_server_error_format">Server error: %s</string>
+    <string name="admin_toast_cannot_load_analytics">Cannot load analytics</string>
+    <string name="admin_connection_error">Connection error</string>
+
+    <string name="admin_episode_edit">Edit Episode</string>
+    <string name="admin_episode_load_error">Cannot load episodes</string>
+    <string name="admin_episode_err_required">Please enter episode number and title</string>
+    <string name="admin_episode_err_invalid_number">Invalid episode number</string>
+    <string name="admin_episode_added">Episode added</string>
+    <string name="admin_episode_add_failed">Failed to add episode</string>
+    <string name="admin_episode_updated">Episode updated</string>
+    <string name="admin_episode_update_failed">Failed to update episode</string>
+    <string name="admin_episode_delete_title">Delete Episode</string>
+    <string name="admin_episode_delete_confirm_format">Are you sure you want to delete \"%s\"?</string>
+    <string name="admin_episode_deleted">Deleted</string>
+    <string name="admin_episode_delete_failed">Delete failed</string>
+    <string name="admin_episode_uploading">Uploading...</string>
+    <string name="admin_episode_has_video">Has video</string>
+    <string name="admin_episode_no_video">No video</string>
+
+    <string name="admin_period_last_days">last %d days</string>
+    <string name="admin_period_all_time">all time</string>
+    <string name="admin_donut_films_unit">films</string>
 </resources>

@@ -82,7 +82,7 @@
             android:background="@color/surface_tertiary"
             android:clickable="true"
             android:focusable="true"
-            android:contentDescription="Edit" />
+            android:contentDescription="@string/admin_cd_edit" />
 
         <ImageView
             android:id="@+id/btn_delete"
@@ -94,7 +94,7 @@
             android:background="@color/surface_tertiary"
             android:clickable="true"
             android:focusable="true"
-            android:contentDescription="Delete" />
+            android:contentDescription="@string/admin_cd_delete" />
     </LinearLayout>
 
 </LinearLayout>

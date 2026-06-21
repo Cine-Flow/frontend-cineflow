@@ -54,7 +54,7 @@ public class AdminAnalyticsActivity extends com.android.cineflow.ui.base.BaseAct
         setSupportActionBar(toolbar);
         if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-            getSupportActionBar().setTitle("Analytics Dashboard");
+            getSupportActionBar().setTitle(R.string.admin_title_analytics);
         }
         toolbar.setNavigationOnClickListener(v -> onBackPressed());
 
@@ -110,38 +110,39 @@ public class AdminAnalyticsActivity extends com.android.cineflow.ui.base.BaseAct
                             bindAnalytics(response.body().getData());
                         } else {
                             Toast.makeText(AdminAnalyticsActivity.this,
-                                    "Cannot load analytics", Toast.LENGTH_SHORT).show();
+                                    R.string.admin_toast_cannot_load_analytics, Toast.LENGTH_SHORT).show();
                         }
                     }
 
                     @Override
                     public void onFailure(Call<ApiResponseDto<AdminAnalyticsDto>> call, Throwable t) {
                         Toast.makeText(AdminAnalyticsActivity.this,
-                                "Server error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+                                getString(R.string.admin_toast_server_error_format, t.getMessage()), Toast.LENGTH_SHORT).show();
                     }
                 });
     }
 
     private void bindAnalytics(AdminAnalyticsDto data) {
-        String periodLabel = data.getPeriod() + " ngày qua";
+        String periodLabel = getString(R.string.admin_period_last_days, data.getPeriod());
+        String allTime = getString(R.string.admin_period_all_time);
 
-        bindKpi(findViewById(R.id.kpi_users), "TỔNG NGƯỜI DÙNG",
-                formatNumber(data.getTotalUsers()), "", true, "tất cả thời gian",
+        bindKpi(findViewById(R.id.kpi_users), getString(R.string.admin_kpi_total_users),
+                formatNumber(data.getTotalUsers()), "", true, allTime,
                 R.color.brand_primary);
-        bindKpi(findViewById(R.id.kpi_signups), "ĐĂNG KÝ MỚI",
+        bindKpi(findViewById(R.id.kpi_signups), getString(R.string.admin_kpi_new_signups),
                 formatNumber(data.getNewSignups()), "", true, periodLabel,
                 R.color.status_info);
-        bindKpi(findViewById(R.id.kpi_active_users), "NGƯỜI DÙNG HOẠT ĐỘNG",
+        bindKpi(findViewById(R.id.kpi_active_users), getString(R.string.admin_kpi_active_users),
                 formatNumber(data.getActiveUsers()), "", true, periodLabel,
                 R.color.status_success);
-        bindKpi(findViewById(R.id.kpi_views), "LƯỢT XEM TẬP",
+        bindKpi(findViewById(R.id.kpi_views), getString(R.string.admin_kpi_episode_views),
                 formatNumber(data.getEpisodeViews()), "", true, "",
                 R.color.badge_movie);
-        bindKpi(findViewById(R.id.kpi_watch_sessions), "PHIÊN XEM",
+        bindKpi(findViewById(R.id.kpi_watch_sessions), getString(R.string.admin_kpi_watch_sessions),
                 formatNumber(data.getWatchSessions()), "", true, periodLabel,
                 R.color.badge_series);
-        bindKpi(findViewById(R.id.kpi_favorites), "YÊU THÍCH",
-                formatNumber(data.getTotalFavorites()), "", true, "tất cả thời gian",
+        bindKpi(findViewById(R.id.kpi_favorites), getString(R.string.admin_kpi_favorites),
+                formatNumber(data.getTotalFavorites()), "", true, allTime,
                 R.color.brand_accent);
 
         tvSignupsTotal.setText(formatNumber(data.getNewSignups()));
@@ -153,14 +154,14 @@ public class AdminAnalyticsActivity extends com.android.cineflow.ui.base.BaseAct
                 R.color.badge_movie, R.color.badge_series, R.color.badge_live, R.color.brand_primary
         });
         donutFilmType.setSlices(filmSlices);
-        donutFilmType.setCenterText(formatNumber(sumSlices(data.getFilmTypes())), "phim");
+        donutFilmType.setCenterText(formatNumber(sumSlices(data.getFilmTypes())), getString(R.string.admin_donut_films_unit));
         renderLegend(legendFilmType, filmSlices);
 
         List<DonutChartView.Slice> premiumSlices = toSlices(data.getPremiumFreeMix(), new int[] {
                 R.color.badge_premium, R.color.status_info
         });
         donutPremiumFree.setSlices(premiumSlices);
-        donutPremiumFree.setCenterText(formatNumber(sumSlices(data.getPremiumFreeMix())), "phim");
+        donutPremiumFree.setCenterText(formatNumber(sumSlices(data.getPremiumFreeMix())), getString(R.string.admin_donut_films_unit));
         renderLegend(legendPremiumFree, premiumSlices);
 
         barsCategories.setBars(toBars(data.getTopCategories(), R.color.brand_primary));

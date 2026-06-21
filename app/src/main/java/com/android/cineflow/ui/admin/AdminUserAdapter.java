@@ -89,7 +89,9 @@ public class AdminUserAdapter extends RecyclerView.Adapter<AdminUserAdapter.User
             tvName.setText(display);
             tvUsername.setText("@" + user.getUsername());
             tvEmail.setText(user.getEmail());
-            tvJoined.setText(user.getCreatedAt().isEmpty() ? "Joined -" : "Joined " + user.getCreatedAt());
+            tvJoined.setText(user.getCreatedAt().isEmpty()
+                    ? itemView.getContext().getString(R.string.admin_joined_unknown)
+                    : itemView.getContext().getString(R.string.admin_joined_format, user.getCreatedAt()));
 
             GradientDrawable circle = new GradientDrawable();
             circle.setShape(GradientDrawable.OVAL);
@@ -109,7 +111,7 @@ public class AdminUserAdapter extends RecyclerView.Adapter<AdminUserAdapter.User
             }
 
             boolean admin = "ROLE_ADMIN".equals(user.getRole());
-            tvRole.setText(admin ? "ADMIN" : "USER");
+            tvRole.setText(admin ? R.string.admin_role_admin_short : R.string.admin_role_user_short);
             int roleColor = itemView.getContext().getColor(
                     admin ? R.color.brand_primary : R.color.surface_tertiary);
             GradientDrawable roleBg = new GradientDrawable();
