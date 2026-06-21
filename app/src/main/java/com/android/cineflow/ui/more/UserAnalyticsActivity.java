@@ -86,9 +86,9 @@ public class UserAnalyticsActivity extends com.android.cineflow.ui.base.BaseActi
         int hours = totalMinutes / 60;
         int mins = totalMinutes % 60;
         
-        tvTotalTime.setText(hours + " giờ " + mins + " phút");
+        tvTotalTime.setText(getString(R.string.analytics_time_format, hours, mins));
         tvEpisodesWatched.setText(String.valueOf(data.getTotalEpisodesWatched()));
-        tvAvgTime.setText(data.getAverageWatchTimePerDay() + " phút/ngày");
+        tvAvgTime.setText(getString(R.string.analytics_avg_time_format, data.getAverageWatchTimePerDay()));
 
         // Genre Action
         int action = data.getActionPercent();
@@ -108,9 +108,9 @@ public class UserAnalyticsActivity extends com.android.cineflow.ui.base.BaseActi
 
     private void bindMockAnalytics() {
         // Mock data tailored for a typical active student account
-        tvTotalTime.setText("12 giờ 45 phút");
+        tvTotalTime.setText(getString(R.string.analytics_time_format, 12, 45));
         tvEpisodesWatched.setText("24");
-        tvAvgTime.setText("35 phút/ngày");
+        tvAvgTime.setText(getString(R.string.analytics_avg_time_format, 35));
 
         // Action: 55%
         tvGenreActionPercent.setText("55%");

@@ -34,7 +34,7 @@
                 android:id="@+id/tv_admin_title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Admin Panel"
+                android:text="@string/admin_panel"
                 android:textColor="@color/text_primary"
                 android:textSize="17sp"
                 android:fontFamily="sans-serif-medium" />
@@ -43,7 +43,7 @@
                 android:id="@+id/tv_admin_subtitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Manage films, users &amp; more"
+                android:text="@string/admin_panel_desc"
                 android:textColor="@color/text_tertiary"
                 android:textSize="13sp"
                 android:layout_marginTop="3dp" />

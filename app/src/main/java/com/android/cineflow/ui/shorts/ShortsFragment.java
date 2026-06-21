@@ -135,13 +135,29 @@ public class ShortsFragment extends BaseFragment implements ShortsAdapter.OnShor
 
     @Override
     public void onLikeClick(int position) {
+        com.android.cineflow.data.auth.AuthManager auth = com.android.cineflow.data.auth.AuthManager.getInstance();
+        if (auth == null || !auth.isLoggedIn()) {
+            Toast.makeText(requireContext(), "Vui lòng đăng nhập", Toast.LENGTH_SHORT).show();
+            startActivity(new Intent(requireContext(), com.android.cineflow.ui.auth.LoginActivity.class));
+            return;
+        }
+
         ShortVideo video = adapter.getItem(position);
         boolean newState = !video.isLiked();
 
         video.setLiked(newState);
         video.setLikeCount(video.getLikeCount() + (newState ? 1 : -1));
 
-        adapter.notifyItemChanged(position);
+        // Update visible holder directly to avoid PlayerView re-bind (black screen)
+        androidx.recyclerview.widget.RecyclerView rv =
+                (androidx.recyclerview.widget.RecyclerView) viewPagerShorts.getChildAt(0);
+        if (rv != null) {
+            RecyclerView.ViewHolder vh = rv.findViewHolderForAdapterPosition(position);
+            if (vh instanceof ShortsAdapter.ViewHolder) {
+                ((ShortsAdapter.ViewHolder) vh).bind(video);
+            }
+        }
+
         viewModel.toggleLike(video, newState);
     }
 
@@ -157,8 +173,8 @@ public class ShortsFragment extends BaseFragment implements ShortsAdapter.OnShor
         Intent shareIntent = new Intent(Intent.ACTION_SEND);
         shareIntent.setType("text/plain");
         shareIntent.putExtra(Intent.EXTRA_TEXT,
-                "Xem video \"" + video.getTitle() + "\" trên CineFlow!\n" + video.getVideoUrl());
-        startActivity(Intent.createChooser(shareIntent, "Chia sẻ qua"));
+                getString(R.string.share_video_text, video.getTitle(), video.getVideoUrl()));
+        startActivity(Intent.createChooser(shareIntent, getString(R.string.share_via)));
     }
 
     private void showCommentsDialog(ShortVideo video) {
@@ -170,10 +186,22 @@ public class ShortsFragment extends BaseFragment implements ShortsAdapter.OnShor
         EditText etCommentInput = dialogView.findViewById(R.id.et_comment_input_shorts);
         View btnSendComment = dialogView.findViewById(R.id.btn_send_comment_shorts);
         TextView tvCommentLoginHint = dialogView.findViewById(R.id.tv_comment_login_hint_shorts);
+        TextView tvCommentsCount = dialogView.findViewById(R.id.tv_comments_count);
+        View ivCommentsClose = dialogView.findViewById(R.id.iv_comments_close);
 
         androidx.appcompat.app.AlertDialog dialog = new MaterialAlertDialogBuilder(requireContext())
                 .setView(dialogView)
+                .setBackgroundInsetTop(0)
+                .setBackgroundInsetBottom(0)
                 .show();
+        if (dialog.getWindow() != null) {
+            dialog.getWindow().setBackgroundDrawable(new android.graphics.drawable.ColorDrawable(android.graphics.Color.TRANSPARENT));
+            dialog.getWindow().setGravity(android.view.Gravity.BOTTOM);
+            dialog.getWindow().setLayout(
+                    android.view.ViewGroup.LayoutParams.MATCH_PARENT,
+                    android.view.ViewGroup.LayoutParams.WRAP_CONTENT);
+        }
+        ivCommentsClose.setOnClickListener(v -> dialog.dismiss());
 
         com.android.cineflow.data.auth.AuthManager auth = com.android.cineflow.data.auth.AuthManager.getInstance();
         boolean loggedIn = auth != null && auth.isLoggedIn();
@@ -190,12 +218,33 @@ public class ShortsFragment extends BaseFragment implements ShortsAdapter.OnShor
             });
         }
 
-        List<String> commentStrings = new ArrayList<>();
-        ArrayAdapter<String> commentAdapter = new ArrayAdapter<>(
-                requireContext(),
-                R.layout.item_comment,
-                R.id.tv_comment_content,
-                commentStrings);
+        List<com.android.cineflow.data.network.dto.CommentDto> commentList = new ArrayList<>();
+        ArrayAdapter<com.android.cineflow.data.network.dto.CommentDto> commentAdapter =
+                new ArrayAdapter<com.android.cineflow.data.network.dto.CommentDto>(
+                        requireContext(), R.layout.item_comment, commentList) {
+                    @Override
+                    public View getView(int position, View convertView, android.view.ViewGroup parent) {
+                        View v = convertView != null ? convertView
+                                : LayoutInflater.from(getContext()).inflate(R.layout.item_comment, parent, false);
+                        TextView tvUser = v.findViewById(R.id.tv_comment_user);
+                        TextView tvContent = v.findViewById(R.id.tv_comment_content);
+                        com.android.cineflow.data.network.dto.CommentDto c = getItem(position);
+                        if (c == null) return v;
+                        boolean isEmpty = c.getId() == null;
+                        String author = c.getAuthorName() != null ? "@" + c.getAuthorName() : "@user";
+                        tvUser.setText(author);
+                        tvContent.setText(c.getContent() != null ? c.getContent() : "");
+                        tvUser.setVisibility(isEmpty ? View.GONE : View.VISIBLE);
+                        if (isEmpty) {
+                            tvContent.setTextColor(getResources().getColor(R.color.text_tertiary));
+                            tvContent.setGravity(android.view.Gravity.CENTER);
+                        } else {
+                            tvContent.setTextColor(getResources().getColor(R.color.text_primary));
+                            tvContent.setGravity(android.view.Gravity.START);
+                        }
+                        return v;
+                    }
+                };
         lvComments.setAdapter(commentAdapter);
 
         // Define runnable to load and refresh comments
@@ -203,15 +252,18 @@ public class ShortsFragment extends BaseFragment implements ShortsAdapter.OnShor
             @Override
             public void run() {
                 viewModel.getComments(video.getId()).observe(getViewLifecycleOwner(), commentsDto -> {
-                    commentStrings.clear();
+                    commentList.clear();
+                    int count = 0;
                     if (commentsDto != null && !commentsDto.isEmpty()) {
-                        for (com.android.cineflow.data.network.dto.CommentDto c : commentsDto) {
-                            String author = c.getAuthorName() != null ? c.getAuthorName() : "Người dùng";
-                            commentStrings.add(author + ": " + c.getContent());
-                        }
+                        commentList.addAll(commentsDto);
+                        count = commentsDto.size();
                     } else {
-                        commentStrings.add("Chưa có bình luận nào.");
+                        com.android.cineflow.data.network.dto.CommentDto empty =
+                                new com.android.cineflow.data.network.dto.CommentDto();
+                        empty.setContent("Chưa có bình luận nào.");
+                        commentList.add(empty);
                     }
+                    tvCommentsCount.setText(String.valueOf(count));
                     commentAdapter.notifyDataSetChanged();
                 });
             }

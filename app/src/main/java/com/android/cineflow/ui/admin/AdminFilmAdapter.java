@@ -85,7 +85,7 @@ public class AdminFilmAdapter extends RecyclerView.Adapter<AdminFilmAdapter.Film
 
             if (film.getIsPremium()) {
                 tvPremium.setVisibility(View.VISIBLE);
-                tvPremium.setText("PREMIUM");
+                tvPremium.setText(R.string.admin_premium_badge);
             } else {
                 tvPremium.setVisibility(View.GONE);
             }

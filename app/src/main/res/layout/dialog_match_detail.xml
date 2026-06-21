@@ -12,7 +12,7 @@
         android:id="@+id/tv_dialog_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Chi tiết Trận đấu"
+        android:text="@string/match_detail_title"
         android:textColor="@color/text_primary"
         android:textSize="18sp"
         android:textStyle="bold"
@@ -73,7 +73,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="VS"
+                android:text="@string/match_detail_vs"
                 android:textColor="@color/brand_primary"
                 android:textSize="20sp"
                 android:textStyle="bold" />
@@ -164,7 +164,7 @@
             style="@style/Widget.Cineflow.Button.Secondary"
             android:layout_width="wrap_content"
             android:layout_height="40dp"
-            android:text="Đóng"
+            android:text="@string/match_detail_close"
             android:layout_marginEnd="8dp" />
 
         <com.google.android.material.button.MaterialButton
@@ -172,7 +172,7 @@
             style="@style/Widget.Cineflow.Button.Primary"
             android:layout_width="wrap_content"
             android:layout_height="40dp"
-            android:text="Nhắc tôi" />
+            android:text="@string/match_detail_remind" />
     </LinearLayout>
 
 </LinearLayout>

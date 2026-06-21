@@ -35,7 +35,7 @@
             android:paddingEnd="6dp"
             android:paddingTop="2dp"
             android:paddingBottom="2dp"
-            android:text="PREMIUM"
+            android:text="@string/admin_premium_badge"
             android:textColor="#000000"
             android:textSize="9sp"
             android:textStyle="bold"

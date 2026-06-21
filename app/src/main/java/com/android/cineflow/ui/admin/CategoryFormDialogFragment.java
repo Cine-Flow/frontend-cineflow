@@ -49,10 +49,9 @@ public class CategoryFormDialogFragment extends DialogFragment {
             etName.setText(editing.getName());
             etDescription.setText(editing.getDescription());
             long filmCount = editing.getFilmCount();
-            tvMeta.setText("ID #" + editing.getId() + " - " + filmCount + " film"
-                    + (filmCount == 1 ? "" : "s") + " tagged");
+            tvMeta.setText(getString(R.string.admin_category_meta_format, editing.getId(), filmCount, filmCount == 1 ? "" : "s"));
         } else {
-            tvMeta.setText("New category - ID auto-assigned on save");
+            tvMeta.setText(R.string.admin_category_new);
         }
 
         dialog.findViewById(R.id.btn_cancel).setOnClickListener(v -> dismiss());

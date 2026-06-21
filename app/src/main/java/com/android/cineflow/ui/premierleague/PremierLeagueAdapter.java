@@ -199,9 +199,9 @@ public class PremierLeagueAdapter extends BaseAdapter {
         btnSelectDate.setVisibility(isMatchSection ? View.VISIBLE : View.GONE);
         if (isMatchSection) {
             if (PremierLeagueSection.MODE_FINISHED.equals(section.getListMode())) {
-                btnSelectDate.setText("Chọn ngày xem kết quả");
+                btnSelectDate.setText(R.string.pl_select_date_results);
             } else {
-                btnSelectDate.setText("Chọn ngày xem lịch đấu");
+                btnSelectDate.setText(R.string.pl_select_date_fixtures);
             }
         }
         btnSelectDate.setOnClickListener(view -> showFixtureDatePicker(section));
@@ -211,9 +211,9 @@ public class PremierLeagueAdapter extends BaseAdapter {
         } else {
             tvEmptyMatches.setVisibility(View.VISIBLE);
             if (PremierLeagueSection.MODE_FINISHED.equals(section.getListMode())) {
-                tvEmptyMatches.setText("Không có kết quả đấu trong ngày này");
+                tvEmptyMatches.setText(R.string.pl_no_results_date);
             } else {
-                tvEmptyMatches.setText("Không có lịch thi đấu trong ngày này");
+                tvEmptyMatches.setText(R.string.pl_no_fixtures_date);
             }
         }
         if (container != null) {

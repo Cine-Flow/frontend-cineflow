@@ -346,7 +346,7 @@ public class PlayerActivity extends com.android.cineflow.ui.base.BaseActivity {
         shareIntent.putExtra(Intent.EXTRA_SUBJECT, title);
         shareIntent.putExtra(Intent.EXTRA_TEXT, textToShare);
 
-        startActivity(Intent.createChooser(shareIntent, "Chia sẻ qua"));
+        startActivity(Intent.createChooser(shareIntent, getString(R.string.share_via)));
     }
 
     @OptIn(markerClass = UnstableApi.class)

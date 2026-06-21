@@ -2,26 +2,61 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="400dp"
+    android:layout_height="560dp"
     android:orientation="vertical"
-    android:background="@color/surface_primary"
-    android:padding="16dp">
+    android:background="@drawable/bg_comments_sheet">
 
-    <TextView
+    <!-- Drag handle -->
+    <View
+        android:layout_width="36dp"
+        android:layout_height="4dp"
+        android:layout_gravity="center_horizontal"
+        android:background="@drawable/bg_drag_handle"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp" />
+
+    <!-- Header row: title + count + close -->
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Bình luận"
-        android:textColor="@color/text_primary"
-        android:textSize="18sp"
-        android:textStyle="bold"
-        android:gravity="center"
-        android:layout_marginBottom="12dp" />
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:paddingHorizontal="16dp"
+        android:paddingBottom="10dp">
+
+        <TextView
+            android:id="@+id/tv_comments_title"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:text="@string/detail_comments"
+            android:textColor="@color/text_primary"
+            android:textSize="16sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/tv_comments_count"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/text_tertiary"
+            android:textSize="13sp"
+            android:layout_marginEnd="12dp" />
+
+        <ImageView
+            android:id="@+id/iv_comments_close"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:src="@drawable/ic_close"
+            app:tint="@color/text_primary"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:clickable="true"
+            android:focusable="true" />
+    </LinearLayout>
 
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:background="@color/divider"
-        android:layout_marginBottom="8dp" />
+        android:background="@color/divider" />
 
     <ListView
         android:id="@+id/lv_comments"
@@ -30,7 +65,16 @@
         android:layout_weight="1"
         android:divider="@null"
         android:dividerHeight="0dp"
-        android:scrollbars="none" />
+        android:scrollbars="vertical"
+        android:overScrollMode="ifContentScrolls"
+        android:clipToPadding="false"
+        android:paddingHorizontal="14dp"
+        android:paddingVertical="4dp" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/divider" />
 
     <!-- Comment input container -->
     <LinearLayout
@@ -38,57 +82,68 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:layout_marginTop="8dp"
         android:gravity="center_vertical"
-        android:background="@drawable/bg_comment_input"
-        android:paddingStart="12dp"
-        android:paddingEnd="4dp"
-        android:paddingTop="4dp"
-        android:paddingBottom="4dp">
+        android:paddingHorizontal="14dp"
+        android:paddingVertical="10dp">
 
-        <EditText
-            android:id="@+id/et_comment_input_shorts"
+        <ImageView
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:src="@drawable/ic_user_avatar"
+            android:background="@drawable/shape_circle_orange"
+            android:padding="2dp"
+            android:layout_marginEnd="10dp" />
+
+        <LinearLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:background="@android:color/transparent"
-            android:hint="Viết bình luận..."
-            android:inputType="textCapSentences|textMultiLine"
-            android:maxLines="3"
-            android:maxLength="1000"
-            android:textColor="@color/text_primary"
-            android:textColorHint="@color/text_tertiary"
-            android:textSize="14sp"
-            android:importantForAutofill="no" />
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:background="@drawable/bg_comment_input"
+            android:paddingStart="14dp"
+            android:paddingEnd="6dp"
+            android:paddingTop="4dp"
+            android:paddingBottom="4dp">
 
-        <Button
-            android:id="@+id/btn_send_comment_shorts"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:minWidth="0dp"
-            android:minHeight="0dp"
-            android:paddingStart="12dp"
-            android:paddingEnd="12dp"
-            android:paddingTop="6dp"
-            android:paddingBottom="6dp"
-            android:backgroundTint="@color/brand_primary"
-            android:text="Gửi"
-            android:textColor="@color/text_primary"
-            android:textSize="13sp"
-            android:textStyle="bold"
-            app:cornerRadius="20dp" />
+            <EditText
+                android:id="@+id/et_comment_input_shorts"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@android:color/transparent"
+                android:hint="Thêm bình luận..."
+                android:inputType="textCapSentences|textMultiLine"
+                android:maxLines="3"
+                android:maxLength="1000"
+                android:textColor="@color/text_primary"
+                android:textColorHint="@color/text_tertiary"
+                android:textSize="14sp"
+                android:importantForAutofill="no" />
+
+            <ImageView
+                android:id="@+id/btn_send_comment_shorts"
+                android:layout_width="36dp"
+                android:layout_height="36dp"
+                android:padding="8dp"
+                android:src="@drawable/ic_send"
+                app:tint="@color/brand_primary"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:clickable="true"
+                android:focusable="true" />
+        </LinearLayout>
     </LinearLayout>
 
     <TextView
         android:id="@+id/tv_comment_login_hint_shorts"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
         android:gravity="center"
-        android:text="Đăng nhập để bình luận"
-        android:textColor="@color/text_tertiary"
+        android:text="@string/comments_login_to_comment"
+        android:textColor="@color/brand_accent"
         android:textSize="13sp"
+        android:textStyle="bold"
+        android:padding="14dp"
         android:visibility="gone" />
 
 </LinearLayout>
-

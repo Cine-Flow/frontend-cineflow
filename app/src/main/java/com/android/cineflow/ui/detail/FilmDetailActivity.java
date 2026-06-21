@@ -279,9 +279,9 @@ public class FilmDetailActivity extends com.android.cineflow.ui.base.BaseActivit
         
         if ("SPORTS".equals(film.getType())) {
             if (film.getTrailerUrl() == null || film.getTrailerUrl().isEmpty()) {
-                tvType.setText("Tin tức");
+                tvType.setText(R.string.detail_type_news);
             } else {
-                tvType.setText("Bóng đá");
+                tvType.setText(R.string.detail_type_football);
             }
         } else {
             tvType.setText(film.getType());
@@ -304,7 +304,7 @@ public class FilmDetailActivity extends com.android.cineflow.ui.base.BaseActivit
             tvEpisodesTitle.setVisibility(android.view.View.GONE);
             rvEpisodes.setVisibility(android.view.View.GONE);
 
-            btnPlayMain.setText("▶  Xem trực tiếp");
+            btnPlayMain.setText(R.string.detail_btn_watch_live);
             btnPlayMain.setEnabled(true);
             btnPlayMain.setOnClickListener(v -> {
                 Intent intent = new Intent(this, PlayerActivity.class);
@@ -330,9 +330,9 @@ public class FilmDetailActivity extends com.android.cineflow.ui.base.BaseActivit
             rvEpisodes.setVisibility(android.view.View.GONE);
 
             if ("LIVE".equals(film.getType())) {
-                btnPlayMain.setText("▶  Xem trực tiếp");
+                btnPlayMain.setText(R.string.detail_btn_watch_live);
             } else {
-                btnPlayMain.setText(" Xem ngay");
+                btnPlayMain.setText(R.string.detail_btn_watch_now);
             }
             btnPlayMain.setEnabled(true);
             btnPlayMain.setOnClickListener(v -> {

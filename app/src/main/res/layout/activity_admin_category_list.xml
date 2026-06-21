@@ -85,7 +85,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Categories"
+                android:text="@string/admin_categories"
                 android:textColor="@color/text_tertiary"
                 android:textSize="11sp" />
         </LinearLayout>
@@ -111,7 +111,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Film tags"
+                android:text="@string/admin_category_film_tags"
                 android:textColor="@color/text_tertiary"
                 android:textSize="11sp" />
         </LinearLayout>
@@ -137,7 +137,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Unused"
+                android:text="@string/admin_category_unused"
                 android:textColor="@color/text_tertiary"
                 android:textSize="11sp" />
         </LinearLayout>

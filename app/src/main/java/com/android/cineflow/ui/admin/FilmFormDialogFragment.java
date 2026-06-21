@@ -268,7 +268,7 @@ public class FilmFormDialogFragment extends DialogFragment {
 
     private void updateTypeVisibility() {
         if (tvTrailerLabel != null) {
-            tvTrailerLabel.setText("LIVE".equals(selectedType) ? "Live stream URL" : "Trailer URL");
+            tvTrailerLabel.setText("LIVE".equals(selectedType) ? getString(R.string.admin_trailer_label_live) : getString(R.string.admin_trailer_label_default));
         }
         if ("SINGLE".equals(selectedType)) {
             layoutVideoUrl.setVisibility(View.VISIBLE);
@@ -291,7 +291,7 @@ public class FilmFormDialogFragment extends DialogFragment {
 
     private void uploadFileStreaming(Uri fileUri, String folder, EditText targetEditText) {
         layoutUploadProgress.setVisibility(View.VISIBLE);
-        tvUploadStatus.setText("Dang tai len...");
+        tvUploadStatus.setText(getString(R.string.admin_uploading));
 
         try {
             ContentResolver resolver = requireContext().getContentResolver();
@@ -348,7 +348,7 @@ public class FilmFormDialogFragment extends DialogFragment {
 
     private void uploadFile(Uri fileUri, String folder, EditText targetEditText) {
         layoutUploadProgress.setVisibility(View.VISIBLE);
-        tvUploadStatus.setText("Đang tải lên...");
+        tvUploadStatus.setText(getString(R.string.admin_uploading));
 
         try {
             ContentResolver resolver = requireContext().getContentResolver();

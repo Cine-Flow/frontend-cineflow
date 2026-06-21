@@ -175,14 +175,14 @@ public class AdminAnalyticsActivity extends com.android.cineflow.ui.base.BaseAct
         styleTab(iconCatalog, labelCatalog, section == Section.CATALOG);
         styleTab(iconSubs, labelSubs, section == Section.SUBSCRIPTIONS);
         if (section == Section.OVERVIEW) {
-            tvSectionTitle.setText("Overview");
-            tvSectionSubtitle.setText("Engagement KPIs from backend analytics");
+            tvSectionTitle.setText(R.string.admin_section_overview);
+            tvSectionSubtitle.setText(R.string.admin_section_overview_subtitle);
         } else if (section == Section.CATALOG) {
-            tvSectionTitle.setText("Catalog");
-            tvSectionSubtitle.setText("Film type, category and top title data");
+            tvSectionTitle.setText(R.string.admin_section_catalog);
+            tvSectionSubtitle.setText(R.string.admin_section_catalog_subtitle);
         } else {
-            tvSectionTitle.setText("Subscriptions");
-            tvSectionSubtitle.setText("Active packages and revenue summary");
+            tvSectionTitle.setText(R.string.admin_section_subscriptions);
+            tvSectionSubtitle.setText(R.string.admin_section_subscriptions_subtitle);
         }
     }
 

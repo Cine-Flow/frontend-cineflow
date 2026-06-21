@@ -82,7 +82,7 @@
                         android:id="@+id/chip_7d"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="7D"
+                        android:text="@string/admin_analytics_7d"
                         android:textSize="12sp"
                         android:textStyle="bold"
                         android:paddingStart="14dp"
@@ -96,7 +96,7 @@
                         android:id="@+id/chip_30d"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="30D"
+                        android:text="@string/admin_analytics_30d"
                         android:textSize="12sp"
                         android:textStyle="bold"
                         android:paddingStart="14dp"
@@ -111,7 +111,7 @@
                         android:id="@+id/chip_90d"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="90D"
+                        android:text="@string/admin_analytics_90d"
                         android:textSize="12sp"
                         android:textStyle="bold"
                         android:paddingStart="14dp"
@@ -192,7 +192,7 @@
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="New sign-ups"
+                                android:text="@string/admin_analytics_new_signups"
                                 android:textColor="@color/text_primary"
                                 android:textSize="15sp"
                                 android:textStyle="bold" />
@@ -200,7 +200,7 @@
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="From users.created_at"
+                                android:text="@string/admin_analytics_new_signups_source"
                                 android:textColor="@color/text_tertiary"
                                 android:textSize="11sp" />
                         </LinearLayout>
@@ -243,7 +243,7 @@
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="Watch sessions"
+                                android:text="@string/admin_analytics_watch_sessions"
                                 android:textColor="@color/text_primary"
                                 android:textSize="15sp"
                                 android:textStyle="bold" />
@@ -251,7 +251,7 @@
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="From watch_history.last_watched_at"
+                                android:text="@string/admin_analytics_watch_sessions_source"
                                 android:textColor="@color/text_tertiary"
                                 android:textSize="11sp" />
                         </LinearLayout>
@@ -302,7 +302,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Catalog mix by type"
+                        android:text="@string/admin_analytics_catalog_mix"
                         android:textColor="@color/text_primary"
                         android:textSize="15sp"
                         android:textStyle="bold" />
@@ -310,7 +310,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="films.type — SINGLE / SERIES / LIVE"
+                        android:text="@string/admin_analytics_catalog_mix_source"
                         android:textColor="@color/text_tertiary"
                         android:textSize="11sp" />
 
@@ -347,7 +347,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Top categories by film count"
+                        android:text="@string/admin_analytics_top_categories"
                         android:textColor="@color/text_primary"
                         android:textSize="15sp"
                         android:textStyle="bold" />
@@ -355,7 +355,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="COUNT(*) GROUP BY category from film_categories"
+                        android:text="@string/admin_analytics_top_categories_source"
                         android:textColor="@color/text_tertiary"
                         android:textSize="11sp"
                         android:layout_marginBottom="10dp" />
@@ -376,7 +376,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Top films by total views"
+                        android:text="@string/admin_analytics_top_films"
                         android:textColor="@color/text_primary"
                         android:textSize="15sp"
                         android:textStyle="bold" />
@@ -384,7 +384,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="SUM(episodes.view_count) GROUP BY film"
+                        android:text="@string/admin_analytics_top_films_source"
                         android:textColor="@color/text_tertiary"
                         android:textSize="11sp"
                         android:layout_marginBottom="10dp" />
@@ -448,7 +448,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Active subscriptions by package"
+                        android:text="@string/admin_analytics_active_subs"
                         android:textColor="@color/text_primary"
                         android:textSize="15sp"
                         android:textStyle="bold" />
@@ -456,7 +456,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="user_subscriptions WHERE status = 'ACTIVE'"
+                        android:text="@string/admin_analytics_active_subs_source"
                         android:textColor="@color/text_tertiary"
                         android:textSize="11sp" />
 
@@ -492,7 +492,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Subscription health"
+                        android:text="@string/admin_analytics_sub_health"
                         android:textColor="@color/text_primary"
                         android:textSize="15sp"
                         android:textStyle="bold"
@@ -521,7 +521,7 @@
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="ACTIVE"
+                                android:text="@string/admin_analytics_status_active"
                                 android:textColor="@color/text_tertiary"
                                 android:textSize="11sp"
                                 android:textStyle="bold" />
@@ -545,7 +545,7 @@
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="EXPIRING ≤7D"
+                                android:text="@string/admin_analytics_status_expiring"
                                 android:textColor="@color/text_tertiary"
                                 android:textSize="11sp"
                                 android:textStyle="bold" />
@@ -569,7 +569,7 @@
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="EXPIRED"
+                                android:text="@string/admin_analytics_status_expired"
                                 android:textColor="@color/text_tertiary"
                                 android:textSize="11sp"
                                 android:textStyle="bold" />
@@ -613,7 +613,7 @@
                 android:id="@+id/label_overview"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Overview"
+                android:text="@string/admin_section_overview"
                 android:textSize="11sp"
                 android:textStyle="bold"
                 android:layout_marginTop="4dp" />
@@ -643,7 +643,7 @@
                 android:id="@+id/label_catalog"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Catalog"
+                android:text="@string/admin_section_catalog"
                 android:textSize="11sp"
                 android:textStyle="bold"
                 android:layout_marginTop="4dp" />
@@ -673,7 +673,7 @@
                 android:id="@+id/label_subscriptions"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Subscriptions"
+                android:text="@string/admin_section_subscriptions"
                 android:textSize="11sp"
                 android:textStyle="bold"
                 android:layout_marginTop="4dp" />

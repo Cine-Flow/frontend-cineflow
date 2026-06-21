@@ -67,7 +67,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Username *"
+            android:text="@string/form_username"
             android:textColor="@color/text_secondary"
             android:textSize="12sp" />
 
@@ -90,7 +90,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Unique. Used to sign in."
+            android:text="@string/form_username_hint"
             android:textColor="@color/text_tertiary"
             android:textSize="11sp"
             android:layout_marginBottom="12dp" />
@@ -98,7 +98,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Email *"
+            android:text="@string/form_email_star"
             android:textColor="@color/text_secondary"
             android:textSize="12sp" />
 
@@ -120,7 +120,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Full name"
+            android:text="@string/form_full_name"
             android:textColor="@color/text_secondary"
             android:textSize="12sp" />
 
@@ -142,7 +142,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Phone number"
+            android:text="@string/form_phone_number"
             android:textColor="@color/text_secondary"
             android:textSize="12sp" />
 
@@ -164,7 +164,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Avatar URL"
+            android:text="@string/form_avatar_url"
             android:textColor="@color/text_secondary"
             android:textSize="12sp" />
 
@@ -186,7 +186,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Role"
+            android:text="@string/form_role"
             android:textColor="@color/text_secondary"
             android:textSize="12sp" />
 
@@ -201,7 +201,7 @@
                 android:id="@+id/rb_role_user"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="User"
+                android:text="@string/form_role_user"
                 android:textColor="@color/text_secondary"
                 android:buttonTint="@color/brand_primary" />
 
@@ -209,7 +209,7 @@
                 android:id="@+id/rb_role_admin"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Admin"
+                android:text="@string/form_role_admin"
                 android:textColor="@color/text_secondary"
                 android:buttonTint="@color/brand_primary"
                 android:layout_marginStart="20dp" />
@@ -225,7 +225,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Initial password *"
+                android:text="@string/form_initial_password"
                 android:textColor="@color/text_secondary"
                 android:textSize="12sp" />
 
@@ -247,7 +247,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Only set on creation. Use the reset action to change it later."
+                android:text="@string/form_initial_password_hint"
                 android:textColor="@color/text_tertiary"
                 android:textSize="11sp" />
         </LinearLayout>
@@ -263,7 +263,7 @@
                 style="@style/Widget.Cineflow.Button.Secondary"
                 android:layout_width="wrap_content"
                 android:layout_height="40dp"
-                android:text="Cancel"
+                android:text="@string/cancel"
                 android:layout_marginEnd="8dp" />
 
             <com.google.android.material.button.MaterialButton
@@ -271,7 +271,7 @@
                 style="@style/Widget.Cineflow.Button.Primary"
                 android:layout_width="wrap_content"
                 android:layout_height="40dp"
-                android:text="Save" />
+                android:text="@string/save" />
         </LinearLayout>
 
     </LinearLayout>

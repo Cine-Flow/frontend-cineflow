@@ -328,7 +328,7 @@
     <string name="form_initial_password_hint">Only set on creation. Use the reset action to change it later.</string>
 
     <!-- Match detail dialog -->
-    <string name="match_detail_title">Di tiết Trận đấu</string>
+    <string name="match_detail_title">Chi tiết Trận đấu</string>
     <string name="match_detail_vs">VS</string>
     <string name="match_detail_stadium_format">🏟️ Sân vận động: %s</string>
     <string name="match_detail_referee_format">🏁 Trọng tài: %s</string>

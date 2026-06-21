@@ -120,11 +120,11 @@ public class AdminUserAdapter extends RecyclerView.Adapter<AdminUserAdapter.User
                     admin ? R.color.text_primary : R.color.text_secondary));
 
             if (user.getSubscriptionPlan() != null && !user.getSubscriptionPlan().isEmpty()) {
-                String until = user.getSubscriptionEndDate() != null ? " - until " + user.getSubscriptionEndDate() : "";
-                tvSubscription.setText(user.getSubscriptionPlan() + until);
+                String until = user.getSubscriptionEndDate() != null ? itemView.getContext().getString(R.string.admin_subscription_until_format, user.getSubscriptionPlan(), user.getSubscriptionEndDate()) : user.getSubscriptionPlan();
+                tvSubscription.setText(until);
                 tvSubscription.setTextColor(itemView.getContext().getColor(R.color.badge_premium));
             } else {
-                tvSubscription.setText("Free tier");
+                tvSubscription.setText(R.string.admin_free_tier);
                 tvSubscription.setTextColor(itemView.getContext().getColor(R.color.text_tertiary));
             }
 

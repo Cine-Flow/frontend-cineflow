@@ -97,7 +97,7 @@ public class AdminEpisodesDialogFragment extends DialogFragment {
         dialog.setContentView(R.layout.dialog_episodes_manager);
 
         TextView tvTitle = dialog.findViewById(R.id.tv_dialog_title);
-        tvTitle.setText("Tập phim - " + filmTitle);
+        tvTitle.setText(getString(R.string.admin_episode_title, filmTitle));
 
         progressBar = dialog.findViewById(R.id.progress_bar);
         RecyclerView rvEpisodes = dialog.findViewById(R.id.rv_episodes);
@@ -158,7 +158,7 @@ public class AdminEpisodesDialogFragment extends DialogFragment {
                     .max(Integer::compareTo)
                     .orElse(0) + 1;
             etEpNumber.setText(String.valueOf(nextEpNumber));
-            etEpTitle.setText("Tập " + nextEpNumber);
+            etEpTitle.setText(getString(R.string.admin_episode_default_title, nextEpNumber));
         }
 
         formDialog.findViewById(R.id.btn_upload_ep_video).setOnClickListener(v -> {
@@ -391,7 +391,7 @@ public class AdminEpisodesDialogFragment extends DialogFragment {
         @Override
         public void onBindViewHolder(@NonNull VH holder, int position) {
             EpisodeDto ep = episodes.get(position);
-            holder.tvNumber.setText("Tập " + ep.getEpisodeNumber());
+            holder.tvNumber.setText(getString(R.string.admin_episode_number, ep.getEpisodeNumber()));
             holder.tvTitle.setText(ep.getTitle() != null ? ep.getTitle() : "");
             boolean hasVideo = ep.getVideoUrl() != null && !ep.getVideoUrl().isEmpty();
             holder.tvStatus.setText(hasVideo ? "Có video" : "Chưa có video");

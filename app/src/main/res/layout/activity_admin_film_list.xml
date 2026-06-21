@@ -109,7 +109,7 @@
             style="@style/Widget.Cineflow.Button.Secondary"
             android:layout_width="wrap_content"
             android:layout_height="36dp"
-            android:text="Prev"
+            android:text="@string/admin_prev"
             android:textAllCaps="false"
             android:textSize="12sp"
             android:enabled="false" />
@@ -128,7 +128,7 @@
             style="@style/Widget.Cineflow.Button.Secondary"
             android:layout_width="wrap_content"
             android:layout_height="36dp"
-            android:text="Next"
+            android:text="@string/admin_next"
             android:textAllCaps="false"
             android:textSize="12sp"
             android:enabled="false" />

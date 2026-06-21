@@ -72,16 +72,15 @@ public class UserFormDialogFragment extends DialogFragment {
             etFullName.setText(editing.getFullName());
             etPhone.setText(editing.getPhoneNumber());
             etAvatarUrl.setText(editing.getAvatarUrl());
-            tvRoleReadonly.setText("Role: "
-                    + ("ROLE_ADMIN".equals(editing.getRole()) ? "Admin" : "User")
-                    + " - ID " + editing.getId());
+            tvRoleReadonly.setText(getString(R.string.admin_user_role_format,
+                    "ROLE_ADMIN".equals(editing.getRole()) ? "Admin" : "User", editing.getId()));
             if ("ROLE_ADMIN".equals(editing.getRole())) {
                 rbRoleAdmin.setChecked(true);
             } else {
                 rbRoleUser.setChecked(true);
             }
         } else {
-            tvRoleReadonly.setText("Choose role for the new user.");
+            tvRoleReadonly.setText(R.string.admin_user_role_choose);
             rbRoleUser.setChecked(true);
         }
 

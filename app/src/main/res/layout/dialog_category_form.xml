@@ -30,7 +30,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Name *"
+            android:text="@string/category_form_name"
             android:textColor="@color/text_secondary"
             android:textSize="12sp" />
 
@@ -52,7 +52,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Shown to users when browsing films."
+            android:text="@string/category_form_name_hint"
             android:textColor="@color/text_tertiary"
             android:textSize="11sp"
             android:layout_marginBottom="14dp" />
@@ -60,7 +60,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Description"
+            android:text="@string/category_form_description"
             android:textColor="@color/text_secondary"
             android:textSize="12sp" />
 
@@ -89,7 +89,7 @@
                 style="@style/Widget.Cineflow.Button.Secondary"
                 android:layout_width="wrap_content"
                 android:layout_height="40dp"
-                android:text="Cancel"
+                android:text="@string/cancel"
                 android:layout_marginEnd="8dp" />
 
             <com.google.android.material.button.MaterialButton
@@ -97,7 +97,7 @@
                 style="@style/Widget.Cineflow.Button.Primary"
                 android:layout_width="wrap_content"
                 android:layout_height="40dp"
-                android:text="Save" />
+                android:text="@string/save" />
         </LinearLayout>
 
     </LinearLayout>
