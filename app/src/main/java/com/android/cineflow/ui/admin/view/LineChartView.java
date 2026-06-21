@@ -45,12 +45,12 @@ public class LineChartView extends View {
         linePaint.setStrokeJoin(Paint.Join.ROUND);
         linePaint.setStrokeCap(Paint.Cap.ROUND);
         fillPaint.setStyle(Paint.Style.FILL);
-        gridPaint.setColor(Color.parseColor("#E9ECEF"));
+        gridPaint.setColor(Color.parseColor("#2A2A2A"));
         gridPaint.setStrokeWidth(1f);
-        axisPaint.setColor(Color.parseColor("#868E96"));
+        axisPaint.setColor(Color.parseColor("#AAAAAA"));
         axisPaint.setTextAlign(Paint.Align.CENTER);
         dotPaint.setStyle(Paint.Style.FILL);
-        dotInnerPaint.setColor(Color.WHITE);
+        dotInnerPaint.setColor(Color.parseColor("#0D0D0D"));
         dotInnerPaint.setStyle(Paint.Style.FILL);
     }
 
@@ -65,8 +65,16 @@ public class LineChartView extends View {
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
-        if (points.size() < 2) return;
         float density = getResources().getDisplayMetrics().density;
+        if (points.size() < 2) {
+            Paint empty = new Paint(Paint.ANTI_ALIAS_FLAG);
+            empty.setColor(Color.parseColor("#666666"));
+            empty.setTextSize(13 * density);
+            empty.setTextAlign(Paint.Align.CENTER);
+            canvas.drawText("Chưa có dữ liệu",
+                    getWidth() / 2f, getHeight() / 2f + empty.getTextSize() / 3f, empty);
+            return;
+        }
         linePaint.setStrokeWidth(2.5f * density);
         axisPaint.setTextSize(10f * density);
 
@@ -80,20 +88,25 @@ public class LineChartView extends View {
         float chartW = w - padL - padR;
         float chartH = h - padT - padB;
 
-        float max = 0f, min = Float.MAX_VALUE;
+        float max = 0f;
         for (Point p : points) {
             if (p.value > max) max = p.value;
-            if (p.value < min) min = p.value;
         }
-        if (max == min) max = min + 1;
+        float min = 0f;
+        // Round max up to a "nice" value so y-axis ticks are clean integers.
+        if (max < 1f) max = 1f;
+        int ticks = 4;
+        if (max <= 4f) ticks = (int) Math.max(1, Math.ceil(max));
+        max = niceCeil(max, ticks);
         float range = max - min;
 
-        // 4 horizontal gridlines + y labels
-        for (int i = 0; i <= 4; i++) {
-            float y = padT + chartH * (i / 4f);
+        // gridlines + y labels (integer when range is small)
+        boolean integerTicks = max <= 10f;
+        for (int i = 0; i <= ticks; i++) {
+            float y = padT + chartH * (i / (float) ticks);
             canvas.drawLine(padL, y, w - padR, y, gridPaint);
-            float val = max - range * (i / 4f);
-            String s = formatTick(val);
+            float val = max - range * (i / (float) ticks);
+            String s = integerTicks ? String.valueOf(Math.round(val)) : formatTick(val);
             axisPaint.setTextAlign(Paint.Align.RIGHT);
             canvas.drawText(s, padL - 4 * density,
                     y + axisPaint.getTextSize() / 3f, axisPaint);
@@ -124,10 +137,13 @@ public class LineChartView extends View {
         Path linePath = buildSmoothPath(xs, ys);
         canvas.drawPath(linePath, linePaint);
 
-        // Dots
+        // Dots — when there are many points, only mark non-zero values so the
+        // chart doesn't look like a string of beads on a flat line.
         float dotR = 4 * density;
         float innerR = 2 * density;
+        boolean sparseDots = n > 12;
         for (int i = 0; i < n; i++) {
+            if (sparseDots && points.get(i).value <= 0f) continue;
             canvas.drawCircle(xs[i], ys[i], dotR, dotPaint);
             canvas.drawCircle(xs[i], ys[i], innerR, dotInnerPaint);
         }
@@ -149,6 +165,21 @@ public class LineChartView extends View {
             path.cubicTo(cx, ys[i - 1], cx, ys[i], xs[i], ys[i]);
         }
         return path;
+    }
+
+    /** Round {@code v} up so it divides evenly into {@code ticks} integer steps. */
+    private float niceCeil(float v, int ticks) {
+        if (v <= ticks) return ticks;
+        float step = (float) Math.ceil(v / ticks);
+        // snap step to 1/2/5/10·10^k for nicer numbers
+        float pow = (float) Math.pow(10, Math.floor(Math.log10(step)));
+        float norm = step / pow;
+        float niceNorm;
+        if (norm <= 1) niceNorm = 1;
+        else if (norm <= 2) niceNorm = 2;
+        else if (norm <= 5) niceNorm = 5;
+        else niceNorm = 10;
+        return niceNorm * pow * ticks;
     }
 
     private String formatTick(float v) {

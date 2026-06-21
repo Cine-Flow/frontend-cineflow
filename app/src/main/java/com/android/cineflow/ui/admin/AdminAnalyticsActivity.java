@@ -29,21 +29,21 @@ import java.util.Locale;
 
 public class AdminAnalyticsActivity extends com.android.cineflow.ui.base.BaseActivity {
 
-    private enum Section { OVERVIEW, CATALOG, SUBSCRIPTIONS }
+    private enum Section { OVERVIEW, CATALOG }
 
     private TextView chip7, chip30, chip90;
     private int period = 30;
     private TextView tvSectionTitle, tvSectionSubtitle;
-    private NestedScrollView sectionOverview, sectionCatalog, sectionSubs;
-    private LinearLayout tabOverview, tabCatalog, tabSubs;
-    private ImageView iconOverview, iconCatalog, iconSubs;
-    private TextView labelOverview, labelCatalog, labelSubs;
+    private NestedScrollView sectionOverview, sectionCatalog;
+    private LinearLayout tabOverview, tabCatalog;
+    private ImageView iconOverview, iconCatalog;
+    private TextView labelOverview, labelCatalog;
     private LineChartView chartSignups, chartWatch;
     private TextView tvSignupsTotal, tvWatchTotal;
-    private DonutChartView donutFilmType, donutSubs;
-    private LinearLayout legendFilmType, legendSubs;
-    private BarChartView barsCategories, barsTopFilms;
-    private TextView tvSubsActive, tvSubsExpiring, tvSubsExpired;
+    private DonutChartView donutFilmType, donutPremiumFree;
+    private LinearLayout legendFilmType, legendPremiumFree;
+    private BarChartView barsCategories, barsTopFilms, barsTopFavorited, barsTopCommented, barsTopEpisodes;
+    private TextView tvZeroViewFilms;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,16 +65,12 @@ public class AdminAnalyticsActivity extends com.android.cineflow.ui.base.BaseAct
         tvSectionSubtitle = findViewById(R.id.tv_section_subtitle);
         sectionOverview = findViewById(R.id.section_overview);
         sectionCatalog = findViewById(R.id.section_catalog);
-        sectionSubs = findViewById(R.id.section_subscriptions);
         tabOverview = findViewById(R.id.tab_overview);
         tabCatalog = findViewById(R.id.tab_catalog);
-        tabSubs = findViewById(R.id.tab_subscriptions);
         iconOverview = findViewById(R.id.icon_overview);
         iconCatalog = findViewById(R.id.icon_catalog);
-        iconSubs = findViewById(R.id.icon_subscriptions);
         labelOverview = findViewById(R.id.label_overview);
         labelCatalog = findViewById(R.id.label_catalog);
-        labelSubs = findViewById(R.id.label_subscriptions);
         chip7 = findViewById(R.id.chip_7d);
         chip30 = findViewById(R.id.chip_30d);
         chip90 = findViewById(R.id.chip_90d);
@@ -83,18 +79,18 @@ public class AdminAnalyticsActivity extends com.android.cineflow.ui.base.BaseAct
         tvSignupsTotal = findViewById(R.id.tv_signups_total);
         tvWatchTotal = findViewById(R.id.tv_watch_total);
         donutFilmType = findViewById(R.id.donut_film_type);
-        donutSubs = findViewById(R.id.donut_subs);
+        donutPremiumFree = findViewById(R.id.donut_premium_free);
         legendFilmType = findViewById(R.id.legend_film_type);
-        legendSubs = findViewById(R.id.legend_subs);
+        legendPremiumFree = findViewById(R.id.legend_premium_free);
         barsCategories = findViewById(R.id.bars_categories);
         barsTopFilms = findViewById(R.id.bars_top_films);
-        tvSubsActive = findViewById(R.id.tv_subs_active);
-        tvSubsExpiring = findViewById(R.id.tv_subs_expiring);
-        tvSubsExpired = findViewById(R.id.tv_subs_expired);
+        barsTopFavorited = findViewById(R.id.bars_top_favorited);
+        barsTopCommented = findViewById(R.id.bars_top_commented);
+        barsTopEpisodes = findViewById(R.id.bars_top_episodes);
+        tvZeroViewFilms = findViewById(R.id.tv_zero_view_films);
 
         tabOverview.setOnClickListener(v -> switchTo(Section.OVERVIEW));
         tabCatalog.setOnClickListener(v -> switchTo(Section.CATALOG));
-        tabSubs.setOnClickListener(v -> switchTo(Section.SUBSCRIPTIONS));
         chip7.setOnClickListener(v -> { period = 7; refreshChips(); loadAnalytics(); });
         chip30.setOnClickListener(v -> { period = 30; refreshChips(); loadAnalytics(); });
         chip90.setOnClickListener(v -> { period = 90; refreshChips(); loadAnalytics(); });
@@ -127,62 +123,66 @@ public class AdminAnalyticsActivity extends com.android.cineflow.ui.base.BaseAct
     }
 
     private void bindAnalytics(AdminAnalyticsDto data) {
-        bindKpi(findViewById(R.id.kpi_users), "TOTAL USERS", formatNumber(data.getTotalUsers()),
-                "", true, "all-time users", R.color.brand_primary);
-        bindKpi(findViewById(R.id.kpi_signups), "NEW SIGN-UPS", formatNumber(data.getNewSignups()),
-                "", true, "last " + data.getPeriod() + " days", R.color.status_info);
-        bindKpi(findViewById(R.id.kpi_views), "EPISODE VIEWS", formatNumber(data.getEpisodeViews()),
-                "", true, "", R.color.badge_movie);
-        bindKpi(findViewById(R.id.kpi_watch_sessions), "WATCH SESSIONS", formatNumber(data.getWatchSessions()),
-                "", true, "", R.color.badge_series);
-        bindKpi(findViewById(R.id.kpi_premium), "PREMIUM USERS", formatNumber(data.getPremiumUsers()),
-                "", true, "active subscriptions", R.color.badge_premium);
-        bindKpi(findViewById(R.id.kpi_revenue), "REVENUE", formatCurrency(data),
-                "", true, "active packages", R.color.status_success);
+        String periodLabel = data.getPeriod() + " ngày qua";
+
+        bindKpi(findViewById(R.id.kpi_users), "TỔNG NGƯỜI DÙNG",
+                formatNumber(data.getTotalUsers()), "", true, "tất cả thời gian",
+                R.color.brand_primary);
+        bindKpi(findViewById(R.id.kpi_signups), "ĐĂNG KÝ MỚI",
+                formatNumber(data.getNewSignups()), "", true, periodLabel,
+                R.color.status_info);
+        bindKpi(findViewById(R.id.kpi_active_users), "NGƯỜI DÙNG HOẠT ĐỘNG",
+                formatNumber(data.getActiveUsers()), "", true, periodLabel,
+                R.color.status_success);
+        bindKpi(findViewById(R.id.kpi_views), "LƯỢT XEM TẬP",
+                formatNumber(data.getEpisodeViews()), "", true, "",
+                R.color.badge_movie);
+        bindKpi(findViewById(R.id.kpi_watch_sessions), "PHIÊN XEM",
+                formatNumber(data.getWatchSessions()), "", true, periodLabel,
+                R.color.badge_series);
+        bindKpi(findViewById(R.id.kpi_favorites), "YÊU THÍCH",
+                formatNumber(data.getTotalFavorites()), "", true, "tất cả thời gian",
+                R.color.brand_accent);
 
         tvSignupsTotal.setText(formatNumber(data.getNewSignups()));
         tvWatchTotal.setText(formatNumber(data.getWatchSessions()));
-        chartSignups.setData(simpleSeries(data.getPeriod(), data.getNewSignups()), getColor(R.color.brand_primary));
-        chartWatch.setData(simpleSeries(data.getPeriod(), data.getWatchSessions()), getColor(R.color.badge_movie));
+        chartSignups.setData(toPoints(data.getDailySignups()), getColor(R.color.brand_primary));
+        chartWatch.setData(toPoints(data.getDailyWatchSessions()), getColor(R.color.badge_movie));
 
         List<DonutChartView.Slice> filmSlices = toSlices(data.getFilmTypes(), new int[] {
                 R.color.badge_movie, R.color.badge_series, R.color.badge_live, R.color.brand_primary
         });
         donutFilmType.setSlices(filmSlices);
-        donutFilmType.setCenterText(formatNumber(sumSlices(data.getFilmTypes())), "films");
+        donutFilmType.setCenterText(formatNumber(sumSlices(data.getFilmTypes())), "phim");
         renderLegend(legendFilmType, filmSlices);
 
-        List<DonutChartView.Slice> subSlices = toSlices(data.getSubscriptions(), new int[] {
-                R.color.badge_premium, R.color.brand_primary, R.color.status_info, R.color.status_warning
+        List<DonutChartView.Slice> premiumSlices = toSlices(data.getPremiumFreeMix(), new int[] {
+                R.color.badge_premium, R.color.status_info
         });
-        donutSubs.setSlices(subSlices);
-        donutSubs.setCenterText(formatNumber(sumSlices(data.getSubscriptions())), "subs");
-        renderLegend(legendSubs, subSlices);
+        donutPremiumFree.setSlices(premiumSlices);
+        donutPremiumFree.setCenterText(formatNumber(sumSlices(data.getPremiumFreeMix())), "phim");
+        renderLegend(legendPremiumFree, premiumSlices);
 
         barsCategories.setBars(toBars(data.getTopCategories(), R.color.brand_primary));
         barsTopFilms.setBars(toBars(data.getTopFilms(), R.color.badge_movie));
+        barsTopFavorited.setBars(toBars(data.getTopFavoritedFilms(), R.color.brand_accent));
+        barsTopCommented.setBars(toBars(data.getTopCommentedFilms(), R.color.status_info));
+        barsTopEpisodes.setBars(toBars(data.getTopEpisodes(), R.color.badge_series));
 
-        tvSubsActive.setText(formatNumber(data.getPremiumUsers()));
-        tvSubsExpiring.setText("-");
-        tvSubsExpired.setText("-");
+        tvZeroViewFilms.setText(formatNumber(data.getFilmsWithZeroViews()));
     }
 
     private void switchTo(Section section) {
         sectionOverview.setVisibility(section == Section.OVERVIEW ? View.VISIBLE : View.GONE);
         sectionCatalog.setVisibility(section == Section.CATALOG ? View.VISIBLE : View.GONE);
-        sectionSubs.setVisibility(section == Section.SUBSCRIPTIONS ? View.VISIBLE : View.GONE);
         styleTab(iconOverview, labelOverview, section == Section.OVERVIEW);
         styleTab(iconCatalog, labelCatalog, section == Section.CATALOG);
-        styleTab(iconSubs, labelSubs, section == Section.SUBSCRIPTIONS);
         if (section == Section.OVERVIEW) {
             tvSectionTitle.setText(R.string.admin_section_overview);
             tvSectionSubtitle.setText(R.string.admin_section_overview_subtitle);
-        } else if (section == Section.CATALOG) {
+        } else {
             tvSectionTitle.setText(R.string.admin_section_catalog);
             tvSectionSubtitle.setText(R.string.admin_section_catalog_subtitle);
-        } else {
-            tvSectionTitle.setText(R.string.admin_section_subscriptions);
-            tvSectionSubtitle.setText(R.string.admin_section_subscriptions_subtitle);
         }
     }
 
@@ -227,14 +227,23 @@ public class AdminAnalyticsActivity extends com.android.cineflow.ui.base.BaseAct
         if (accent != null) accent.setBackgroundColor(getColor(accentColorRes));
     }
 
-    private List<LineChartView.Point> simpleSeries(int days, long total) {
+    private List<LineChartView.Point> toPoints(List<AdminAnalyticsDto.TimePoint> series) {
         List<LineChartView.Point> points = new ArrayList<>();
-        int slots = Math.max(2, Math.min(days, 10));
-        float avg = slots == 0 ? 0 : (float) total / slots;
-        for (int i = 0; i < slots; i++) {
-            points.add(new LineChartView.Point(String.valueOf(i + 1), avg));
+        if (series == null || series.isEmpty()) return points;
+        int n = series.size();
+        for (int i = 0; i < n; i++) {
+            AdminAnalyticsDto.TimePoint p = series.get(i);
+            // Show only first / mid / last label to avoid crowding
+            String label = (i == 0 || i == n - 1 || i == n / 2) ? shortDate(p.getDate()) : "";
+            points.add(new LineChartView.Point(label, p.getValue()));
         }
         return points;
+    }
+
+    private String shortDate(String iso) {
+        if (iso == null || iso.length() < 10) return iso == null ? "" : iso;
+        // yyyy-MM-dd → dd/MM
+        return iso.substring(8, 10) + "/" + iso.substring(5, 7);
     }
 
     private List<DonutChartView.Slice> toSlices(List<AdminAnalyticsDto.MetricSlice> items, int[] colors) {
@@ -280,9 +289,5 @@ public class AdminAnalyticsActivity extends com.android.cineflow.ui.base.BaseAct
 
     private String formatNumber(long value) {
         return NumberFormat.getNumberInstance(Locale.getDefault()).format(value);
-    }
-
-    private String formatCurrency(AdminAnalyticsDto data) {
-        return NumberFormat.getCurrencyInstance(Locale.US).format(data.getRevenue());
     }
 }
