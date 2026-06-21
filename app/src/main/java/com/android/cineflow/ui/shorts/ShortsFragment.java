@@ -108,7 +108,7 @@ public class ShortsFragment extends BaseFragment implements ShortsAdapter.OnShor
             holder.playerView.setPlayer(null);
             holder.playerView.setPlayer(player);
 
-            MediaItem mediaItem = MediaItem.fromUri(video.getVideoUrl());
+            MediaItem mediaItem = MediaItem.fromUri(com.android.cineflow.data.network.ApiClient.resolveLocalhostUrl(video.getVideoUrl()));
             player.setMediaItem(mediaItem);
             player.prepare();
             player.play();

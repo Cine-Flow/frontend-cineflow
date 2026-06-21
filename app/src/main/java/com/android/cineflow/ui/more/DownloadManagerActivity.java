@@ -122,7 +122,7 @@ public class DownloadManagerActivity extends com.android.cineflow.ui.base.BaseAc
             holder.tvMeta.setText(episode.size + " • Đã tải " + episode.downloadDate);
 
             Glide.with(DownloadManagerActivity.this)
-                    .load(episode.filmCoverUrl)
+                    .load(com.android.cineflow.data.network.ApiClient.resolveLocalhostUrl(episode.filmCoverUrl))
                     .centerCrop()
                     .placeholder(R.drawable.placeholder_card)
                     .into(holder.ivCover);

@@ -85,7 +85,7 @@ public class ContentRowAdapter extends BaseAdapter {
 
         void bind(ContentCard card) {
             Glide.with(ivThumbnail.getContext())
-                    .load(card.getThumbnailUrl())
+                    .load(com.android.cineflow.data.network.ApiClient.resolveLocalhostUrl(card.getThumbnailUrl()))
                     .placeholder(R.drawable.placeholder_card)
                     .centerCrop()
                     .into(ivThumbnail);

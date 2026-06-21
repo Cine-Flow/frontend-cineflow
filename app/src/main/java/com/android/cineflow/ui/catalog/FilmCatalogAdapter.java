@@ -53,7 +53,7 @@ public class FilmCatalogAdapter extends RecyclerView.Adapter<FilmCatalogAdapter.
         FilmDto film = films.get(position);
 
         Glide.with(context)
-                .load(film.getThumbnailUrl())
+                .load(com.android.cineflow.data.network.ApiClient.resolveLocalhostUrl(film.getThumbnailUrl()))
                 .placeholder(R.drawable.placeholder_card)
                 .centerCrop()
                 .into(h.ivThumb);

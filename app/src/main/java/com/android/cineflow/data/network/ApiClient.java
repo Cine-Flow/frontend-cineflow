@@ -14,6 +14,23 @@ public class ApiClient {
 
     public static final String BASE_URL = "http://10.0.2.2:8080/api/v1/";
 
+    public static String resolveLocalhostUrl(String url) {
+        if (url != null && url.contains("localhost:9000")) {
+            String host = "10.0.2.2";
+            try {
+                java.net.URI uri = new java.net.URI(BASE_URL);
+                String baseHost = uri.getHost();
+                if (baseHost != null && !baseHost.isEmpty()) {
+                    host = baseHost;
+                }
+            } catch (Exception e) {
+                // fallback
+            }
+            return url.replace("localhost:9000", host + ":9000");
+        }
+        return url;
+    }
+
     private static FilmApiService filmApiService;
     private static FilmApiService publicFilmApiService;
     private static RequestQueue requestQueue;

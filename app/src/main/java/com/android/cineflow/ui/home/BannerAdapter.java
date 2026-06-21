@@ -48,7 +48,7 @@ public class BannerAdapter extends RecyclerView.Adapter<BannerAdapter.BannerView
         if (hasTitle) holder.tvTitle.setText(card.getTitle());
         
         Glide.with(context)
-             .load(card.getThumbnailUrl())
+             .load(com.android.cineflow.data.network.ApiClient.resolveLocalhostUrl(card.getThumbnailUrl()))
              .into(holder.ivThumbnail);
              
         boolean hasBadge = card.getBadgeLabel() != null && !card.getBadgeLabel().isEmpty();

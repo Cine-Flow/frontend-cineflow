@@ -284,7 +284,7 @@ public class FilmDetailActivity extends com.android.cineflow.ui.base.BaseActivit
         tvDescription.setText(film.getDescription());
 
         Glide.with(this)
-                .load(film.getThumbnailUrl())
+                .load(com.android.cineflow.data.network.ApiClient.resolveLocalhostUrl(film.getThumbnailUrl()))
                 .centerCrop()
                 .into(ivCover);
 

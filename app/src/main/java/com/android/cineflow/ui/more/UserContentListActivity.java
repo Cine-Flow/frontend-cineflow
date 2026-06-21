@@ -123,7 +123,7 @@ public class UserContentListActivity extends com.android.cineflow.ui.base.BaseAc
             RowItem item = items.get(position);
             ((TextView) convertView.findViewById(R.id.tv_item_title)).setText(item.film != null ? item.film.getTitle() : "");
             ((TextView) convertView.findViewById(R.id.tv_item_subtitle)).setText(item.subtitle);
-            Glide.with(UserContentListActivity.this).load(item.film != null ? item.film.getThumbnailUrl() : "")
+            Glide.with(UserContentListActivity.this).load(item.film != null ? com.android.cineflow.data.network.ApiClient.resolveLocalhostUrl(item.film.getThumbnailUrl()) : "")
                     .placeholder(R.drawable.placeholder_card).centerCrop()
                     .into((ImageView) convertView.findViewById(R.id.iv_thumbnail));
             return convertView;

@@ -93,7 +93,7 @@ public class AdminFilmAdapter extends RecyclerView.Adapter<AdminFilmAdapter.Film
             tintTypeBadge(film.getType());
 
             Glide.with(itemView.getContext())
-                    .load(film.getThumbnailUrl())
+                    .load(com.android.cineflow.data.network.ApiClient.resolveLocalhostUrl(film.getThumbnailUrl()))
                     .centerCrop()
                     .placeholder(R.color.surface_tertiary)
                     .into(ivThumbnail);
