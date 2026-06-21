@@ -32,6 +32,7 @@
     <string name="player_desc_header">Detailed Description</string>
     <string name="player_default_desc">An exciting movie is playing randomly because the API flow for fetching film details has not been implemented yet. For a complete experience, please build the API to fetch information and episode list!</string>
     <string name="player_btn_favorite">Add to Favorites</string>
+    <string name="player_btn_favorited">Liked</string>
     <string name="player_btn_share">Share</string>
     <string name="player_back_desc">Go Back</string>
     <string name="player_fullscreen_desc">Rotate to fullscreen</string>

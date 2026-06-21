@@ -270,7 +270,7 @@ public class PlayerActivity extends com.android.cineflow.ui.base.BaseActivity {
 
     private void updateFavoriteButtonState() {
         if (isFavorited) {
-            btnPlayerFavorite.setText("Đã thích");
+            btnPlayerFavorite.setText(R.string.player_btn_favorited);
             btnPlayerFavorite.setBackgroundTintList(android.content.res.ColorStateList.valueOf(android.graphics.Color.parseColor("#E91E63")));
         } else {
             btnPlayerFavorite.setText(R.string.player_btn_favorite);

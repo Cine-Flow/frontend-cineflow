@@ -102,6 +102,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
+                android:textColor="@color/white"
                 android:text="@string/player_btn_favorite" />
 
             <TextView
@@ -204,7 +205,7 @@
                     android:paddingBottom="6dp"
                     android:backgroundTint="@color/brand_primary"
                     android:text="@string/detail_btn_send"
-                    android:textColor="@color/text_primary"
+                    android:textColor="@color/white"
                     android:textSize="13sp"
                     android:textStyle="bold"
                     app:cornerRadius="20dp" />

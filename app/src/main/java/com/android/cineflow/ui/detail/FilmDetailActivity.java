@@ -23,6 +23,7 @@ import com.android.cineflow.data.network.ApiClient;
 import com.android.cineflow.data.network.dto.ApiResponseDto;
 import com.android.cineflow.data.network.dto.CreateCommentRequestDto;
 import com.android.cineflow.data.network.dto.EpisodeDto;
+import com.android.cineflow.data.network.dto.FavoriteDto;
 import com.android.cineflow.data.network.dto.FilmCommentDto;
 import com.android.cineflow.data.network.dto.FilmDetailDto;
 import com.android.cineflow.ui.auth.LoginActivity;
@@ -52,6 +53,7 @@ public class FilmDetailActivity extends com.android.cineflow.ui.base.BaseActivit
     private EpisodeAdapter episodeAdapter;
 
     private FilmDetailDto currentFilm;
+    private boolean isFavorited = false;
 
     // ── Comments ──
     private RecyclerView rvComments;
@@ -111,6 +113,9 @@ public class FilmDetailActivity extends com.android.cineflow.ui.base.BaseActivit
         super.onResume();
         // Refresh input state in case user logged in from another activity
         updateCommentInputState();
+        if (currentFilm != null) {
+            checkFavoriteStatus();
+        }
     }
 
     private void setupCommentsSection() {
@@ -267,7 +272,8 @@ public class FilmDetailActivity extends com.android.cineflow.ui.base.BaseActivit
 
     private void bindData(FilmDetailDto film) {
         this.currentFilm = film;
-        btnAddFavorite.setOnClickListener(v -> addFavorite(film.getId()));
+        btnAddFavorite.setOnClickListener(v -> toggleFavorite());
+        checkFavoriteStatus();
         tvTitle.setText(film.getTitle());
         tvYear.setText(String.valueOf(film.getReleaseYear()));
         
@@ -357,16 +363,100 @@ public class FilmDetailActivity extends com.android.cineflow.ui.base.BaseActivit
         startActivity(intent);
     }
 
-    private void addFavorite(Integer filmId) {
-        ApiClient.getFilmApiService().addFavorite(filmId).enqueue(new Callback<ApiResponseDto<com.android.cineflow.data.network.dto.FavoriteDto>>() {
-            @Override public void onResponse(Call<ApiResponseDto<com.android.cineflow.data.network.dto.FavoriteDto>> call, Response<ApiResponseDto<com.android.cineflow.data.network.dto.FavoriteDto>> response) {
-                Toast.makeText(FilmDetailActivity.this,
-                        response.isSuccessful() ? "Đã thêm vào yêu thích" : "Vui lòng đăng nhập",
-                        Toast.LENGTH_SHORT).show();
+    private void checkFavoriteStatus() {
+        AuthManager auth = AuthManager.getInstance();
+        if (currentFilm == null || auth == null || !auth.isLoggedIn()) {
+            isFavorited = false;
+            updateFavoriteButtonState();
+            return;
+        }
+        int filmId = currentFilm.getId();
+        ApiClient.getFilmApiService().getFavorites().enqueue(new Callback<ApiResponseDto<List<FavoriteDto>>>() {
+            @Override
+            public void onResponse(Call<ApiResponseDto<List<FavoriteDto>>> call, Response<ApiResponseDto<List<FavoriteDto>>> response) {
+                if (response.isSuccessful() && response.body() != null && response.body().getData() != null) {
+                    isFavorited = false;
+                    for (FavoriteDto fav : response.body().getData()) {
+                        if (fav.getFilm() != null && fav.getFilm().getId() == filmId) {
+                            isFavorited = true;
+                            break;
+                        }
+                    }
+                    updateFavoriteButtonState();
+                }
             }
-            @Override public void onFailure(Call<ApiResponseDto<com.android.cineflow.data.network.dto.FavoriteDto>> call, Throwable t) {
-                Toast.makeText(FilmDetailActivity.this, "Không thể thêm yêu thích", Toast.LENGTH_SHORT).show();
+
+            @Override
+            public void onFailure(Call<ApiResponseDto<List<FavoriteDto>>> call, Throwable t) {
+                // Ignore failure
             }
         });
+    }
+
+    private void updateFavoriteButtonState() {
+        if (isFavorited) {
+            btnAddFavorite.setText(R.string.player_btn_favorited);
+            btnAddFavorite.setBackgroundTintList(android.content.res.ColorStateList.valueOf(android.graphics.Color.parseColor("#E91E63")));
+        } else {
+            btnAddFavorite.setText(R.string.player_btn_favorite);
+            btnAddFavorite.setBackgroundTintList(android.content.res.ColorStateList.valueOf(android.graphics.Color.parseColor("#2D2D2D")));
+        }
+    }
+
+    private void toggleFavorite() {
+        AuthManager auth = AuthManager.getInstance();
+        if (currentFilm == null) {
+            Toast.makeText(this, "Không tìm thấy thông tin phim", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        int filmId = currentFilm.getId();
+        if (auth == null || !auth.isLoggedIn()) {
+            Toast.makeText(this, "Vui lòng đăng nhập để thêm vào yêu thích", Toast.LENGTH_SHORT).show();
+            startActivity(new Intent(this, com.android.cineflow.ui.auth.LoginActivity.class));
+            return;
+        }
+
+        btnAddFavorite.setEnabled(false);
+        if (isFavorited) {
+            ApiClient.getFilmApiService().deleteFavorite(filmId).enqueue(new Callback<ApiResponseDto<Void>>() {
+                @Override
+                public void onResponse(Call<ApiResponseDto<Void>> call, Response<ApiResponseDto<Void>> response) {
+                    btnAddFavorite.setEnabled(true);
+                    if (response.isSuccessful()) {
+                        isFavorited = false;
+                        updateFavoriteButtonState();
+                        Toast.makeText(FilmDetailActivity.this, "Đã xóa khỏi yêu thích", Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(FilmDetailActivity.this, "Không thể xóa khỏi yêu thích", Toast.LENGTH_SHORT).show();
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<ApiResponseDto<Void>> call, Throwable t) {
+                    btnAddFavorite.setEnabled(true);
+                    Toast.makeText(FilmDetailActivity.this, "Lỗi mạng", Toast.LENGTH_SHORT).show();
+                }
+            });
+        } else {
+            ApiClient.getFilmApiService().addFavorite(filmId).enqueue(new Callback<ApiResponseDto<FavoriteDto>>() {
+                @Override
+                public void onResponse(Call<ApiResponseDto<FavoriteDto>> call, Response<ApiResponseDto<FavoriteDto>> response) {
+                    btnAddFavorite.setEnabled(true);
+                    if (response.isSuccessful()) {
+                        isFavorited = true;
+                        updateFavoriteButtonState();
+                        Toast.makeText(FilmDetailActivity.this, "Đã thêm vào yêu thích", Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(FilmDetailActivity.this, "Không thể thêm vào yêu thích", Toast.LENGTH_SHORT).show();
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<ApiResponseDto<FavoriteDto>> call, Throwable t) {
+                    btnAddFavorite.setEnabled(true);
+                    Toast.makeText(FilmDetailActivity.this, "Lỗi mạng", Toast.LENGTH_SHORT).show();
+                }
+            });
+        }
     }
 }

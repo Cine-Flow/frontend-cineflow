@@ -32,6 +32,7 @@
     <string name="player_desc_header">Mô tả chi tiết</string>
     <string name="player_default_desc">Bộ phim hấp dẫn đang được phát ngẫu nhiên vì chưa có luồng gọi API lấy chi tiết phim. Để đầy đủ hơn, vui lòng xây dựng API lấy thông tin và danh sách tập phim!</string>
     <string name="player_btn_favorite">Thêm vào yêu thích</string>
+    <string name="player_btn_favorited">Đã thích</string>
     <string name="player_btn_share">Chia sẻ</string>
     <string name="player_back_desc">Quay lại</string>
     <string name="player_fullscreen_desc">Xoay ngang/toàn màn hình</string>
