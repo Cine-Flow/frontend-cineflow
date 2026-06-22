@@ -136,7 +136,7 @@ public class AdminAnalyticsActivity extends com.android.cineflow.ui.base.BaseAct
                 formatNumber(data.getActiveUsers()), "", true, periodLabel,
                 R.color.status_success);
         bindKpi(findViewById(R.id.kpi_views), getString(R.string.admin_kpi_episode_views),
-                formatNumber(data.getEpisodeViews()), "", true, "",
+                formatNumber(data.getEpisodeViews()), "", true, periodLabel,
                 R.color.badge_movie);
         bindKpi(findViewById(R.id.kpi_watch_sessions), getString(R.string.admin_kpi_watch_sessions),
                 formatNumber(data.getWatchSessions()), "", true, periodLabel,

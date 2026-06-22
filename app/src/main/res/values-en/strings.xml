@@ -286,7 +286,7 @@
     <string name="admin_section_subscriptions_subtitle">Active packages and revenue summary</string>
     <string name="admin_category_meta_format">ID #%1$d - %2$d film%3$s tagged</string>
     <string name="admin_category_new">New category - ID auto-assigned on save</string>
-    <string name="admin_user_role_format">Role: %1$s - ID %2$d</string>
+    <string name="admin_user_role_format">Role: %1$s - ID %2$s</string>
     <string name="admin_user_role_choose">Choose role for the new user.</string>
     <string name="admin_free_tier">Free tier</string>
     <string name="admin_premium_badge">PREMIUM</string>

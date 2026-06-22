@@ -111,6 +111,14 @@ public class LoginActivity extends com.android.cineflow.ui.base.BaseActivity {
                         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                         startActivity(intent);
                         finish();
+                    } else if (isTaskRoot()) {
+                        // Launched as a fresh task (e.g. from admin logout) with no
+                        // caller to return to — go to MainActivity instead of just
+                        // finishing, otherwise the app would exit entirely.
+                        Intent mainIntent = new Intent(LoginActivity.this, com.android.cineflow.MainActivity.class);
+                        mainIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                        startActivity(mainIntent);
+                        finish();
                     } else {
                         setResult(RESULT_OK);
                         finish();
