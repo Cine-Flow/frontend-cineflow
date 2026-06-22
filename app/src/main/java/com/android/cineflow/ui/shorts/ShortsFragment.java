@@ -20,7 +20,7 @@ import androidx.viewpager2.widget.ViewPager2;
 import com.android.cineflow.R;
 import com.android.cineflow.data.model.ShortVideo;
 import com.android.cineflow.ui.base.BaseFragment;
-import com.google.android.material.dialog.MaterialAlertDialogBuilder;
+import com.google.android.material.bottomsheet.BottomSheetDialog;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -189,18 +189,12 @@ public class ShortsFragment extends BaseFragment implements ShortsAdapter.OnShor
         TextView tvCommentsCount = dialogView.findViewById(R.id.tv_comments_count);
         View ivCommentsClose = dialogView.findViewById(R.id.iv_comments_close);
 
-        androidx.appcompat.app.AlertDialog dialog = new MaterialAlertDialogBuilder(requireContext())
-                .setView(dialogView)
-                .setBackgroundInsetTop(0)
-                .setBackgroundInsetBottom(0)
-                .show();
+        BottomSheetDialog dialog = new BottomSheetDialog(requireContext());
+        dialog.setContentView(dialogView);
         if (dialog.getWindow() != null) {
             dialog.getWindow().setBackgroundDrawable(new android.graphics.drawable.ColorDrawable(android.graphics.Color.TRANSPARENT));
-            dialog.getWindow().setGravity(android.view.Gravity.BOTTOM);
-            dialog.getWindow().setLayout(
-                    android.view.ViewGroup.LayoutParams.MATCH_PARENT,
-                    android.view.ViewGroup.LayoutParams.WRAP_CONTENT);
         }
+        dialog.show();
         ivCommentsClose.setOnClickListener(v -> dialog.dismiss());
 
         com.android.cineflow.data.auth.AuthManager auth = com.android.cineflow.data.auth.AuthManager.getInstance();
@@ -265,6 +259,7 @@ public class ShortsFragment extends BaseFragment implements ShortsAdapter.OnShor
                     }
                     tvCommentsCount.setText(String.valueOf(count));
                     commentAdapter.notifyDataSetChanged();
+                    resizeListToFitContent(lvComments, commentAdapter);
                 });
             }
         };
@@ -291,6 +286,28 @@ public class ShortsFragment extends BaseFragment implements ShortsAdapter.OnShor
         });
     }
 
+    /**
+     * ListView has no fixed height so the sheet grows with the comment count;
+     * caps the list at half the screen height, beyond which it scrolls internally.
+     */
+    private void resizeListToFitContent(ListView listView, ArrayAdapter<?> adapter) {
+        int width = listView.getWidth() > 0
+                ? listView.getWidth()
+                : getResources().getDisplayMetrics().widthPixels;
+        int widthSpec = View.MeasureSpec.makeMeasureSpec(width, View.MeasureSpec.AT_MOST);
+
+        int totalHeight = listView.getPaddingTop() + listView.getPaddingBottom();
+        for (int i = 0; i < adapter.getCount(); i++) {
+            View item = adapter.getView(i, null, listView);
+            item.measure(widthSpec, View.MeasureSpec.UNSPECIFIED);
+            totalHeight += item.getMeasuredHeight();
+        }
+
+        int maxListHeight = (int) (getResources().getDisplayMetrics().heightPixels * 0.5f);
+        android.view.ViewGroup.LayoutParams params = listView.getLayoutParams();
+        params.height = Math.min(totalHeight, maxListHeight);
+        listView.setLayoutParams(params);
+    }
 
     @Override
     public void onResume() {
