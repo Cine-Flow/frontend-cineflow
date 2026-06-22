@@ -103,7 +103,7 @@ public interface FilmApiService {
 
     Call<ApiResponseDto<PagedResponseDto<FilmDetailDto>>> getAllFilms(int page, int size, String search);
 
-    Call<ApiResponseDto<List<AdminCategoryDto>>> getAdminCategories();
+    Call<ApiResponseDto<PagedResponseDto<AdminCategoryDto>>> getAdminCategories(int page, int size, String search);
 
     Call<ApiResponseDto<AdminCategoryDto>> createCategory(AdminCategoryRequestDto request);
 
@@ -111,9 +111,7 @@ public interface FilmApiService {
 
     Call<ApiResponseDto<Void>> deleteCategory(Integer id);
 
-    Call<ApiResponseDto<List<AdminUserDto>>> getAdminUsers(String search, String role, String subscription);
-
-    Call<ApiResponseDto<AdminUserDto>> createUser(AdminUserRequestDto request);
+    Call<ApiResponseDto<PagedResponseDto<AdminUserDto>>> getAdminUsers(int page, int size, String search);
 
     Call<ApiResponseDto<AdminUserDto>> updateUser(String id, AdminUserRequestDto request);
 

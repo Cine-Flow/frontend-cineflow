@@ -181,76 +181,7 @@
             android:hint="https://..."
             android:singleLine="true"
             android:inputType="textUri"
-            android:layout_marginBottom="12dp" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/form_role"
-            android:textColor="@color/text_secondary"
-            android:textSize="12sp" />
-
-        <RadioGroup
-            android:id="@+id/rg_role"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_marginBottom="12dp">
-
-            <RadioButton
-                android:id="@+id/rb_role_user"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/form_role_user"
-                android:textColor="@color/text_secondary"
-                android:buttonTint="@color/brand_primary" />
-
-            <RadioButton
-                android:id="@+id/rb_role_admin"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/form_role_admin"
-                android:textColor="@color/text_secondary"
-                android:buttonTint="@color/brand_primary"
-                android:layout_marginStart="20dp" />
-        </RadioGroup>
-
-        <LinearLayout
-            android:id="@+id/layout_password"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:layout_marginBottom="20dp">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/form_initial_password"
-                android:textColor="@color/text_secondary"
-                android:textSize="12sp" />
-
-            <EditText
-                android:id="@+id/et_password"
-                android:layout_width="match_parent"
-                android:layout_height="40dp"
-                android:background="@drawable/bg_input_field"
-                android:textColor="@color/text_primary"
-                android:textColorHint="@color/text_tertiary"
-                android:textSize="14sp"
-                android:paddingStart="12dp"
-                android:paddingEnd="12dp"
-                android:hint="@string/admin_hint_min_8_chars"
-                android:singleLine="true"
-                android:inputType="textPassword"
-                android:layout_marginBottom="4dp" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/form_initial_password_hint"
-                android:textColor="@color/text_tertiary"
-                android:textSize="11sp" />
-        </LinearLayout>
+            android:layout_marginBottom="20dp" />
 
         <LinearLayout
             android:layout_width="match_parent"
