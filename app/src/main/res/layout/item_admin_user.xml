@@ -123,7 +123,7 @@
             android:contentDescription="@string/admin_cd_edit_profile" />
 
         <ImageView
-            android:id="@+id/btn_reset"
+            android:id="@+id/btn_block"
             android:layout_width="34dp"
             android:layout_height="34dp"
             android:src="@drawable/ic_lock"
@@ -132,7 +132,7 @@
             android:background="@color/surface_tertiary"
             android:clickable="true"
             android:focusable="true"
-            android:contentDescription="@string/admin_cd_password_reset" />
+            android:contentDescription="@string/admin_cd_block_user" />
 
         <ImageView
             android:id="@+id/btn_delete"

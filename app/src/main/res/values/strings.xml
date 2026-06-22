@@ -454,6 +454,8 @@
     <string name="admin_cd_delete">Xóa</string>
     <string name="admin_cd_edit_profile">Chỉnh sửa hồ sơ</string>
     <string name="admin_cd_password_reset">Gửi liên kết đặt lại mật khẩu</string>
+    <string name="admin_cd_block_user">Khóa tài khoản</string>
+    <string name="admin_cd_unblock_user">Mở khóa tài khoản</string>
     <string name="admin_cd_avatar">Ảnh đại diện</string>
     <string name="admin_cd_avatar_preview">Xem trước ảnh đại diện</string>
     <string name="admin_cd_edit_episode">Chỉnh sửa tập</string>
@@ -498,6 +500,9 @@
     <string name="admin_button_delete">Xóa</string>
     <string name="admin_button_cancel">Hủy</string>
     <string name="admin_button_send_link">Gửi liên kết</string>
+    <string name="admin_button_send_reset_link">Gửi liên kết đặt lại mật khẩu</string>
+    <string name="admin_button_block">Khóa</string>
+    <string name="admin_button_unblock">Mở khóa</string>
 
     <!-- Film form dialog -->
     <string name="admin_dialog_edit_film">Chỉnh sửa phim</string>
@@ -517,6 +522,10 @@
     <string name="admin_dialog_delete_user_msg">Xóa vĩnh viễn @%s?\n\nGói đăng ký, lịch sử xem và danh sách yêu thích sẽ bị xóa.</string>
     <string name="admin_dialog_send_reset_title">Gửi liên kết đặt lại mật khẩu?</string>
     <string name="admin_dialog_send_reset_msg">Liên kết đặt lại sẽ được gửi đến %s</string>
+    <string name="admin_dialog_block_title">Khóa người dùng?</string>
+    <string name="admin_dialog_block_msg">@%s sẽ không thể đăng nhập cho đến khi được mở khóa.</string>
+    <string name="admin_dialog_unblock_title">Mở khóa người dùng?</string>
+    <string name="admin_dialog_unblock_msg">@%s sẽ có thể đăng nhập trở lại.</string>
     <string name="admin_role_admin_short">ADMIN</string>
     <string name="admin_role_user_short">USER</string>
     <string name="admin_joined_unknown">Tham gia -</string>
@@ -529,6 +538,8 @@
     <string name="admin_toast_cannot_delete_user">Không xóa được người dùng</string>
     <string name="admin_toast_reset_email_sent">Đã gửi email đặt lại</string>
     <string name="admin_toast_cannot_send_reset_email">Không gửi được email đặt lại</string>
+    <string name="admin_toast_user_blocked">Đã khóa người dùng</string>
+    <string name="admin_toast_user_unblocked">Đã mở khóa người dùng</string>
     <string name="admin_err_username_required">Tên đăng nhập là bắt buộc</string>
     <string name="admin_err_valid_email_required">Email hợp lệ là bắt buộc</string>
     <string name="admin_err_min_6_chars">Tối thiểu 6 ký tự</string>

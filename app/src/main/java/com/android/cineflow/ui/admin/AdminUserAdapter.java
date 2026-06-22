@@ -21,7 +21,7 @@ public class AdminUserAdapter extends RecyclerView.Adapter<AdminUserAdapter.User
 
     public interface OnUserActionListener {
         void onEditUser(AdminUserDto user);
-        void onResetPassword(AdminUserDto user);
+        void onToggleBlock(AdminUserDto user);
         void onDeleteUser(AdminUserDto user);
     }
 
@@ -65,7 +65,7 @@ public class AdminUserAdapter extends RecyclerView.Adapter<AdminUserAdapter.User
         private final TextView tvSubscription;
         private final TextView tvJoined;
         private final ImageView btnEdit;
-        private final ImageView btnReset;
+        private final ImageView btnBlock;
         private final ImageView btnDelete;
 
         UserViewHolder(View v) {
@@ -79,7 +79,7 @@ public class AdminUserAdapter extends RecyclerView.Adapter<AdminUserAdapter.User
             tvSubscription = v.findViewById(R.id.tv_user_subscription);
             tvJoined = v.findViewById(R.id.tv_user_joined);
             btnEdit = v.findViewById(R.id.btn_edit);
-            btnReset = v.findViewById(R.id.btn_reset);
+            btnBlock = v.findViewById(R.id.btn_block);
             btnDelete = v.findViewById(R.id.btn_delete);
         }
 
@@ -130,11 +130,16 @@ public class AdminUserAdapter extends RecyclerView.Adapter<AdminUserAdapter.User
                 tvSubscription.setTextColor(itemView.getContext().getColor(R.color.text_tertiary));
             }
 
+            itemView.setAlpha(user.isEnabled() ? 1f : 0.5f);
+            btnBlock.setImageResource(user.isEnabled() ? R.drawable.ic_lock : R.drawable.ic_lock_open);
+            btnBlock.setContentDescription(itemView.getContext().getString(
+                    user.isEnabled() ? R.string.admin_cd_block_user : R.string.admin_cd_unblock_user));
+
             btnEdit.setOnClickListener(v -> {
                 if (listener != null) listener.onEditUser(user);
             });
-            btnReset.setOnClickListener(v -> {
-                if (listener != null) listener.onResetPassword(user);
+            btnBlock.setOnClickListener(v -> {
+                if (listener != null) listener.onToggleBlock(user);
             });
             btnDelete.setOnClickListener(v -> {
                 if (listener != null) listener.onDeleteUser(user);

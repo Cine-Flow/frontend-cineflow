@@ -446,6 +446,8 @@
     <string name="admin_cd_delete">Delete</string>
     <string name="admin_cd_edit_profile">Edit profile</string>
     <string name="admin_cd_password_reset">Send password reset</string>
+    <string name="admin_cd_block_user">Block user</string>
+    <string name="admin_cd_unblock_user">Unblock user</string>
     <string name="admin_cd_avatar">Avatar</string>
     <string name="admin_cd_avatar_preview">Avatar preview</string>
     <string name="admin_cd_edit_episode">Edit episode</string>
@@ -485,6 +487,9 @@
     <string name="admin_button_delete">Delete</string>
     <string name="admin_button_cancel">Cancel</string>
     <string name="admin_button_send_link">Send link</string>
+    <string name="admin_button_send_reset_link">Send password reset link</string>
+    <string name="admin_button_block">Block</string>
+    <string name="admin_button_unblock">Unblock</string>
 
     <string name="admin_dialog_edit_film">Edit Film</string>
     <string name="admin_dialog_create_film">Create Film</string>
@@ -502,6 +507,10 @@
     <string name="admin_dialog_delete_user_msg">Permanently delete @%s?\n\nTheir subscriptions, watch history, and favorites will be removed.</string>
     <string name="admin_dialog_send_reset_title">Send password reset?</string>
     <string name="admin_dialog_send_reset_msg">A reset link will be emailed to %s</string>
+    <string name="admin_dialog_block_title">Block this user?</string>
+    <string name="admin_dialog_block_msg">@%s won\'t be able to log in until unblocked.</string>
+    <string name="admin_dialog_unblock_title">Unblock this user?</string>
+    <string name="admin_dialog_unblock_msg">@%s will be able to log in again.</string>
     <string name="admin_role_admin_short">ADMIN</string>
     <string name="admin_role_user_short">USER</string>
     <string name="admin_joined_unknown">Joined -</string>
@@ -514,6 +523,8 @@
     <string name="admin_toast_cannot_delete_user">Cannot delete user</string>
     <string name="admin_toast_reset_email_sent">Reset email sent</string>
     <string name="admin_toast_cannot_send_reset_email">Cannot send reset email</string>
+    <string name="admin_toast_user_blocked">User blocked</string>
+    <string name="admin_toast_user_unblocked">User unblocked</string>
     <string name="admin_err_username_required">Username required</string>
     <string name="admin_err_valid_email_required">Valid email required</string>
     <string name="admin_err_min_6_chars">Min 6 characters</string>

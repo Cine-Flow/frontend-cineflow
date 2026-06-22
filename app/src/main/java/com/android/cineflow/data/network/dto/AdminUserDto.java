@@ -8,6 +8,7 @@ public class AdminUserDto {
     private String phoneNumber;
     private String avatarUrl;
     private String role;
+    private boolean enabled = true;
     private String createdAt;
     private String subscriptionPlan;
     private String subscriptionEndDate;
@@ -19,6 +20,7 @@ public class AdminUserDto {
     public String getPhoneNumber() { return phoneNumber; }
     public String getAvatarUrl() { return avatarUrl; }
     public String getRole() { return role != null ? role : "ROLE_USER"; }
+    public boolean isEnabled() { return enabled; }
     public String getCreatedAt() { return createdAt != null ? createdAt : ""; }
     public String getSubscriptionPlan() { return subscriptionPlan; }
     public String getSubscriptionEndDate() { return subscriptionEndDate; }
