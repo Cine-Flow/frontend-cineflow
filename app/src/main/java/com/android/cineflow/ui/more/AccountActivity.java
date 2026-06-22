@@ -348,19 +348,7 @@ public class AccountActivity extends com.android.cineflow.ui.base.BaseActivity {
     // --- Terms & Support Premium Dialogs ---
     private void showTermsDialog() {
         TextView textView = new TextView(this);
-        textView.setText(
-            "CINE-FLOW - ĐIỀU KHOẢN DỊCH VỤ & CHÍNH SÁCH BẢO MẬT\n\n" +
-            "Chào mừng bạn đến với ứng dụng xem phim trực tuyến Cine-Flow!\n\n" +
-            "1. CHẤP THUẬN ĐIỀU KHOẢN\n" +
-            "Bằng việc đăng ký tài khoản và sử dụng các dịch vụ xem phim trên ứng dụng Cine-Flow, bạn hoàn toàn đồng ý và chịu sự ràng buộc bởi các điều khoản sử dụng này.\n\n" +
-            "2. BẢN QUYỀN VÀ NỘI DUNG\n" +
-            "Toàn bộ phim, trailer, hình ảnh và âm thanh trên ứng dụng thuộc bản quyền của Cine-Flow hoặc các đối tác liên kết hợp pháp. Người dùng nghiêm cấm sao chép, ghi hình, phân phối hoặc thương mại hóa bất kỳ nội dung nào dưới mọi hình thức.\n\n" +
-            "3. BẢO MẬT THÔNG TIN CÁ NHÂN\n" +
-            "Chúng tôi cam kết bảo mật tuyệt đối các thông tin cá nhân của bạn bao gồm Email, tên đăng nhập, lịch sử xem và các giao dịch gói cước theo chính sách bảo mật của chúng tôi.\n\n" +
-            "4. ĐĂNG KÝ VÀ SỬ DỤNG GÓI PREMIUM\n" +
-            "Các gói dịch vụ (Cơ bản, Tiêu chuẩn, Cao cấp) sẽ có mức giá và quyền lợi đi kèm được ghi rõ. Việc thanh toán được xử lý bảo mật. Các gói cước đã đăng ký sẽ không được hoàn trả phí trừ trường hợp sự cố phát sinh do hệ thống.\n\n" +
-            "Cine-Flow v1.0 - Cảm ơn bạn đã tin tưởng dịch vụ xem phim của chúng tôi!"
-        );
+        textView.setText(getString(R.string.terms_content));
         textView.setTextColor(getResources().getColor(R.color.text_primary));
         textView.setTextSize(14f);
         textView.setLineSpacing(4f, 1.1f);
@@ -395,8 +383,8 @@ public class AccountActivity extends com.android.cineflow.ui.base.BaseActivity {
     private void sendSupportEmail() {
         android.content.Intent emailIntent = new android.content.Intent(android.content.Intent.ACTION_SENDTO);
         emailIntent.setData(android.net.Uri.parse("mailto:support@cineflow.com"));
-        emailIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, "[Cine-Flow Support Request] - " + tvName.getText().toString());
-        emailIntent.putExtra(android.content.Intent.EXTRA_TEXT, "Chào đội ngũ hỗ trợ Cine-Flow,\n\nTôi đang gặp sự cố với tài khoản của mình. Dưới đây là thông tin chi tiết:\n...");
+        emailIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, getString(R.string.support_email_subject, tvName.getText().toString()));
+        emailIntent.putExtra(android.content.Intent.EXTRA_TEXT, getString(R.string.support_email_body));
         try {
             startActivity(android.content.Intent.createChooser(emailIntent, getString(R.string.support_email_chooser)));
         } catch (android.content.ActivityNotFoundException e) {

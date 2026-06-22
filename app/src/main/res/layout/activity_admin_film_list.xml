@@ -14,7 +14,7 @@
         android:elevation="4dp"
         app:titleTextColor="@color/text_primary"
         app:navigationIconTint="@color/text_primary"
-        app:title="Film Management" />
+        app:title="@string/admin_title_film_management" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -32,7 +32,7 @@
             android:layout_height="40dp"
             android:layout_weight="1"
             android:background="@drawable/bg_input_field"
-            android:hint="Search films..."
+            android:hint="@string/admin_hint_search_films"
             android:textColorHint="@color/text_tertiary"
             android:textColor="@color/text_primary"
             android:textSize="14sp"
@@ -54,7 +54,7 @@
             android:padding="10dp"
             android:clickable="true"
             android:focusable="true"
-            android:contentDescription="Add film" />
+            android:contentDescription="@string/admin_cd_add_film" />
     </LinearLayout>
 
     <TextView
@@ -109,7 +109,7 @@
             style="@style/Widget.Cineflow.Button.Secondary"
             android:layout_width="wrap_content"
             android:layout_height="36dp"
-            android:text="Prev"
+            android:text="@string/admin_prev"
             android:textAllCaps="false"
             android:textSize="12sp"
             android:enabled="false" />
@@ -128,7 +128,7 @@
             style="@style/Widget.Cineflow.Button.Secondary"
             android:layout_width="wrap_content"
             android:layout_height="36dp"
-            android:text="Next"
+            android:text="@string/admin_next"
             android:textAllCaps="false"
             android:textSize="12sp"
             android:enabled="false" />

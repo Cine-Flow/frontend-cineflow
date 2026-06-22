@@ -50,7 +50,7 @@ public class AdminFilmListActivity extends com.android.cineflow.ui.base.BaseActi
         setSupportActionBar(toolbar);
         if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-            getSupportActionBar().setTitle("Film Management");
+            getSupportActionBar().setTitle(R.string.admin_title_film_management);
         }
         toolbar.setNavigationOnClickListener(v -> onBackPressed());
 
@@ -132,9 +132,9 @@ public class AdminFilmListActivity extends com.android.cineflow.ui.base.BaseActi
     @Override
     public void onDeleteFilm(FilmDetailDto film) {
         new androidx.appcompat.app.AlertDialog.Builder(this)
-                .setTitle("Delete Film")
-                .setMessage("Are you sure you want to delete \"" + film.getTitle() + "\"?")
-                .setPositiveButton("Delete", (d, w) -> repository.deleteFilm(film.getId(), new AdminFilmRepository.OnResultListener() {
+                .setTitle(R.string.admin_dialog_delete_film_title)
+                .setMessage(getString(R.string.admin_dialog_delete_film_msg, film.getTitle()))
+                .setPositiveButton(R.string.admin_button_delete, (d, w) -> repository.deleteFilm(film.getId(), new AdminFilmRepository.OnResultListener() {
                     @Override
                     public void onSuccess(FilmDetailDto result) {}
 
@@ -143,7 +143,7 @@ public class AdminFilmListActivity extends com.android.cineflow.ui.base.BaseActi
                         runOnUiThread(() -> tvFilmCount.setText(message));
                     }
                 }))
-                .setNegativeButton("Cancel", null)
+                .setNegativeButton(R.string.admin_button_cancel, null)
                 .show();
     }
 

@@ -89,7 +89,9 @@ public class AdminUserAdapter extends RecyclerView.Adapter<AdminUserAdapter.User
             tvName.setText(display);
             tvUsername.setText("@" + user.getUsername());
             tvEmail.setText(user.getEmail());
-            tvJoined.setText(user.getCreatedAt().isEmpty() ? "Joined -" : "Joined " + user.getCreatedAt());
+            tvJoined.setText(user.getCreatedAt().isEmpty()
+                    ? itemView.getContext().getString(R.string.admin_joined_unknown)
+                    : itemView.getContext().getString(R.string.admin_joined_format, user.getCreatedAt()));
 
             GradientDrawable circle = new GradientDrawable();
             circle.setShape(GradientDrawable.OVAL);
@@ -109,7 +111,7 @@ public class AdminUserAdapter extends RecyclerView.Adapter<AdminUserAdapter.User
             }
 
             boolean admin = "ROLE_ADMIN".equals(user.getRole());
-            tvRole.setText(admin ? "ADMIN" : "USER");
+            tvRole.setText(admin ? R.string.admin_role_admin_short : R.string.admin_role_user_short);
             int roleColor = itemView.getContext().getColor(
                     admin ? R.color.brand_primary : R.color.surface_tertiary);
             GradientDrawable roleBg = new GradientDrawable();
@@ -120,11 +122,11 @@ public class AdminUserAdapter extends RecyclerView.Adapter<AdminUserAdapter.User
                     admin ? R.color.text_primary : R.color.text_secondary));
 
             if (user.getSubscriptionPlan() != null && !user.getSubscriptionPlan().isEmpty()) {
-                String until = user.getSubscriptionEndDate() != null ? " - until " + user.getSubscriptionEndDate() : "";
-                tvSubscription.setText(user.getSubscriptionPlan() + until);
+                String until = user.getSubscriptionEndDate() != null ? itemView.getContext().getString(R.string.admin_subscription_until_format, user.getSubscriptionPlan(), user.getSubscriptionEndDate()) : user.getSubscriptionPlan();
+                tvSubscription.setText(until);
                 tvSubscription.setTextColor(itemView.getContext().getColor(R.color.badge_premium));
             } else {
-                tvSubscription.setText("Free tier");
+                tvSubscription.setText(R.string.admin_free_tier);
                 tvSubscription.setTextColor(itemView.getContext().getColor(R.color.text_tertiary));
             }
 

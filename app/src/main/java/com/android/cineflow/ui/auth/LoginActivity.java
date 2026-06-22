@@ -97,7 +97,8 @@ public class LoginActivity extends com.android.cineflow.ui.base.BaseActivity {
                 setLoading(false);
                 if (response.isSuccessful() && response.body() != null && response.body().getData() != null) {
                     LoginResponseDto data = response.body().getData();
-                    AuthManager.getInstance().saveSession(
+                    AuthManager auth = AuthManager.getInstance();
+                    auth.saveSession(
                             data.getAccessToken(),
                             data.getRefreshToken(),
                             data.getId(),
@@ -105,8 +106,23 @@ public class LoginActivity extends com.android.cineflow.ui.base.BaseActivity {
                             data.getEmail(),
                             data.getRole()
                     );
-                    setResult(RESULT_OK);
-                    finish();
+                    if (auth.isAdmin()) {
+                        Intent intent = new Intent(LoginActivity.this, AdminDashboardActivity.class);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                        startActivity(intent);
+                        finish();
+                    } else if (isTaskRoot()) {
+                        // Launched as a fresh task (e.g. from admin logout) with no
+                        // caller to return to — go to MainActivity instead of just
+                        // finishing, otherwise the app would exit entirely.
+                        Intent mainIntent = new Intent(LoginActivity.this, com.android.cineflow.MainActivity.class);
+                        mainIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                        startActivity(mainIntent);
+                        finish();
+                    } else {
+                        setResult(RESULT_OK);
+                        finish();
+                    }
                 } else {
                     String msg = getString(R.string.login_err_failed);
                     if (response.body() != null && response.body().getMessage() != null) {

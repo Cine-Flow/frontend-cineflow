@@ -125,7 +125,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Bình luận"
+            android:text="@string/detail_comments"
             android:textColor="#FFFFFF"
             android:textSize="12sp"
             android:layout_gravity="center_horizontal"
@@ -145,7 +145,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Chia sẻ"
+            android:text="@string/player_btn_share"
             android:textColor="#FFFFFF"
             android:textSize="12sp"
             android:layout_gravity="center_horizontal"

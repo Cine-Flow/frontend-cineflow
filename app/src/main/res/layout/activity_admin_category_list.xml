@@ -14,7 +14,7 @@
         android:elevation="4dp"
         app:titleTextColor="@color/text_primary"
         app:navigationIconTint="@color/text_primary"
-        app:title="Category Management" />
+        app:title="@string/admin_title_category_management" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -24,7 +24,7 @@
         android:paddingStart="16dp"
         android:paddingEnd="16dp"
         android:paddingTop="8dp"
-        android:paddingBottom="8dp">
+        android:paddingBottom="4dp">
 
         <EditText
             android:id="@+id/et_search"
@@ -32,7 +32,7 @@
             android:layout_height="40dp"
             android:layout_weight="1"
             android:background="@drawable/bg_input_field"
-            android:hint="Search by name..."
+            android:hint="@string/admin_hint_search_by_name"
             android:textColorHint="@color/text_tertiary"
             android:textColor="@color/text_primary"
             android:textSize="14sp"
@@ -54,93 +54,7 @@
             android:padding="10dp"
             android:clickable="true"
             android:focusable="true"
-            android:contentDescription="Add category" />
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:paddingStart="16dp"
-        android:paddingEnd="16dp"
-        android:paddingBottom="8dp">
-
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:orientation="vertical"
-            android:gravity="center"
-            android:padding="12dp"
-            android:background="@drawable/bg_admin_film_item">
-
-            <TextView
-                android:id="@+id/tv_summary_total"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textColor="@color/brand_primary"
-                android:textSize="20sp"
-                android:textStyle="bold" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Categories"
-                android:textColor="@color/text_tertiary"
-                android:textSize="11sp" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:orientation="vertical"
-            android:gravity="center"
-            android:padding="12dp"
-            android:layout_marginStart="8dp"
-            android:background="@drawable/bg_admin_film_item">
-
-            <TextView
-                android:id="@+id/tv_summary_films"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textColor="@color/badge_movie"
-                android:textSize="20sp"
-                android:textStyle="bold" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Film tags"
-                android:textColor="@color/text_tertiary"
-                android:textSize="11sp" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:orientation="vertical"
-            android:gravity="center"
-            android:padding="12dp"
-            android:layout_marginStart="8dp"
-            android:background="@drawable/bg_admin_film_item">
-
-            <TextView
-                android:id="@+id/tv_summary_empty"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textColor="@color/text_tertiary"
-                android:textSize="20sp"
-                android:textStyle="bold" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Unused"
-                android:textColor="@color/text_tertiary"
-                android:textSize="11sp" />
-        </LinearLayout>
+            android:contentDescription="@string/admin_cd_add_category" />
     </LinearLayout>
 
     <TextView
@@ -152,12 +66,73 @@
         android:paddingStart="16dp"
         android:paddingBottom="8dp" />
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rv_categories"
+    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1"
-        android:clipToPadding="false"
-        android:paddingBottom="8dp" />
+        android:layout_weight="1">
+
+        <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+            android:id="@+id/swipe_refresh"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rv_categories"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:clipToPadding="false"
+                android:paddingBottom="8dp" />
+
+        </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
+        <ProgressBar
+            android:id="@+id/progress_bar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:visibility="gone"
+            android:indeterminateTint="@color/brand_primary" />
+
+    </FrameLayout>
+
+    <LinearLayout
+        android:id="@+id/pagination_bar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:padding="8dp"
+        android:background="@color/surface_secondary">
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn_prev_page"
+            style="@style/Widget.Cineflow.Button.Secondary"
+            android:layout_width="wrap_content"
+            android:layout_height="36dp"
+            android:text="@string/admin_prev"
+            android:textAllCaps="false"
+            android:textSize="12sp"
+            android:enabled="false" />
+
+        <TextView
+            android:id="@+id/tv_page_info"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:textColor="@color/text_secondary"
+            android:textSize="13sp" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn_next_page"
+            style="@style/Widget.Cineflow.Button.Secondary"
+            android:layout_width="wrap_content"
+            android:layout_height="36dp"
+            android:text="@string/admin_next"
+            android:textAllCaps="false"
+            android:textSize="12sp"
+            android:enabled="false" />
+
+    </LinearLayout>
 
 </LinearLayout>

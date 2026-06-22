@@ -30,7 +30,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
-            android:text="Thống kê cá nhân"
+            android:text="@string/analytics_title"
             android:textColor="@color/text_primary"
             android:textSize="20sp"
             android:fontFamily="sans-serif-medium" />
@@ -60,7 +60,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Thời lượng đã xem"
+                    android:text="@string/analytics_total_watch_time"
                     android:textColor="@color/text_secondary"
                     android:textSize="14sp"
                     android:textAllCaps="true"
@@ -71,7 +71,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
-                    android:text="0 giờ 0 phút"
+                    android:text="@string/analytics_total_default"
                     android:textColor="@color/text_primary"
                     android:textSize="28sp"
                     android:fontFamily="sans-serif-condensed-light"
@@ -98,7 +98,7 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Số tập đã xem"
+                            android:text="@string/analytics_episodes_watched"
                             android:textColor="@color/text_secondary"
                             android:textSize="12sp" />
 
@@ -122,7 +122,7 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Xem trung bình"
+                            android:text="@string/analytics_avg_watch"
                             android:textColor="@color/text_secondary"
                             android:textSize="12sp" />
 
@@ -131,7 +131,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="4dp"
-                            android:text="0 phút/ngày"
+                            android:text="@string/analytics_avg_default"
                             android:textColor="@color/text_primary"
                             android:textSize="18sp"
                             android:fontFamily="sans-serif-medium" />
@@ -151,7 +151,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Phân bổ thể loại phim đã xem"
+                    android:text="@string/analytics_genre_distribution"
                     android:textColor="@color/text_secondary"
                     android:textSize="14sp"
                     android:textAllCaps="true"
@@ -175,7 +175,7 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:text="Hành động &amp; Phiêu lưu"
+                            android:text="@string/analytics_genre_action"
                             android:textColor="@color/text_primary"
                             android:textSize="14sp" />
 
@@ -216,7 +216,7 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:text="Hoạt hình &amp; Anime"
+                            android:text="@string/analytics_genre_animation"
                             android:textColor="@color/text_primary"
                             android:textSize="14sp" />
 
@@ -257,7 +257,7 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:text="Tình cảm &amp; Lãng mạn"
+                            android:text="@string/analytics_genre_romance"
                             android:textColor="@color/text_primary"
                             android:textSize="14sp" />
 

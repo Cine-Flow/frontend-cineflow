@@ -14,7 +14,7 @@
         android:elevation="4dp"
         app:titleTextColor="@color/text_primary"
         app:navigationIconTint="@color/text_primary"
-        app:title="Analytics Dashboard">
+        app:title="@string/admin_title_analytics">
 
         <ImageView
             android:id="@+id/btn_export"
@@ -24,7 +24,7 @@
             android:layout_marginEnd="12dp"
             android:src="@drawable/ic_download"
             android:padding="4dp"
-            android:contentDescription="Export"
+            android:contentDescription="@string/admin_cd_export"
             android:clickable="true"
             android:focusable="true" />
     </com.google.android.material.appbar.MaterialToolbar>
@@ -71,6 +71,7 @@
                 android:paddingEnd="16dp"
                 android:paddingBottom="16dp">
 
+                <!-- Period chips -->
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -82,7 +83,7 @@
                         android:id="@+id/chip_7d"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="7D"
+                        android:text="@string/admin_analytics_7d"
                         android:textSize="12sp"
                         android:textStyle="bold"
                         android:paddingStart="14dp"
@@ -96,7 +97,7 @@
                         android:id="@+id/chip_30d"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="30D"
+                        android:text="@string/admin_analytics_30d"
                         android:textSize="12sp"
                         android:textStyle="bold"
                         android:paddingStart="14dp"
@@ -111,7 +112,7 @@
                         android:id="@+id/chip_90d"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="90D"
+                        android:text="@string/admin_analytics_90d"
                         android:textSize="12sp"
                         android:textStyle="bold"
                         android:paddingStart="14dp"
@@ -123,6 +124,7 @@
                         android:focusable="true" />
                 </LinearLayout>
 
+                <!-- KPI row 1: Users / Signups -->
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -146,14 +148,15 @@
                         android:layout_marginStart="5dp" />
                 </LinearLayout>
 
+                <!-- KPI row 2: Active / Views -->
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
-                    android:layout_marginBottom="16dp">
+                    android:layout_marginBottom="10dp">
 
                     <include
-                        android:id="@+id/kpi_views"
+                        android:id="@+id/kpi_active_users"
                         layout="@layout/item_admin_kpi"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
@@ -161,7 +164,7 @@
                         android:layout_marginEnd="5dp" />
 
                     <include
-                        android:id="@+id/kpi_watch_sessions"
+                        android:id="@+id/kpi_views"
                         layout="@layout/item_admin_kpi"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
@@ -169,6 +172,31 @@
                         android:layout_marginStart="5dp" />
                 </LinearLayout>
 
+                <!-- KPI row 3: Watch Sessions / Favorites -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginBottom="16dp">
+
+                    <include
+                        android:id="@+id/kpi_watch_sessions"
+                        layout="@layout/item_admin_kpi"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:layout_marginEnd="5dp" />
+
+                    <include
+                        android:id="@+id/kpi_favorites"
+                        layout="@layout/item_admin_kpi"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:layout_marginStart="5dp" />
+                </LinearLayout>
+
+                <!-- Signups chart -->
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -183,27 +211,14 @@
                         android:orientation="horizontal"
                         android:gravity="center_vertical">
 
-                        <LinearLayout
+                        <TextView
                             android:layout_width="0dp"
-                            android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:orientation="vertical">
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="New sign-ups"
-                                android:textColor="@color/text_primary"
-                                android:textSize="15sp"
-                                android:textStyle="bold" />
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="From users.created_at"
-                                android:textColor="@color/text_tertiary"
-                                android:textSize="11sp" />
-                        </LinearLayout>
+                            android:layout_height="wrap_content"
+                            android:text="@string/admin_chart_signups_title"
+                            android:textColor="@color/text_primary"
+                            android:textSize="15sp"
+                            android:textStyle="bold" />
 
                         <TextView
                             android:id="@+id/tv_signups_total"
@@ -221,6 +236,7 @@
                         android:layout_marginTop="8dp" />
                 </LinearLayout>
 
+                <!-- Watch sessions chart -->
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -234,27 +250,14 @@
                         android:orientation="horizontal"
                         android:gravity="center_vertical">
 
-                        <LinearLayout
+                        <TextView
                             android:layout_width="0dp"
-                            android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:orientation="vertical">
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="Watch sessions"
-                                android:textColor="@color/text_primary"
-                                android:textSize="15sp"
-                                android:textStyle="bold" />
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="From watch_history.last_watched_at"
-                                android:textColor="@color/text_tertiary"
-                                android:textSize="11sp" />
-                        </LinearLayout>
+                            android:layout_height="wrap_content"
+                            android:text="@string/admin_chart_watch_title"
+                            android:textColor="@color/text_primary"
+                            android:textSize="15sp"
+                            android:textStyle="bold" />
 
                         <TextView
                             android:id="@+id/tv_watch_total"
@@ -291,6 +294,49 @@
                 android:paddingTop="4dp"
                 android:paddingBottom="16dp">
 
+                <!-- Zero-view warning KPI -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:padding="14dp"
+                    android:layout_marginBottom="10dp"
+                    android:background="@drawable/bg_analytics_card">
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/admin_card_zero_view_title"
+                            android:textColor="@color/text_primary"
+                            android:textSize="14sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/admin_card_zero_view_desc"
+                            android:textColor="@color/text_tertiary"
+                            android:textSize="11sp"
+                            android:layout_marginTop="2dp" />
+                    </LinearLayout>
+
+                    <TextView
+                        android:id="@+id/tv_zero_view_films"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/status_warning"
+                        android:textSize="26sp"
+                        android:textStyle="bold" />
+                </LinearLayout>
+
+                <!-- Catalog Mix donut -->
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -302,17 +348,10 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Catalog mix by type"
+                        android:text="@string/admin_analytics_catalog_mix"
                         android:textColor="@color/text_primary"
                         android:textSize="15sp"
                         android:textStyle="bold" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="films.type — SINGLE / SERIES / LIVE"
-                        android:textColor="@color/text_tertiary"
-                        android:textSize="11sp" />
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -336,6 +375,7 @@
                     </LinearLayout>
                 </LinearLayout>
 
+                <!-- Premium vs Free donut -->
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -347,118 +387,10 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Top categories by film count"
+                        android:text="@string/admin_card_premium_vs_free"
                         android:textColor="@color/text_primary"
                         android:textSize="15sp"
                         android:textStyle="bold" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="COUNT(*) GROUP BY category from film_categories"
-                        android:textColor="@color/text_tertiary"
-                        android:textSize="11sp"
-                        android:layout_marginBottom="10dp" />
-
-                    <com.android.cineflow.ui.admin.view.BarChartView
-                        android:id="@+id/bars_categories"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content" />
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:padding="14dp"
-                    android:background="@drawable/bg_analytics_card">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Top films by total views"
-                        android:textColor="@color/text_primary"
-                        android:textSize="15sp"
-                        android:textStyle="bold" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="SUM(episodes.view_count) GROUP BY film"
-                        android:textColor="@color/text_tertiary"
-                        android:textSize="11sp"
-                        android:layout_marginBottom="10dp" />
-
-                    <com.android.cineflow.ui.admin.view.BarChartView
-                        android:id="@+id/bars_top_films"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content" />
-                </LinearLayout>
-            </LinearLayout>
-        </androidx.core.widget.NestedScrollView>
-
-        <!-- ============== SUBSCRIPTIONS ============== -->
-        <androidx.core.widget.NestedScrollView
-            android:id="@+id/section_subscriptions"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:fillViewport="true"
-            android:visibility="gone">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:paddingStart="16dp"
-                android:paddingEnd="16dp"
-                android:paddingTop="4dp"
-                android:paddingBottom="16dp">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:layout_marginBottom="10dp">
-
-                    <include
-                        android:id="@+id/kpi_premium"
-                        layout="@layout/item_admin_kpi"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:layout_marginEnd="5dp" />
-
-                    <include
-                        android:id="@+id/kpi_revenue"
-                        layout="@layout/item_admin_kpi"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:layout_marginStart="5dp" />
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:padding="14dp"
-                    android:layout_marginBottom="10dp"
-                    android:background="@drawable/bg_analytics_card">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Active subscriptions by package"
-                        android:textColor="@color/text_primary"
-                        android:textSize="15sp"
-                        android:textStyle="bold" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="user_subscriptions WHERE status = 'ACTIVE'"
-                        android:textColor="@color/text_tertiary"
-                        android:textSize="11sp" />
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -468,12 +400,12 @@
                         android:layout_marginTop="12dp">
 
                         <com.android.cineflow.ui.admin.view.DonutChartView
-                            android:id="@+id/donut_subs"
+                            android:id="@+id/donut_premium_free"
                             android:layout_width="140dp"
                             android:layout_height="140dp" />
 
                         <LinearLayout
-                            android:id="@+id/legend_subs"
+                            android:id="@+id/legend_premium_free"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
@@ -482,6 +414,103 @@
                     </LinearLayout>
                 </LinearLayout>
 
+                <!-- Top categories -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="14dp"
+                    android:layout_marginBottom="10dp"
+                    android:background="@drawable/bg_analytics_card">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/admin_analytics_top_categories"
+                        android:textColor="@color/text_primary"
+                        android:textSize="15sp"
+                        android:textStyle="bold"
+                        android:layout_marginBottom="10dp" />
+
+                    <com.android.cineflow.ui.admin.view.BarChartView
+                        android:id="@+id/bars_categories"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" />
+                </LinearLayout>
+
+                <!-- Top films by views -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="14dp"
+                    android:layout_marginBottom="10dp"
+                    android:background="@drawable/bg_analytics_card">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/admin_analytics_top_films"
+                        android:textColor="@color/text_primary"
+                        android:textSize="15sp"
+                        android:textStyle="bold"
+                        android:layout_marginBottom="10dp" />
+
+                    <com.android.cineflow.ui.admin.view.BarChartView
+                        android:id="@+id/bars_top_films"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" />
+                </LinearLayout>
+
+                <!-- Top favorited films -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="14dp"
+                    android:layout_marginBottom="10dp"
+                    android:background="@drawable/bg_analytics_card">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/admin_card_top_favorited"
+                        android:textColor="@color/text_primary"
+                        android:textSize="15sp"
+                        android:textStyle="bold"
+                        android:layout_marginBottom="10dp" />
+
+                    <com.android.cineflow.ui.admin.view.BarChartView
+                        android:id="@+id/bars_top_favorited"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" />
+                </LinearLayout>
+
+                <!-- Top commented films -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="14dp"
+                    android:layout_marginBottom="10dp"
+                    android:background="@drawable/bg_analytics_card">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/admin_card_top_commented"
+                        android:textColor="@color/text_primary"
+                        android:textSize="15sp"
+                        android:textStyle="bold"
+                        android:layout_marginBottom="10dp" />
+
+                    <com.android.cineflow.ui.admin.view.BarChartView
+                        android:id="@+id/bars_top_commented"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" />
+                </LinearLayout>
+
+                <!-- Top episodes -->
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -492,95 +521,22 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Subscription health"
+                        android:text="@string/admin_card_top_episodes"
                         android:textColor="@color/text_primary"
                         android:textSize="15sp"
                         android:textStyle="bold"
                         android:layout_marginBottom="10dp" />
 
-                    <LinearLayout
+                    <com.android.cineflow.ui.admin.view.BarChartView
+                        android:id="@+id/bars_top_episodes"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal">
-
-                        <LinearLayout
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:orientation="vertical"
-                            android:gravity="center">
-
-                            <TextView
-                                android:id="@+id/tv_subs_active"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:textColor="@color/status_success"
-                                android:textSize="22sp"
-                                android:textStyle="bold" />
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="ACTIVE"
-                                android:textColor="@color/text_tertiary"
-                                android:textSize="11sp"
-                                android:textStyle="bold" />
-                        </LinearLayout>
-
-                        <LinearLayout
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:orientation="vertical"
-                            android:gravity="center">
-
-                            <TextView
-                                android:id="@+id/tv_subs_expiring"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:textColor="@color/status_warning"
-                                android:textSize="22sp"
-                                android:textStyle="bold" />
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="EXPIRING ≤7D"
-                                android:textColor="@color/text_tertiary"
-                                android:textSize="11sp"
-                                android:textStyle="bold" />
-                        </LinearLayout>
-
-                        <LinearLayout
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:orientation="vertical"
-                            android:gravity="center">
-
-                            <TextView
-                                android:id="@+id/tv_subs_expired"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:textColor="@color/status_error"
-                                android:textSize="22sp"
-                                android:textStyle="bold" />
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="EXPIRED"
-                                android:textColor="@color/text_tertiary"
-                                android:textSize="11sp"
-                                android:textStyle="bold" />
-                        </LinearLayout>
-                    </LinearLayout>
+                        android:layout_height="wrap_content" />
                 </LinearLayout>
             </LinearLayout>
         </androidx.core.widget.NestedScrollView>
     </FrameLayout>
 
-    <!-- ============== BOTTOM NAV ============== -->
+    <!-- ============== BOTTOM NAV (2 tabs) ============== -->
     <LinearLayout
         android:id="@+id/bottom_nav"
         android:layout_width="match_parent"
@@ -607,13 +563,13 @@
                 android:layout_width="22dp"
                 android:layout_height="22dp"
                 android:src="@drawable/ic_admin_stats"
-                android:contentDescription="Overview" />
+                android:contentDescription="@string/admin_section_overview" />
 
             <TextView
                 android:id="@+id/label_overview"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Overview"
+                android:text="@string/admin_section_overview"
                 android:textSize="11sp"
                 android:textStyle="bold"
                 android:layout_marginTop="4dp" />
@@ -637,43 +593,13 @@
                 android:layout_width="22dp"
                 android:layout_height="22dp"
                 android:src="@drawable/ic_admin_films"
-                android:contentDescription="Catalog" />
+                android:contentDescription="@string/admin_section_catalog" />
 
             <TextView
                 android:id="@+id/label_catalog"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Catalog"
-                android:textSize="11sp"
-                android:textStyle="bold"
-                android:layout_marginTop="4dp" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/tab_subscriptions"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:orientation="vertical"
-            android:gravity="center"
-            android:paddingTop="10dp"
-            android:paddingBottom="10dp"
-            android:clickable="true"
-            android:focusable="true"
-            android:background="?attr/selectableItemBackground">
-
-            <ImageView
-                android:id="@+id/icon_subscriptions"
-                android:layout_width="22dp"
-                android:layout_height="22dp"
-                android:src="@drawable/ic_gift"
-                android:contentDescription="Subscriptions" />
-
-            <TextView
-                android:id="@+id/label_subscriptions"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Subscriptions"
+                android:text="@string/admin_section_catalog"
                 android:textSize="11sp"
                 android:textStyle="bold"
                 android:layout_marginTop="4dp" />

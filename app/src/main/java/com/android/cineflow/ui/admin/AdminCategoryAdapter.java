@@ -78,7 +78,7 @@ public class AdminCategoryAdapter
             tvName.setText(category.getName());
             tvDescription.setText(category.getDescription() != null && !category.getDescription().isEmpty()
                     ? category.getDescription()
-                    : "No description");
+                    : itemView.getContext().getString(R.string.admin_no_description));
 
             tvFilmCount.setText(filmCount + " " + (filmCount == 1 ? "film" : "films"));
             int countColor = filmCount == 0 ? R.color.text_tertiary : R.color.brand_primary;

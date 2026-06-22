@@ -96,11 +96,11 @@ public class CategoryActivity extends com.android.cineflow.ui.base.BaseActivity 
                             List<FilmDto> films = response.body().getData();
                             adapter.setFilms(films);
                             if (films.isEmpty()) {
-                                tvError.setText("Chưa có phim nào");
+                                tvError.setText(R.string.category_no_films);
                                 tvError.setVisibility(View.VISIBLE);
                             }
                         } else {
-                            tvError.setText("Lỗi tải dữ liệu");
+                            tvError.setText(R.string.category_load_error);
                             tvError.setVisibility(View.VISIBLE);
                         }
                     }
@@ -108,10 +108,10 @@ public class CategoryActivity extends com.android.cineflow.ui.base.BaseActivity 
                     @Override
                     public void onFailure(Call<ApiResponseDto<List<FilmDto>>> call, Throwable t) {
                         progressBar.setVisibility(View.GONE);
-                        tvError.setText("Không thể kết nối đến máy chủ");
+                        tvError.setText(R.string.category_connection_error);
                         tvError.setVisibility(View.VISIBLE);
                         Toast.makeText(CategoryActivity.this,
-                                "Lỗi: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+                                getString(R.string.category_error_format, t.getMessage()), Toast.LENGTH_SHORT).show();
                     }
                 });
     }

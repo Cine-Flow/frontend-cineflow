@@ -243,7 +243,7 @@ public class PremierLeagueFragment extends BaseFragment {
             java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("dd/MM/yyyy HH:mm", java.util.Locale.getDefault());
             java.util.Date matchDate = sdf.parse(dateStr + " " + timeStr);
             if (matchDate == null) {
-                tvCountdown.setText("⏳ Trạng thái: Chưa diễn ra");
+                tvCountdown.setText(getString(R.string.pl_status_not_started));
                 return;
             }
             
@@ -252,19 +252,19 @@ public class PremierLeagueFragment extends BaseFragment {
                 public void run() {
                     long diff = matchDate.getTime() - System.currentTimeMillis();
                     if (diff <= 0) {
-                        tvCountdown.setText("⏳ Trạng thái: Trận đấu đã bắt đầu!");
+                        tvCountdown.setText(getString(R.string.pl_status_started));
                     } else {
                         long hours = diff / (3600 * 1000);
                         long minutes = (diff % (3600 * 1000)) / (60 * 1000);
                         long seconds = (diff % (60 * 1000)) / 1000;
-                        tvCountdown.setText(String.format("⏳ Đếm ngược: %02d giờ %02d phút %02d giây", hours, minutes, seconds));
+                        tvCountdown.setText(getString(R.string.pl_countdown_format, hours, minutes, seconds));
                         countdownHandler.postDelayed(this, 1000);
                     }
                 }
             };
             countdownHandler.post(runnableHolder[0]);
         } catch (Exception e) {
-            tvCountdown.setText("⏳ Trạng thái: Chưa diễn ra");
+            tvCountdown.setText(getString(R.string.pl_status_not_started));
         }
     }
 

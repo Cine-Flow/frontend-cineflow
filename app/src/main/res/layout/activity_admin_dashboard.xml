@@ -13,7 +13,7 @@
         android:elevation="4dp"
         app:titleTextColor="@color/text_primary"
         app:navigationIconTint="@color/text_primary"
-        app:title="Admin Panel"
+        app:title="@string/admin_panel"
         xmlns:app="http://schemas.android.com/apk/res-auto" />
 
     <ScrollView
@@ -30,7 +30,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Management"
+                android:text="@string/admin_dashboard_management"
                 android:textColor="@color/text_secondary"
                 android:textSize="14sp"
                 android:textStyle="bold"

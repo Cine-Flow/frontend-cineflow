@@ -267,9 +267,13 @@ public class VolleyFilmApiServiceImpl implements FilmApiService {
     }
 
     @Override
-    public Call<ApiResponseDto<List<AdminCategoryDto>>> getAdminCategories() {
-        return createCall("admin/categories", Request.Method.GET, null,
-                new TypeToken<ApiResponseDto<List<AdminCategoryDto>>>(){}.getType());
+    public Call<ApiResponseDto<PagedResponseDto<AdminCategoryDto>>> getAdminCategories(int page, int size, String search) {
+        String query = "page=" + page + "&size=" + size;
+        if (search != null && !search.trim().isEmpty()) {
+            query += "&search=" + Uri.encode(search.trim());
+        }
+        return createCall("admin/categories?" + query, Request.Method.GET, null,
+                new TypeToken<ApiResponseDto<PagedResponseDto<AdminCategoryDto>>>(){}.getType());
     }
 
     @Override
@@ -291,27 +295,13 @@ public class VolleyFilmApiServiceImpl implements FilmApiService {
     }
 
     @Override
-    public Call<ApiResponseDto<List<AdminUserDto>>> getAdminUsers(String search, String role, String subscription) {
-        String query = "";
+    public Call<ApiResponseDto<PagedResponseDto<AdminUserDto>>> getAdminUsers(int page, int size, String search) {
+        String query = "page=" + page + "&size=" + size;
         if (search != null && !search.trim().isEmpty()) {
-            query += "search=" + Uri.encode(search.trim());
+            query += "&search=" + Uri.encode(search.trim());
         }
-        if (role != null && !role.trim().isEmpty()) {
-            if (!query.isEmpty()) query += "&";
-            query += "role=" + Uri.encode(role.trim());
-        }
-        if (subscription != null && !subscription.trim().isEmpty()) {
-            if (!query.isEmpty()) query += "&";
-            query += "subscription=" + Uri.encode(subscription.trim());
-        }
-        return createCall("admin/users" + (query.isEmpty() ? "" : "?" + query), Request.Method.GET, null,
-                new TypeToken<ApiResponseDto<List<AdminUserDto>>>(){}.getType());
-    }
-
-    @Override
-    public Call<ApiResponseDto<AdminUserDto>> createUser(AdminUserRequestDto request) {
-        return createCall("admin/users", Request.Method.POST, request,
-                new TypeToken<ApiResponseDto<AdminUserDto>>(){}.getType());
+        return createCall("admin/users?" + query, Request.Method.GET, null,
+                new TypeToken<ApiResponseDto<PagedResponseDto<AdminUserDto>>>(){}.getType());
     }
 
     @Override

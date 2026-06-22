@@ -85,7 +85,7 @@ public class AdminFilmAdapter extends RecyclerView.Adapter<AdminFilmAdapter.Film
 
             if (film.getIsPremium()) {
                 tvPremium.setVisibility(View.VISIBLE);
-                tvPremium.setText("PREMIUM");
+                tvPremium.setText(R.string.admin_premium_badge);
             } else {
                 tvPremium.setVisibility(View.GONE);
             }
@@ -110,9 +110,9 @@ public class AdminFilmAdapter extends RecyclerView.Adapter<AdminFilmAdapter.Film
         private String formatType(String type) {
             if (type == null) return "";
             switch (type) {
-                case "SINGLE": return "Movie";
-                case "SERIES": return "Series";
-                case "LIVE": return "Live";
+                case "SINGLE": return itemView.getContext().getString(R.string.admin_film_type_movie);
+                case "SERIES": return itemView.getContext().getString(R.string.admin_film_type_series);
+                case "LIVE": return itemView.getContext().getString(R.string.admin_film_type_live);
                 default: return type;
             }
         }

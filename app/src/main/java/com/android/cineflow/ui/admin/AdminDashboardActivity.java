@@ -31,12 +31,51 @@ public class AdminDashboardActivity extends com.android.cineflow.ui.base.BaseAct
         MaterialToolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         if (getSupportActionBar() != null) {
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-            getSupportActionBar().setTitle("Admin Panel");
+            getSupportActionBar().setDisplayHomeAsUpEnabled(false);
+            getSupportActionBar().setTitle(R.string.admin_panel);
         }
-        toolbar.setNavigationOnClickListener(v -> onBackPressed());
 
         buildModuleGrid();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(android.view.Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_admin_dashboard, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(android.view.MenuItem item) {
+        if (item.getItemId() == R.id.action_admin_logout) {
+            confirmLogout();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onBackPressed() {
+        // Admins can't return to a user-facing screen — back from dashboard exits the app
+        finishAffinity();
+    }
+
+    private void confirmLogout() {
+        new com.google.android.material.dialog.MaterialAlertDialogBuilder(this)
+                .setTitle(R.string.admin_logout)
+                .setMessage(R.string.admin_logout_confirm_msg)
+                .setNegativeButton(R.string.admin_button_cancel, null)
+                .setPositiveButton(R.string.admin_logout, (d, w) -> performLogout())
+                .show();
+    }
+
+    private void performLogout() {
+        com.android.cineflow.data.auth.AuthManager auth =
+                com.android.cineflow.data.auth.AuthManager.getInstance();
+        if (auth != null) auth.clearSession();
+        Intent intent = new Intent(this, com.android.cineflow.ui.auth.LoginActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(intent);
+        finish();
     }
 
     private void buildModuleGrid() {
@@ -44,10 +83,10 @@ public class AdminDashboardActivity extends com.android.cineflow.ui.base.BaseAct
         grid.removeAllViews();
 
         List<AdminModule> modules = new ArrayList<>();
-        modules.add(new AdminModule(MODULE_FILMS, "Films", "Manage movies & series", R.drawable.ic_admin_films, R.color.brand_primary));
-        modules.add(new AdminModule(MODULE_USERS, "Users", "Manage accounts & roles", R.drawable.ic_admin_users, R.color.badge_series));
-        modules.add(new AdminModule(MODULE_CATEGORIES, "Categories", "Manage genres & tags", R.drawable.ic_admin_categories, R.color.status_success));
-        modules.add(new AdminModule(MODULE_STATS, "Statistics", "View analytics & reports", R.drawable.ic_admin_stats, R.color.badge_movie));
+        modules.add(new AdminModule(MODULE_FILMS, getString(R.string.admin_module_films_label), getString(R.string.admin_module_films_desc), R.drawable.ic_admin_films, R.color.brand_primary));
+        modules.add(new AdminModule(MODULE_USERS, getString(R.string.admin_module_users_label), getString(R.string.admin_module_users_desc), R.drawable.ic_admin_users, R.color.badge_series));
+        modules.add(new AdminModule(MODULE_CATEGORIES, getString(R.string.admin_module_categories_label), getString(R.string.admin_module_categories_desc), R.drawable.ic_admin_categories, R.color.status_success));
+        modules.add(new AdminModule(MODULE_STATS, getString(R.string.admin_module_stats_label), getString(R.string.admin_module_stats_desc), R.drawable.ic_admin_stats, R.color.badge_movie));
 
         LayoutInflater inflater = LayoutInflater.from(this);
         for (AdminModule module : modules) {

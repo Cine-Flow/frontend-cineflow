@@ -22,6 +22,20 @@ public class MainActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        // Admin users skip the user-facing UI entirely
+        com.android.cineflow.data.auth.AuthManager auth =
+                com.android.cineflow.data.auth.AuthManager.getInstance();
+        if (auth != null && auth.isLoggedIn() && auth.isAdmin()) {
+            android.content.Intent intent = new android.content.Intent(
+                    this, com.android.cineflow.ui.admin.AdminDashboardActivity.class);
+            intent.setFlags(android.content.Intent.FLAG_ACTIVITY_NEW_TASK
+                    | android.content.Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            startActivity(intent);
+            finish();
+            return;
+        }
+
         setContentView(R.layout.activity_main);
 
         viewPager = findViewById(R.id.view_pager);

@@ -37,7 +37,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:text="Không thể tải dữ liệu"
+        android:text="@string/home_load_error"
         android:textColor="@color/text_secondary"
         android:textSize="15sp"
         android:drawablePadding="8dp"

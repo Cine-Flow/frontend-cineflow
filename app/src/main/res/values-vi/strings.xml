@@ -328,7 +328,7 @@
     <string name="form_initial_password_hint">Only set on creation. Use the reset action to change it later.</string>
 
     <!-- Match detail dialog -->
-    <string name="match_detail_title">Di tiết Trận đấu</string>
+    <string name="match_detail_title">Chi tiết Trận đấu</string>
     <string name="match_detail_vs">VS</string>
     <string name="match_detail_stadium_format">🏟️ Sân vận động: %s</string>
     <string name="match_detail_referee_format">🏁 Trọng tài: %s</string>
@@ -425,13 +425,11 @@
     <!-- Admin module - localized strings (i18n)                       -->
     <!-- ============================================================ -->
 
-    <!-- Toolbar titles -->
     <string name="admin_title_film_management">Quản lý phim</string>
     <string name="admin_title_user_management">Quản lý người dùng</string>
     <string name="admin_title_category_management">Quản lý thể loại</string>
     <string name="admin_title_analytics">Bảng thống kê</string>
 
-    <!-- Hints -->
     <string name="admin_hint_search_films">Tìm phim...</string>
     <string name="admin_hint_search_users">Tìm theo tên, email, số điện thoại...</string>
     <string name="admin_hint_search_by_name">Tìm theo tên...</string>
@@ -445,7 +443,6 @@
     <string name="admin_hint_category_description_example">Phim hành động với những pha rượt đuổi, đánh đấm và cảnh mạo hiểm.</string>
     <string name="admin_hint_episode_title_example">Tập 1</string>
 
-    <!-- Content descriptions -->
     <string name="admin_cd_add_film">Thêm phim</string>
     <string name="admin_cd_add_user">Thêm người dùng</string>
     <string name="admin_cd_add_category">Thêm thể loại</string>
@@ -461,7 +458,6 @@
     <string name="admin_cd_close">Đóng</string>
     <string name="admin_cd_export">Xuất dữ liệu</string>
 
-    <!-- Analytics cards -->
     <string name="admin_chart_signups_title">Đăng ký mới theo ngày</string>
     <string name="admin_chart_watch_title">Phiên xem theo ngày</string>
     <string name="admin_card_zero_view_title">Phim chưa có lượt xem</string>
@@ -472,7 +468,6 @@
     <string name="admin_card_top_episodes">Tập phim được xem nhiều nhất</string>
     <string name="admin_chart_empty">Chưa có dữ liệu</string>
 
-    <!-- KPI labels -->
     <string name="admin_kpi_total_users">TỔNG NGƯỜI DÙNG</string>
     <string name="admin_kpi_new_signups">ĐĂNG KÝ MỚI</string>
     <string name="admin_kpi_active_users">NGƯỜI DÙNG HOẠT ĐỘNG</string>
@@ -480,7 +475,6 @@
     <string name="admin_kpi_watch_sessions">PHIÊN XEM</string>
     <string name="admin_kpi_favorites">YÊU THÍCH</string>
 
-    <!-- Dashboard modules -->
     <string name="admin_module_films_label">Phim</string>
     <string name="admin_module_films_desc">Quản lý phim lẻ &amp; phim bộ</string>
     <string name="admin_module_users_label">Người dùng</string>
@@ -490,16 +484,13 @@
     <string name="admin_module_stats_label">Thống kê</string>
     <string name="admin_module_stats_desc">Xem báo cáo &amp; phân tích</string>
 
-    <!-- Logout -->
     <string name="admin_logout">Đăng xuất</string>
     <string name="admin_logout_confirm_msg">Bạn có chắc muốn đăng xuất khỏi tài khoản quản trị?</string>
 
-    <!-- Buttons / generic -->
     <string name="admin_button_delete">Xóa</string>
     <string name="admin_button_cancel">Hủy</string>
     <string name="admin_button_send_link">Gửi liên kết</string>
 
-    <!-- Film form dialog -->
     <string name="admin_dialog_edit_film">Chỉnh sửa phim</string>
     <string name="admin_dialog_create_film">Tạo phim mới</string>
     <string name="admin_dialog_delete_film_title">Xóa phim</string>
@@ -510,7 +501,6 @@
     <string name="admin_film_type_series">Phim bộ</string>
     <string name="admin_film_type_live">Trực tiếp</string>
 
-    <!-- User form dialog -->
     <string name="admin_dialog_edit_user">Chỉnh sửa người dùng</string>
     <string name="admin_dialog_create_user">Tạo người dùng mới</string>
     <string name="admin_dialog_delete_user_title">Xóa người dùng</string>
@@ -533,7 +523,6 @@
     <string name="admin_err_valid_email_required">Email hợp lệ là bắt buộc</string>
     <string name="admin_err_min_6_chars">Tối thiểu 6 ký tự</string>
 
-    <!-- Category form dialog -->
     <string name="admin_dialog_edit_category">Chỉnh sửa thể loại</string>
     <string name="admin_dialog_create_category">Tạo thể loại mới</string>
     <string name="admin_dialog_delete_category_title">Xóa thể loại</string>
@@ -549,7 +538,6 @@
     <string name="admin_err_max_255">Tối đa 255 ký tự</string>
     <string name="admin_no_description">Không có mô tả</string>
 
-    <!-- Upload -->
     <string name="admin_upload_err_read">Không thể đọc tệp tin</string>
     <string name="admin_upload_success">Tải lên thành công!</string>
     <string name="admin_upload_failed_http_format">Tải lên thất bại: HTTP %d</string>
@@ -558,12 +546,10 @@
     <string name="admin_upload_failed">Tải lên thất bại</string>
     <string name="admin_upload_connection_error">Lỗi kết nối khi tải lên</string>
 
-    <!-- Server / network -->
     <string name="admin_toast_server_error_format">Lỗi máy chủ: %s</string>
     <string name="admin_toast_cannot_load_analytics">Không tải được dữ liệu thống kê</string>
     <string name="admin_connection_error">Lỗi kết nối</string>
 
-    <!-- Episode manager -->
     <string name="admin_episode_edit">Sửa tập</string>
     <string name="admin_episode_load_error">Không tải được danh sách tập</string>
     <string name="admin_episode_err_required">Vui lòng nhập số tập và tiêu đề</string>

@@ -3,8 +3,9 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="horizontal"
-    android:padding="12dp"
-    android:gravity="center_vertical">
+    android:paddingHorizontal="4dp"
+    android:paddingVertical="10dp"
+    android:gravity="top">
 
     <ImageView
         android:layout_width="36dp"
@@ -24,16 +25,16 @@
             android:id="@+id/tv_comment_user"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="@color/text_primary"
-            android:textStyle="bold"
-            android:textSize="13sp" />
+            android:textColor="@color/text_tertiary"
+            android:textSize="12sp" />
 
         <TextView
             android:id="@+id/tv_comment_content"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textColor="@color/text_secondary"
-            android:textSize="13sp"
+            android:textColor="@color/text_primary"
+            android:textSize="14sp"
+            android:lineSpacingExtra="2dp"
             android:layout_marginTop="2dp" />
 
     </LinearLayout>

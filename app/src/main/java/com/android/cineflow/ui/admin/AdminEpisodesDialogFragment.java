@@ -97,7 +97,7 @@ public class AdminEpisodesDialogFragment extends DialogFragment {
         dialog.setContentView(R.layout.dialog_episodes_manager);
 
         TextView tvTitle = dialog.findViewById(R.id.tv_dialog_title);
-        tvTitle.setText("Tập phim - " + filmTitle);
+        tvTitle.setText(getString(R.string.admin_episode_title, filmTitle));
 
         progressBar = dialog.findViewById(R.id.progress_bar);
         RecyclerView rvEpisodes = dialog.findViewById(R.id.rv_episodes);
@@ -124,14 +124,14 @@ public class AdminEpisodesDialogFragment extends DialogFragment {
                     episodes = latestEpisodes != null ? latestEpisodes : new ArrayList<>();
                     adapter.notifyDataSetChanged();
                 } else {
-                    Toast.makeText(requireContext(), "Không tải được tập phim", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(requireContext(), R.string.admin_episode_load_error, Toast.LENGTH_SHORT).show();
                 }
             }
 
             @Override
             public void onFailure(Call<ApiResponseDto<FilmDetailDto>> call, Throwable t) {
                 progressBar.setVisibility(View.GONE);
-                Toast.makeText(requireContext(), "Lỗi tải tập phim", Toast.LENGTH_SHORT).show();
+                Toast.makeText(requireContext(), R.string.admin_episode_load_error, Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -146,7 +146,7 @@ public class AdminEpisodesDialogFragment extends DialogFragment {
         EditText etEpTitle = formDialog.findViewById(R.id.et_episode_title);
         EditText etEpVideoUrl = formDialog.findViewById(R.id.et_episode_video_url);
 
-        tvFormTitle.setText(isEdit ? "Sửa tập" : "Thêm tập mới");
+        tvFormTitle.setText(isEdit ? R.string.admin_episode_edit : R.string.episode_form_title);
         if (isEdit) {
             etEpNumber.setText(String.valueOf(episode.getEpisodeNumber()));
             etEpTitle.setText(episode.getTitle() != null ? episode.getTitle() : "");
@@ -158,7 +158,7 @@ public class AdminEpisodesDialogFragment extends DialogFragment {
                     .max(Integer::compareTo)
                     .orElse(0) + 1;
             etEpNumber.setText(String.valueOf(nextEpNumber));
-            etEpTitle.setText("Tập " + nextEpNumber);
+            etEpTitle.setText(getString(R.string.admin_episode_default_title, nextEpNumber));
         }
 
         formDialog.findViewById(R.id.btn_upload_ep_video).setOnClickListener(v -> {
@@ -177,7 +177,7 @@ public class AdminEpisodesDialogFragment extends DialogFragment {
             String epVideoUrl = etEpVideoUrl.getText().toString().trim();
 
             if (epNumStr.isEmpty() || epTitle.isEmpty()) {
-                Toast.makeText(requireContext(), "Vui lòng nhập số tập và tiêu đề", Toast.LENGTH_SHORT).show();
+                Toast.makeText(requireContext(), R.string.admin_episode_err_required, Toast.LENGTH_SHORT).show();
                 return;
             }
 
@@ -185,7 +185,7 @@ public class AdminEpisodesDialogFragment extends DialogFragment {
             try {
                 epNumber = Integer.parseInt(epNumStr);
             } catch (NumberFormatException e) {
-                Toast.makeText(requireContext(), "Số tập không hợp lệ", Toast.LENGTH_SHORT).show();
+                Toast.makeText(requireContext(), R.string.admin_episode_err_invalid_number, Toast.LENGTH_SHORT).show();
                 return;
             }
 
@@ -205,17 +205,17 @@ public class AdminEpisodesDialogFragment extends DialogFragment {
             @Override
             public void onResponse(Call<ApiResponseDto<EpisodeDto>> call, Response<ApiResponseDto<EpisodeDto>> response) {
                 if (response.isSuccessful()) {
-                    Toast.makeText(requireContext(), "Đã thêm tập", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(requireContext(), R.string.admin_episode_added, Toast.LENGTH_SHORT).show();
                     formDialog.dismiss();
                     loadEpisodes();
                 } else {
-                    Toast.makeText(requireContext(), "Thêm tập thất bại", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(requireContext(), R.string.admin_episode_add_failed, Toast.LENGTH_SHORT).show();
                 }
             }
 
             @Override
             public void onFailure(Call<ApiResponseDto<EpisodeDto>> call, Throwable t) {
-                Toast.makeText(requireContext(), "Lỗi kết nối", Toast.LENGTH_SHORT).show();
+                Toast.makeText(requireContext(), R.string.admin_connection_error, Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -225,44 +225,44 @@ public class AdminEpisodesDialogFragment extends DialogFragment {
             @Override
             public void onResponse(Call<ApiResponseDto<EpisodeDto>> call, Response<ApiResponseDto<EpisodeDto>> response) {
                 if (response.isSuccessful()) {
-                    Toast.makeText(requireContext(), "Đã cập nhật tập", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(requireContext(), R.string.admin_episode_updated, Toast.LENGTH_SHORT).show();
                     formDialog.dismiss();
                     loadEpisodes();
                 } else {
-                    Toast.makeText(requireContext(), "Cập nhật tập thất bại", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(requireContext(), R.string.admin_episode_update_failed, Toast.LENGTH_SHORT).show();
                 }
             }
 
             @Override
             public void onFailure(Call<ApiResponseDto<EpisodeDto>> call, Throwable t) {
-                Toast.makeText(requireContext(), "Lỗi kết nối", Toast.LENGTH_SHORT).show();
+                Toast.makeText(requireContext(), R.string.admin_connection_error, Toast.LENGTH_SHORT).show();
             }
         });
     }
 
     private void deleteEpisode(EpisodeDto episode) {
         new androidx.appcompat.app.AlertDialog.Builder(requireContext())
-                .setTitle("Xóa tập phim")
-                .setMessage("Bạn có chắc muốn xóa \"" + episode.getTitle() + "\"?")
-                .setPositiveButton("Xóa", (d, w) -> {
+                .setTitle(R.string.admin_episode_delete_title)
+                .setMessage(getString(R.string.admin_episode_delete_confirm_format, episode.getTitle()))
+                .setPositiveButton(R.string.admin_button_delete, (d, w) -> {
                     ApiClient.getFilmApiService().deleteEpisode(episode.getId()).enqueue(new Callback<ApiResponseDto<Void>>() {
                         @Override
                         public void onResponse(Call<ApiResponseDto<Void>> call, Response<ApiResponseDto<Void>> response) {
                             if (response.isSuccessful()) {
-                                Toast.makeText(requireContext(), "Đã xóa", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(requireContext(), R.string.admin_episode_deleted, Toast.LENGTH_SHORT).show();
                                 loadEpisodes();
                             } else {
-                                Toast.makeText(requireContext(), "Xóa thất bại", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(requireContext(), R.string.admin_episode_delete_failed, Toast.LENGTH_SHORT).show();
                             }
                         }
 
                         @Override
                         public void onFailure(Call<ApiResponseDto<Void>> call, Throwable t) {
-                            Toast.makeText(requireContext(), "Lỗi kết nối", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(requireContext(), R.string.admin_connection_error, Toast.LENGTH_SHORT).show();
                         }
                     });
                 })
-                .setNegativeButton("Hủy", null)
+                .setNegativeButton(R.string.admin_button_cancel, null)
                 .show();
     }
 
@@ -290,32 +290,32 @@ public class AdminEpisodesDialogFragment extends DialogFragment {
             }
 
             if (fileSize == 0L) {
-                Toast.makeText(requireContext(), "Khong the doc tep tin", Toast.LENGTH_SHORT).show();
+                Toast.makeText(requireContext(), R.string.admin_upload_err_read, Toast.LENGTH_SHORT).show();
                 return;
             }
 
             RequestBody requestBody = new ContentUriRequestBody(resolver, fileUri, mimeType, fileSize);
             MultipartBody.Part body = MultipartBody.Part.createFormData("file", fileName, requestBody);
 
-            Toast.makeText(requireContext(), "Dang tai len...", Toast.LENGTH_SHORT).show();
+            Toast.makeText(requireContext(), R.string.admin_episode_uploading, Toast.LENGTH_SHORT).show();
             ApiClient.getFilmApiService().uploadFile(body, "films").enqueue(new Callback<ApiResponseDto<String>>() {
                 @Override
                 public void onResponse(Call<ApiResponseDto<String>> call, Response<ApiResponseDto<String>> response) {
                     if (response.isSuccessful() && response.body() != null && response.body().getData() != null) {
                         targetField.setText(response.body().getData());
-                        Toast.makeText(requireContext(), "Upload thanh cong!", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(requireContext(), R.string.admin_upload_success, Toast.LENGTH_SHORT).show();
                     } else {
-                        Toast.makeText(requireContext(), "Upload that bai: HTTP " + response.code(), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(requireContext(), getString(R.string.admin_upload_failed_http_format, response.code()), Toast.LENGTH_SHORT).show();
                     }
                 }
 
                 @Override
                 public void onFailure(Call<ApiResponseDto<String>> call, Throwable t) {
-                    Toast.makeText(requireContext(), "Loi ket noi upload: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(requireContext(), getString(R.string.admin_upload_err_connection_format, t.getMessage()), Toast.LENGTH_SHORT).show();
                 }
             });
         } catch (Exception e) {
-            Toast.makeText(requireContext(), "Loi: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+            Toast.makeText(requireContext(), getString(R.string.admin_upload_err_format, e.getMessage()), Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -337,7 +337,7 @@ public class AdminEpisodesDialogFragment extends DialogFragment {
 
             InputStream inputStream = resolver.openInputStream(fileUri);
             if (inputStream == null) {
-                Toast.makeText(requireContext(), "Không thể đọc tệp tin", Toast.LENGTH_SHORT).show();
+                Toast.makeText(requireContext(), R.string.admin_upload_err_read, Toast.LENGTH_SHORT).show();
                 return;
             }
 
@@ -354,27 +354,27 @@ public class AdminEpisodesDialogFragment extends DialogFragment {
             RequestBody requestBody = RequestBody.create(MediaType.parse(mimeType), tempFile);
             MultipartBody.Part body = MultipartBody.Part.createFormData("file", fileName, requestBody);
 
-            Toast.makeText(requireContext(), "Đang tải lên...", Toast.LENGTH_SHORT).show();
+            Toast.makeText(requireContext(), R.string.admin_episode_uploading, Toast.LENGTH_SHORT).show();
             ApiClient.getFilmApiService().uploadFile(body, "films").enqueue(new Callback<ApiResponseDto<String>>() {
                 @Override
                 public void onResponse(Call<ApiResponseDto<String>> call, Response<ApiResponseDto<String>> response) {
                     if (response.isSuccessful() && response.body() != null && response.body().getData() != null) {
                         targetField.setText(response.body().getData());
-                        Toast.makeText(requireContext(), "Upload thành công!", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(requireContext(), R.string.admin_upload_success, Toast.LENGTH_SHORT).show();
                     } else {
-                        Toast.makeText(requireContext(), "Upload thất bại", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(requireContext(), R.string.admin_upload_failed, Toast.LENGTH_SHORT).show();
                     }
                     tempFile.delete();
                 }
 
                 @Override
                 public void onFailure(Call<ApiResponseDto<String>> call, Throwable t) {
-                    Toast.makeText(requireContext(), "Lỗi kết nối upload", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(requireContext(), R.string.admin_upload_connection_error, Toast.LENGTH_SHORT).show();
                     tempFile.delete();
                 }
             });
         } catch (Exception e) {
-            Toast.makeText(requireContext(), "Lỗi: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+            Toast.makeText(requireContext(), getString(R.string.admin_upload_err_format, e.getMessage()), Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -391,10 +391,10 @@ public class AdminEpisodesDialogFragment extends DialogFragment {
         @Override
         public void onBindViewHolder(@NonNull VH holder, int position) {
             EpisodeDto ep = episodes.get(position);
-            holder.tvNumber.setText("Tập " + ep.getEpisodeNumber());
+            holder.tvNumber.setText(getString(R.string.admin_episode_number, ep.getEpisodeNumber()));
             holder.tvTitle.setText(ep.getTitle() != null ? ep.getTitle() : "");
             boolean hasVideo = ep.getVideoUrl() != null && !ep.getVideoUrl().isEmpty();
-            holder.tvStatus.setText(hasVideo ? "Có video" : "Chưa có video");
+            holder.tvStatus.setText(hasVideo ? R.string.admin_episode_has_video : R.string.admin_episode_no_video);
             holder.tvStatus.setTextColor(holder.itemView.getContext().getColor(
                     hasVideo ? R.color.status_success : R.color.text_tertiary));
             holder.btnEdit.setOnClickListener(v -> showEpisodeFormDialog(ep));

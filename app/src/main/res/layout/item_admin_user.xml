@@ -20,7 +20,7 @@
             android:layout_width="52dp"
             android:layout_height="52dp"
             android:scaleType="centerCrop"
-            android:contentDescription="Avatar" />
+            android:contentDescription="@string/admin_cd_avatar" />
 
         <TextView
             android:id="@+id/tv_avatar_initial"
@@ -120,7 +120,7 @@
             android:background="@color/surface_tertiary"
             android:clickable="true"
             android:focusable="true"
-            android:contentDescription="Edit profile" />
+            android:contentDescription="@string/admin_cd_edit_profile" />
 
         <ImageView
             android:id="@+id/btn_reset"
@@ -132,7 +132,7 @@
             android:background="@color/surface_tertiary"
             android:clickable="true"
             android:focusable="true"
-            android:contentDescription="Send password reset" />
+            android:contentDescription="@string/admin_cd_password_reset" />
 
         <ImageView
             android:id="@+id/btn_delete"
@@ -144,7 +144,7 @@
             android:background="@color/surface_tertiary"
             android:clickable="true"
             android:focusable="true"
-            android:contentDescription="Delete" />
+            android:contentDescription="@string/admin_cd_delete" />
     </LinearLayout>
 
 </LinearLayout>

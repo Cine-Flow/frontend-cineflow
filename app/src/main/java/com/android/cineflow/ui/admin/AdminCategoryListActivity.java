@@ -1,124 +1,128 @@
 package com.android.cineflow.ui.admin;
 
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.View;
 import android.widget.EditText;
-import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AlertDialog;
+import androidx.lifecycle.Observer;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.android.cineflow.R;
-import com.android.cineflow.data.network.ApiClient;
-import com.android.cineflow.data.network.Call;
-import com.android.cineflow.data.network.Callback;
-import com.android.cineflow.data.network.Response;
 import com.android.cineflow.data.network.dto.AdminCategoryDto;
 import com.android.cineflow.data.network.dto.AdminCategoryRequestDto;
-import com.android.cineflow.data.network.dto.ApiResponseDto;
+import com.android.cineflow.data.repository.AdminCategoryRepository;
 import com.google.android.material.appbar.MaterialToolbar;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Locale;
+import com.google.android.material.button.MaterialButton;
 
 public class AdminCategoryListActivity extends com.android.cineflow.ui.base.BaseActivity
         implements AdminCategoryAdapter.OnCategoryActionListener {
 
+    private AdminCategoryRepository repository;
     private AdminCategoryAdapter adapter;
+    private SwipeRefreshLayout swipeRefresh;
+    private ProgressBar progressBar;
     private TextView tvCategoryCount;
-    private TextView tvSummaryTotal, tvSummaryFilms, tvSummaryEmpty;
     private EditText etSearch;
-    private final List<AdminCategoryDto> all = new ArrayList<>();
+    private MaterialButton btnPrevPage;
+    private MaterialButton btnNextPage;
+    private TextView tvPageInfo;
+
+    private final Handler searchHandler = new Handler(Looper.getMainLooper());
+    private Runnable searchRunnable;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_admin_category_list);
 
+        repository = AdminCategoryRepository.getInstance();
+
         MaterialToolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-            getSupportActionBar().setTitle("Category Management");
+            getSupportActionBar().setTitle(R.string.admin_title_category_management);
         }
         toolbar.setNavigationOnClickListener(v -> onBackPressed());
 
+        progressBar = findViewById(R.id.progress_bar);
         tvCategoryCount = findViewById(R.id.tv_category_count);
-        tvSummaryTotal = findViewById(R.id.tv_summary_total);
-        tvSummaryFilms = findViewById(R.id.tv_summary_films);
-        tvSummaryEmpty = findViewById(R.id.tv_summary_empty);
+        swipeRefresh = findViewById(R.id.swipe_refresh);
         etSearch = findViewById(R.id.et_search);
-        ImageView fab = findViewById(R.id.fab_add_category);
+        btnPrevPage = findViewById(R.id.btn_prev_page);
+        btnNextPage = findViewById(R.id.btn_next_page);
+        tvPageInfo = findViewById(R.id.tv_page_info);
 
         RecyclerView rv = findViewById(R.id.rv_categories);
         rv.setLayoutManager(new LinearLayoutManager(this));
         adapter = new AdminCategoryAdapter(this);
         rv.setAdapter(adapter);
 
-        fab.setOnClickListener(v -> showForm(null));
+        swipeRefresh.setColorSchemeColors(getColor(R.color.brand_primary));
+        swipeRefresh.setOnRefreshListener(() -> {
+            repository.fetchFirstPage(etSearch.getText().toString().trim());
+            swipeRefresh.setRefreshing(false);
+        });
+
+        findViewById(R.id.fab_add_category).setOnClickListener(v -> showForm(null));
+
         etSearch.addTextChangedListener(new TextWatcher() {
             @Override public void beforeTextChanged(CharSequence s, int a, int b, int c) {}
             @Override public void onTextChanged(CharSequence s, int a, int b, int c) {}
-            @Override public void afterTextChanged(Editable s) { applyFilter(); }
+            @Override public void afterTextChanged(Editable s) {
+                if (searchRunnable != null) searchHandler.removeCallbacks(searchRunnable);
+                searchRunnable = () -> repository.fetchFirstPage(s.toString().trim());
+                searchHandler.postDelayed(searchRunnable, 400);
+            }
         });
 
-        loadCategories();
+        btnPrevPage.setOnClickListener(v -> repository.fetchPrevPage());
+        btnNextPage.setOnClickListener(v -> repository.fetchNextPage());
+
+        observeData();
+        repository.fetchFirstPage(null);
     }
 
-    private void loadCategories() {
-        ApiClient.getFilmApiService().getAdminCategories()
-                .enqueue(new Callback<ApiResponseDto<List<AdminCategoryDto>>>() {
-                    @Override
-                    public void onResponse(Call<ApiResponseDto<List<AdminCategoryDto>>> call,
-                                           Response<ApiResponseDto<List<AdminCategoryDto>>> response) {
-                        if (response.isSuccessful() && response.body() != null && response.body().getData() != null) {
-                            all.clear();
-                            all.addAll(response.body().getData());
-                            refreshSummary();
-                            applyFilter();
-                        } else {
-                            Toast.makeText(AdminCategoryListActivity.this,
-                                    "Cannot load categories", Toast.LENGTH_SHORT).show();
-                        }
-                    }
+    private void observeData() {
+        repository.getCategories().observe(this, categories -> {
+            adapter.setCategories(categories);
+            updatePaginationUI();
+        });
 
-                    @Override
-                    public void onFailure(Call<ApiResponseDto<List<AdminCategoryDto>>> call, Throwable t) {
-                        Toast.makeText(AdminCategoryListActivity.this,
-                                "Server error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
-                    }
-                });
+        repository.getLoading().observe(this, loading -> {
+            progressBar.setVisibility(Boolean.TRUE.equals(loading) ? View.VISIBLE : View.GONE);
+        });
+
+        repository.getError().observe(this, error -> {
+            if (error != null && !error.isEmpty()) {
+                tvCategoryCount.setText(error);
+            }
+        });
     }
 
-    private void applyFilter() {
-        String q = etSearch.getText().toString().trim().toLowerCase(Locale.ROOT);
-        List<AdminCategoryDto> filtered = new ArrayList<>();
-        for (AdminCategoryDto c : all) {
-            boolean match = q.isEmpty()
-                    || c.getName().toLowerCase(Locale.ROOT).contains(q)
-                    || (c.getDescription() != null
-                    && c.getDescription().toLowerCase(Locale.ROOT).contains(q));
-            if (match) filtered.add(c);
-        }
-        adapter.setCategories(filtered);
-        tvCategoryCount.setText(filtered.size() + " of " + all.size() + " categories");
-    }
+    private void updatePaginationUI() {
+        long total = repository.getTotalElements();
+        int page = repository.getCurrentPage();
+        int totalPages = repository.getTotalPages();
 
-    private void refreshSummary() {
-        long totalFilms = 0;
-        int empty = 0;
-        for (AdminCategoryDto c : all) {
-            totalFilms += c.getFilmCount();
-            if (c.getFilmCount() == 0) empty++;
-        }
-        tvSummaryTotal.setText(String.valueOf(all.size()));
-        tvSummaryFilms.setText(String.valueOf(totalFilms));
-        tvSummaryEmpty.setText(String.valueOf(empty));
+        tvCategoryCount.setText(total + " categories total");
+
+        int start = total > 0 ? page * 10 + 1 : 0;
+        int end = (int) Math.min((page + 1) * 10L, total);
+        tvPageInfo.setText((page + 1) + " / " + totalPages + "  (" + start + "-" + end + ")");
+
+        btnPrevPage.setEnabled(page > 0);
+        btnNextPage.setEnabled(repository.hasMore());
     }
 
     @Override
@@ -129,16 +133,26 @@ public class AdminCategoryListActivity extends com.android.cineflow.ui.base.Base
     @Override
     public void onDeleteCategory(AdminCategoryDto category) {
         String msg = category.getFilmCount() == 0
-                ? "Delete \"" + category.getName() + "\"?"
-                : "Delete \"" + category.getName() + "\"?\n\n"
-                + category.getFilmCount() + " film tag"
-                + (category.getFilmCount() == 1 ? "" : "s")
-                + " will be removed.";
+                ? getString(R.string.admin_dialog_delete_category_simple, category.getName())
+                : getString(R.string.admin_dialog_delete_category_warning, category.getName(), category.getFilmCount());
         new AlertDialog.Builder(this)
-                .setTitle("Delete category")
+                .setTitle(R.string.admin_dialog_delete_category_title)
                 .setMessage(msg)
-                .setPositiveButton("Delete", (d, w) -> deleteCategory(category))
-                .setNegativeButton("Cancel", null)
+                .setPositiveButton(R.string.admin_button_delete, (d, w) ->
+                        repository.deleteCategory(category.getId(), new AdminCategoryRepository.OnResultListener() {
+                            @Override
+                            public void onSuccess() {
+                                Toast.makeText(AdminCategoryListActivity.this,
+                                        R.string.admin_toast_deleted_category, Toast.LENGTH_SHORT).show();
+                            }
+
+                            @Override
+                            public void onError(String message) {
+                                Toast.makeText(AdminCategoryListActivity.this,
+                                        R.string.admin_toast_cannot_delete_category, Toast.LENGTH_SHORT).show();
+                            }
+                        }))
+                .setNegativeButton(R.string.admin_button_cancel, null)
                 .show();
     }
 
@@ -146,64 +160,35 @@ public class AdminCategoryListActivity extends com.android.cineflow.ui.base.Base
         CategoryFormDialogFragment d = CategoryFormDialogFragment.newInstance(existing);
         d.setOnCategorySavedListener((request, editing) -> {
             if (editing == null) {
-                createCategory(request);
+                repository.createCategory(request, new AdminCategoryRepository.OnResultListener() {
+                    @Override
+                    public void onSuccess() {
+                        Toast.makeText(AdminCategoryListActivity.this,
+                                R.string.admin_toast_created_category, Toast.LENGTH_SHORT).show();
+                    }
+
+                    @Override
+                    public void onError(String message) {
+                        Toast.makeText(AdminCategoryListActivity.this,
+                                R.string.admin_toast_cannot_save_category, Toast.LENGTH_SHORT).show();
+                    }
+                });
             } else {
-                updateCategory(editing.getId(), request);
+                repository.updateCategory(editing.getId(), request, new AdminCategoryRepository.OnResultListener() {
+                    @Override
+                    public void onSuccess() {
+                        Toast.makeText(AdminCategoryListActivity.this,
+                                R.string.admin_toast_updated_category, Toast.LENGTH_SHORT).show();
+                    }
+
+                    @Override
+                    public void onError(String message) {
+                        Toast.makeText(AdminCategoryListActivity.this,
+                                R.string.admin_toast_cannot_save_category, Toast.LENGTH_SHORT).show();
+                    }
+                });
             }
         });
         d.show(getSupportFragmentManager(), "category_form");
-    }
-
-    private void createCategory(AdminCategoryRequestDto request) {
-        ApiClient.getFilmApiService().createCategory(request).enqueue(categoryMutationCallback("Created category"));
-    }
-
-    private void updateCategory(Integer id, AdminCategoryRequestDto request) {
-        ApiClient.getFilmApiService().updateCategory(id, request).enqueue(categoryMutationCallback("Updated category"));
-    }
-
-    private void deleteCategory(AdminCategoryDto category) {
-        ApiClient.getFilmApiService().deleteCategory(category.getId())
-                .enqueue(new Callback<ApiResponseDto<Void>>() {
-                    @Override
-                    public void onResponse(Call<ApiResponseDto<Void>> call, Response<ApiResponseDto<Void>> response) {
-                        if (response.isSuccessful()) {
-                            Toast.makeText(AdminCategoryListActivity.this,
-                                    "Deleted category", Toast.LENGTH_SHORT).show();
-                            loadCategories();
-                        } else {
-                            Toast.makeText(AdminCategoryListActivity.this,
-                                    "Cannot delete category", Toast.LENGTH_SHORT).show();
-                        }
-                    }
-
-                    @Override
-                    public void onFailure(Call<ApiResponseDto<Void>> call, Throwable t) {
-                        Toast.makeText(AdminCategoryListActivity.this,
-                                "Server error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
-                    }
-                });
-    }
-
-    private Callback<ApiResponseDto<AdminCategoryDto>> categoryMutationCallback(String successMessage) {
-        return new Callback<ApiResponseDto<AdminCategoryDto>>() {
-            @Override
-            public void onResponse(Call<ApiResponseDto<AdminCategoryDto>> call,
-                                   Response<ApiResponseDto<AdminCategoryDto>> response) {
-                if (response.isSuccessful()) {
-                    Toast.makeText(AdminCategoryListActivity.this, successMessage, Toast.LENGTH_SHORT).show();
-                    loadCategories();
-                } else {
-                    Toast.makeText(AdminCategoryListActivity.this,
-                            "Cannot save category", Toast.LENGTH_SHORT).show();
-                }
-            }
-
-            @Override
-            public void onFailure(Call<ApiResponseDto<AdminCategoryDto>> call, Throwable t) {
-                Toast.makeText(AdminCategoryListActivity.this,
-                        "Server error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
-            }
-        };
     }
 }
