@@ -152,6 +152,28 @@ public class AdminUserRepository {
         });
     }
 
+    public void setUserBlocked(String id, boolean enabled, OnResultListener listener) {
+        loading.postValue(true);
+        api.setUserStatus(id, enabled).enqueue(new Callback<ApiResponseDto<AdminUserDto>>() {
+            @Override
+            public void onResponse(Call<ApiResponseDto<AdminUserDto>> call, Response<ApiResponseDto<AdminUserDto>> response) {
+                loading.postValue(false);
+                if (response.isSuccessful()) {
+                    listener.onSuccess();
+                    fetchUsers(currentPage, DEFAULT_PAGE_SIZE, currentSearch);
+                } else {
+                    listener.onError("Update failed: HTTP " + response.code());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ApiResponseDto<AdminUserDto>> call, Throwable t) {
+                loading.postValue(false);
+                listener.onError("Network error: " + t.getMessage());
+            }
+        });
+    }
+
     public interface OnResultListener {
         void onSuccess();
         void onError(String message);

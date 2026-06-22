@@ -119,6 +119,8 @@ public interface FilmApiService {
 
     Call<ApiResponseDto<Void>> resetUserPassword(String id);
 
+    Call<ApiResponseDto<AdminUserDto>> setUserStatus(String id, boolean enabled);
+
     Call<ApiResponseDto<AdminAnalyticsDto>> getAdminAnalytics(int period);
 
     Call<ApiResponseDto<FilmDetailDto>> getAdminFilmById(Integer id);

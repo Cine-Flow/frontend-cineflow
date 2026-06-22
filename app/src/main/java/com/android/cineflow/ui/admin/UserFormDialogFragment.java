@@ -24,8 +24,13 @@ public class UserFormDialogFragment extends DialogFragment {
         void onUserSaved(AdminUserRequestDto request, @Nullable AdminUserDto editing);
     }
 
+    public interface OnSendResetPasswordListener {
+        void onSendResetPassword(AdminUserDto user);
+    }
+
     private AdminUserDto editing;
     private OnUserSavedListener listener;
+    private OnSendResetPasswordListener resetPasswordListener;
 
     public static UserFormDialogFragment newInstance(@Nullable AdminUserDto user) {
         UserFormDialogFragment f = new UserFormDialogFragment();
@@ -35,6 +40,10 @@ public class UserFormDialogFragment extends DialogFragment {
 
     public void setOnUserSavedListener(OnUserSavedListener l) {
         this.listener = l;
+    }
+
+    public void setOnSendResetPasswordListener(OnSendResetPasswordListener l) {
+        this.resetPasswordListener = l;
     }
 
     @NonNull
@@ -52,8 +61,19 @@ public class UserFormDialogFragment extends DialogFragment {
         EditText etAvatarUrl = dialog.findViewById(R.id.et_avatar_url);
         ImageView ivPreview = dialog.findViewById(R.id.iv_avatar_preview);
         TextView tvInitial = dialog.findViewById(R.id.tv_avatar_preview_initial);
+        TextView btnSendResetLink = dialog.findViewById(R.id.btn_send_reset_link);
 
         tvTitle.setText(R.string.admin_dialog_edit_user);
+
+        if (editing != null) {
+            btnSendResetLink.setVisibility(android.view.View.VISIBLE);
+            btnSendResetLink.setOnClickListener(v -> {
+                if (resetPasswordListener != null) resetPasswordListener.onSendResetPassword(editing);
+                dismiss();
+            });
+        } else {
+            btnSendResetLink.setVisibility(android.view.View.GONE);
+        }
 
         if (editing != null) {
             etUsername.setText(editing.getUsername());

@@ -65,6 +65,19 @@
         </LinearLayout>
 
         <TextView
+            android:id="@+id/btn_send_reset_link"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/admin_button_send_reset_link"
+            android:textColor="@color/brand_accent"
+            android:textSize="12sp"
+            android:textStyle="bold"
+            android:clickable="true"
+            android:focusable="true"
+            android:visibility="gone"
+            android:layout_marginBottom="16dp" />
+
+        <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/form_username"

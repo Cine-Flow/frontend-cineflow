@@ -128,7 +128,34 @@ public class AdminUserListActivity extends com.android.cineflow.ui.base.BaseActi
     }
 
     @Override
-    public void onResetPassword(AdminUserDto user) {
+    public void onToggleBlock(AdminUserDto user) {
+        boolean blocking = user.isEnabled();
+        int titleRes = blocking ? R.string.admin_dialog_block_title : R.string.admin_dialog_unblock_title;
+        int msgRes = blocking ? R.string.admin_dialog_block_msg : R.string.admin_dialog_unblock_msg;
+        int buttonRes = blocking ? R.string.admin_button_block : R.string.admin_button_unblock;
+        int successRes = blocking ? R.string.admin_toast_user_blocked : R.string.admin_toast_user_unblocked;
+
+        new AlertDialog.Builder(this)
+                .setTitle(titleRes)
+                .setMessage(getString(msgRes, user.getUsername()))
+                .setPositiveButton(buttonRes, (d, w) ->
+                        repository.setUserBlocked(user.getId(), !blocking, new AdminUserRepository.OnResultListener() {
+                            @Override
+                            public void onSuccess() {
+                                Toast.makeText(AdminUserListActivity.this, successRes, Toast.LENGTH_SHORT).show();
+                            }
+
+                            @Override
+                            public void onError(String message) {
+                                Toast.makeText(AdminUserListActivity.this,
+                                        getString(R.string.admin_toast_server_error_format, message), Toast.LENGTH_SHORT).show();
+                            }
+                        }))
+                .setNegativeButton(R.string.admin_button_cancel, null)
+                .show();
+    }
+
+    public void onSendResetPassword(AdminUserDto user) {
         new AlertDialog.Builder(this)
                 .setTitle(R.string.admin_dialog_send_reset_title)
                 .setMessage(getString(R.string.admin_dialog_send_reset_msg, user.getEmail()))
@@ -189,6 +216,7 @@ public class AdminUserListActivity extends com.android.cineflow.ui.base.BaseActi
                                 R.string.admin_toast_cannot_save_user, Toast.LENGTH_SHORT).show();
                     }
                 }));
+        d.setOnSendResetPasswordListener(this::onSendResetPassword);
         d.show(getSupportFragmentManager(), "user_form");
     }
 }

@@ -323,6 +323,12 @@ public class VolleyFilmApiServiceImpl implements FilmApiService {
     }
 
     @Override
+    public Call<ApiResponseDto<AdminUserDto>> setUserStatus(String id, boolean enabled) {
+        return createCall("admin/users/" + Uri.encode(id) + "/status?enabled=" + enabled, Request.Method.PUT, null,
+                new TypeToken<ApiResponseDto<AdminUserDto>>(){}.getType());
+    }
+
+    @Override
     public Call<ApiResponseDto<AdminAnalyticsDto>> getAdminAnalytics(int period) {
         return createCall("admin/analytics?period=" + period, Request.Method.GET, null,
                 new TypeToken<ApiResponseDto<AdminAnalyticsDto>>(){}.getType());
